@@ -30,10 +30,10 @@ public class driveOpMode extends LinearOpMode{
         while(opModeIsActive()) {
             dir = new Vector2d(this.gamepad1.left_stick_x,-this.gamepad1.left_stick_y);
             servoPower = -gamepad1.right_stick_y;
-            tgtPowers[0] = this.gamepad1.left_stick_y;
-            tgtPowers[1] = -this.gamepad1.left_stick_y;
-            tgtPowers[2] = -this.gamepad1.left_stick_y;
-            tgtPowers[3] = this.gamepad1.left_stick_y;
+            tgtPowers[0] = this.gamepad1.left_stick_y+Math.min(this.gamepad1.left_stick_x,0);
+            tgtPowers[1] = this.gamepad1.left_stick_y+Math.min(this.gamepad1.left_stick_x,0);
+            tgtPowers[2] = -this.gamepad1.left_stick_y+Math.max(this.gamepad1.left_stick_x,0);
+            tgtPowers[3] = -this.gamepad1.left_stick_y+Math.max(this.gamepad1.left_stick_x,0);
             for(int i = 0; i < 4; i++){
                 motors[i].setPower(tgtPowers[i]);
             }
