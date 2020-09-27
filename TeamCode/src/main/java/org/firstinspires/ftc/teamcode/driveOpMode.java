@@ -33,11 +33,6 @@ public class driveOpMode extends LinearOpMode{
         waitForStart();
         while(opModeIsActive()) {
             NormalizedRGBA sensedColor = color.getNormalizedColors();
-            telemetry.addData("tgtCol",(sensedColor.red+sensedColor.blue+sensedColor.green)/3);
-            if((sensedColor.red+sensedColor.blue+sensedColor.green)/3 > 125){
-                telemetry.addData("DETECTED","WHITE");
-                motors[0].setPower(1);
-            }
             dir = new Vector2d(this.gamepad1.left_stick_x,-this.gamepad1.left_stick_y);
             servoPower = gamepad1.right_stick_y+1;
             tgtPowers[0] = this.gamepad1.left_stick_y+Math.min(this.gamepad1.left_stick_x,0);
