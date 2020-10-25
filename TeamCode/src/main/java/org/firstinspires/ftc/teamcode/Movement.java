@@ -38,13 +38,13 @@ public class Movement extends OpMode{
         odometryCalculations();
         if(drive>0) {
             if (destAngle * (coords[0] - destination[0]) - (coords[1] - destination[1]) >= 0.01) {
-                moveTo(destination[0], destination[1], 0.5);
+                moveTo(destination[0], destination[1], destination[2]);
             }
             if (getRuntime() >= setRuntime) {
                 motors[0].setPower(0);
                 motors[1].setPower(0);
                 drive = (drive + 1)%3;
-                if (drive == 2) setRuntime = movementTime;
+                if (drive == 2) setRuntime = getRuntime() + movementTime;
             } else {
                 motors[0].setPower(destination[2]);
                 motors[1].setPower(destination[2]*(drive*2-3));
@@ -61,8 +61,12 @@ public class Movement extends OpMode{
         destAngle = Math.atan(dist[0] / dist[1]);
         double rotationAngle = (coords[2] - destAngle + Math.PI) % (2 * Math.PI) - Math.PI;
         double rotationTime = getRuntime() + (0.5 * baseline * rotationAngle) / (power*5.2*circumference);
-        movementTime = getRuntime() + rotationTime + Math.sqrt(Math.pow(dist[0], 2) + Math.pow(dist[1], 2)) / (power*5.2*circumference);
+        movementTime = Math.sqrt(Math.pow(dist[0], 2) + Math.pow(dist[1], 2)) / (power*5.2*circumference);
         drive = 1;
         setRuntime = rotationTime;
+    }
+
+    private void shoot(){
+        //move to (line, y)
     }
 }
