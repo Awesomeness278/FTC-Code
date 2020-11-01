@@ -3,6 +3,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.configuration.annotations.ServoType;
 //import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp
@@ -24,39 +26,22 @@ public class driveOpModeShooting extends LinearOpMode{
         DcMotor rightBackMotor = hardwareMap.get(DcMotor.class, "Right Back Motor");
         rightBackMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        //DcMotor intakeMotor = hardwareMap.get(DcMotor.class, "Intake Motor");
-        //DcMotor flywheelMotor = hardwareMap.get(DcMotor.class, "Flywheel Motor");
+        DcMotor intakeMotor = hardwareMap.get(DcMotor.class, "Intake Motor");
+        DcMotor flywheelMotor = hardwareMap.get(DcMotor.class, "Flywheel Motor");
+        
+        Servo[] conveyorBeltServos = new Servo[3];
 
-        /*for(int i = 0; i < 3; i++){
+        for(int i = 0; i < conveyorBeltServos.length; i++){
             conveyorBeltServos[i] = hardwareMap.get(Servo.class,"Servo "+(i));
-        }*/
+        }
 
         //color = hardwareMap.get(ColorRangeSensor.class, "colorRangeSensor");
+
         telemetry.addData("Status","Initialized");
         telemetry.update();
         waitForStart();
         while(opModeIsActive()) {
-            if (gamepad1.a) {
-                leftFrontMotor.setPower(moveSpeed);
-                leftBackMotor.setPower(0);
-                rightFrontMotor.setPower(0);
-                rightBackMotor.setPower(0);
-            } else if (gamepad1.b) {
-                leftFrontMotor.setPower(0);
-                leftBackMotor.setPower(moveSpeed);
-                rightFrontMotor.setPower(0);
-                rightBackMotor.setPower(0);
-            } else if (gamepad1.x) {
-                leftFrontMotor.setPower(0);
-                leftBackMotor.setPower(0);
-                rightFrontMotor.setPower(moveSpeed);
-                rightBackMotor.setPower(0);
-            } else if (gamepad1.y) {
-                leftFrontMotor.setPower(0);
-                leftBackMotor.setPower(0);
-                rightFrontMotor.setPower(0);
-                rightBackMotor.setPower(moveSpeed);
-            } else if (gamepad1.dpad_up) {
+            if (gamepad1.dpad_up) {
                 leftFrontMotor.setPower(moveSpeed);
                 leftBackMotor.setPower(moveSpeed);
                 rightFrontMotor.setPower(moveSpeed);
@@ -88,11 +73,22 @@ public class driveOpModeShooting extends LinearOpMode{
                 rightFrontMotor.setPower((-gamepad1.left_stick_y-gamepad1.left_stick_x)*moveSpeed*scalar);
                 rightBackMotor.setPower((-gamepad1.left_stick_y+gamepad1.left_stick_x)*moveSpeed*scalar);
             }
+            
+            if(gamepad1.a){
+                flywheelMotor.setPower(1);
+                intakeMotor.setPower(1);
+                for (int i = 1; i < conveyorBeltServos.length; i++){
+                    conveyorBeltServos[i].setPosition(0.75);
+                }
+            } else {
+                flywheelMotor.setPower(0);
+                intakeMotor.setPower(0);
+                for (int i = 1; i < conveyorBeltServos.length; i++){
+                    conveyorBeltServos[i].setPosition(0.5);
+                }
+            }
 
-            /*double foo = this.gamepad1.a ? 0.5 : 0;
-            flywheelMotor.setPower(foo);
-            intakeMotor.setPower(foo);*/
-            //test
         }
     }
+
 }
