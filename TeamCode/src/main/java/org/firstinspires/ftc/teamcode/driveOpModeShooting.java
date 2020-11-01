@@ -92,7 +92,6 @@ public class driveOpModeShooting extends LinearOpMode{
             /*double foo = this.gamepad1.a ? 0.5 : 0;
             flywheelMotor.setPower(foo);
             intakeMotor.setPower(foo);*/
-            //a
         }
     }
 }
