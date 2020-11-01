@@ -16,7 +16,7 @@ public class driveOpMode extends LinearOpMode{
     private double[] tgtPowers = new double[4];
     int fix = 0;
     int fix2 = 0;
-    double leftPower;
+    double leftPower; //testing a comment
     double rightPower;
     Vector dir;
     @Override
