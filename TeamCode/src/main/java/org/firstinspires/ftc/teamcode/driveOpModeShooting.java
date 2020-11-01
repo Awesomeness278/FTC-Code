@@ -78,7 +78,7 @@ public class driveOpModeShooting extends LinearOpMode{
                 flywheelMotor.setPower(1);
                 intakeMotor.setPower(1);
                 for (int i = 1; i < conveyorBeltServos.length; i++){
-                    conveyorBeltServos[i].setPosition(0.75);
+                    conveyorBeltServos[i].setPosition(0.25);
                 }
             } else {
                 flywheelMotor.setPower(0);
