@@ -20,9 +20,14 @@ public class MoveTo extends LinearOpMode {
     DcMotor verticalLeft, verticalRight, horizontal;
 
     final double COUNTS_PER_INCH = 307.699557;
-    double tx = 12;
-    double ty = 12;
-    double to = 30;
+    double tx;
+    double ty;
+    double to;
+    public void setupGoto(double tx, double ty, double to){
+        this.tx = tx;
+        this.ty = ty;
+        this.to = to;
+    }
     //Hardware Map Names for drive motors and odometry wheels. THIS WILL CHANGE ON EACH ROBOT, YOU NEED TO UPDATE THESE VALUES ACCORDINGLY
     String rfName = "Right Front Motor", rbName = "Right Back Motor", lfName = "Left Front Motor", lbName = "Left Back Motor";
     String verticalLeftEncoderName = rbName, verticalRightEncoderName = lfName, horizontalEncoderName = lbName;
@@ -32,6 +37,7 @@ public class MoveTo extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+        setupGoto(12,12,30);
         //Initialize hardware map values. PLEASE UPDATE THESE VALUES TO MATCH YOUR CONFIGURATION
         initDriveHardwareMap(rfName, rbName, lfName, lbName, verticalLeftEncoderName, verticalRightEncoderName, horizontalEncoderName);
 
