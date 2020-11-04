@@ -18,6 +18,7 @@ public class driveOpModeShooting extends LinearOpMode{
 
         DcMotor leftFrontMotor = hardwareMap.get(DcMotor.class, "Left Front Motor");
         leftFrontMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         DcMotor leftBackMotor = hardwareMap.get(DcMotor.class, "Left Back Motor");
         leftBackMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -25,6 +26,7 @@ public class driveOpModeShooting extends LinearOpMode{
         rightFrontMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         DcMotor rightBackMotor = hardwareMap.get(DcMotor.class, "Right Back Motor");
         rightBackMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         /*DcMotor intakeMotor = hardwareMap.get(DcMotor.class, "Intake Motor");
         DcMotor flywheelMotor = hardwareMap.get(DcMotor.class, "Flywheel Motor");
@@ -39,10 +41,10 @@ public class driveOpModeShooting extends LinearOpMode{
         telemetry.update();
         waitForStart();
         while(opModeIsActive()) {
-            double leftFront;
-            double leftBack;
-            double rightFront;
-            double rightBack;
+            double leftFront = 0;
+            double leftBack = 0;
+            double rightFront = 0;
+            double rightBack = 0;
             if (gamepad1.dpad_up) {
                 leftFront = 1;
                 leftBack = 1;
@@ -63,7 +65,7 @@ public class driveOpModeShooting extends LinearOpMode{
                 leftBack = 1;
                 rightFront = 1;
                 rightBack = -1;
-            } else {
+            } else if (gamepad1.left_stick_y != 0 || gamepad1.left_stick_x != 0){
                 double scalar = Math.sqrt(Math.pow(gamepad1.left_stick_y,2)+Math.pow(gamepad1.left_stick_x,2))/(Math.abs(gamepad1.left_stick_y)+Math.abs(gamepad1.left_stick_x));
                 leftFront = (-gamepad1.left_stick_y+gamepad1.left_stick_x)*scalar;
                 leftBack = (-gamepad1.left_stick_y-gamepad1.left_stick_x)*scalar;
