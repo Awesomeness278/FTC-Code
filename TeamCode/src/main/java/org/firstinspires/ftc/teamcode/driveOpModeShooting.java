@@ -3,8 +3,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.configuration.annotations.ServoType;
+//import com.qualcomm.robotcore.hardware.Servo;
+//import com.qualcomm.robotcore.hardware.configuration.annotations.ServoType;
 //import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp
@@ -26,55 +26,59 @@ public class driveOpModeShooting extends LinearOpMode{
         DcMotor rightBackMotor = hardwareMap.get(DcMotor.class, "Right Back Motor");
         rightBackMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        DcMotor intakeMotor = hardwareMap.get(DcMotor.class, "Intake Motor");
+        /*DcMotor intakeMotor = hardwareMap.get(DcMotor.class, "Intake Motor");
         DcMotor flywheelMotor = hardwareMap.get(DcMotor.class, "Flywheel Motor");
         
         Servo[] conveyorBeltServos = new Servo[3];
 
         for(int i = 0; i < conveyorBeltServos.length; i++){
             conveyorBeltServos[i] = hardwareMap.get(Servo.class,"Servo "+(i));
-        }
-
-        //color = hardwareMap.get(ColorRangeSensor.class, "colorRangeSensor");
+        }*/
 
         telemetry.addData("Status","Initialized");
         telemetry.update();
         waitForStart();
         while(opModeIsActive()) {
+            double leftFront;
+            double leftBack;
+            double rightFront;
+            double rightBack;
             if (gamepad1.dpad_up) {
-                leftFrontMotor.setPower(moveSpeed);
-                leftBackMotor.setPower(moveSpeed);
-                rightFrontMotor.setPower(moveSpeed);
-                rightBackMotor.setPower(moveSpeed);
+                leftFront = 1;
+                leftBack = 1;
+                rightFront = 1;
+                rightBack = 1;
             } else if (gamepad1.dpad_right) {
-                leftFrontMotor.setPower(moveSpeed);
-                leftBackMotor.setPower(-moveSpeed);
-                rightFrontMotor.setPower(-moveSpeed);
-                rightBackMotor.setPower(moveSpeed);
+                leftFront = 1;
+                leftBack = -1;
+                rightFront = -1;
+                rightBack = 1;
             } else if (gamepad1.dpad_down) {
-                leftFrontMotor.setPower(-moveSpeed);
-                leftBackMotor.setPower(-moveSpeed);
-                rightFrontMotor.setPower(-moveSpeed);
-                rightBackMotor.setPower(-moveSpeed);
+                leftFront = -1;
+                leftBack = -1;
+                rightFront = -1;
+                rightBack = -1;
             } else if (gamepad1.dpad_left) {
-                leftFrontMotor.setPower(-moveSpeed);
-                leftBackMotor.setPower(moveSpeed);
-                rightFrontMotor.setPower(moveSpeed);
-                rightBackMotor.setPower(-moveSpeed);
-            } else if (gamepad1.right_stick_x != 0) {
-                leftFrontMotor.setPower(moveSpeed*gamepad1.right_stick_x);
-                leftBackMotor.setPower(moveSpeed*gamepad1.right_stick_x);
-                rightFrontMotor.setPower(-moveSpeed*gamepad1.right_stick_x);
-                rightBackMotor.setPower(-moveSpeed*gamepad1.right_stick_x);
+                leftFront = -1;
+                leftBack = 1;
+                rightFront = 1;
+                rightBack = -1;
             } else {
                 double scalar = Math.sqrt(Math.pow(gamepad1.left_stick_y,2)+Math.pow(gamepad1.left_stick_x,2))/(Math.abs(gamepad1.left_stick_y)+Math.abs(gamepad1.left_stick_x));
-                leftFrontMotor.setPower((-gamepad1.left_stick_y+gamepad1.left_stick_x)*moveSpeed*scalar);
-                leftBackMotor.setPower((-gamepad1.left_stick_y-gamepad1.left_stick_x)*moveSpeed*scalar);
-                rightFrontMotor.setPower((-gamepad1.left_stick_y-gamepad1.left_stick_x)*moveSpeed*scalar);
-                rightBackMotor.setPower((-gamepad1.left_stick_y+gamepad1.left_stick_x)*moveSpeed*scalar);
+                leftFront = (-gamepad1.left_stick_y+gamepad1.left_stick_x)*scalar;
+                leftBack = (-gamepad1.left_stick_y-gamepad1.left_stick_x)*scalar;
+                rightFront = (-gamepad1.left_stick_y-gamepad1.left_stick_x)*scalar;
+                rightBack = (-gamepad1.left_stick_y+gamepad1.left_stick_x)*scalar;
             }
-            
-            if(gamepad1.a){
+            leftFront = leftFront*(1-Math.abs(gamepad1.right_stick_x)/2)+gamepad1.right_stick_x/2;
+            leftBack = leftBack*(1-Math.abs(gamepad1.right_stick_x)/2)+gamepad1.right_stick_x/2;
+            rightFront = rightFront*(1-Math.abs(gamepad1.right_stick_x)/2)-gamepad1.right_stick_x/2;
+            rightBack = rightBack*(1-Math.abs(gamepad1.right_stick_x)/2)-gamepad1.right_stick_x/2;
+            leftFrontMotor.setPower(leftFront*moveSpeed);
+            leftBackMotor.setPower(leftBack*moveSpeed);
+            rightFrontMotor.setPower(rightFront*moveSpeed);
+            rightBackMotor.setPower(rightBack*moveSpeed);
+            /*if(gamepad1.a){
                 flywheelMotor.setPower(1);
                 intakeMotor.setPower(1);
                 for (int i = 1; i < conveyorBeltServos.length; i++){
@@ -86,9 +90,8 @@ public class driveOpModeShooting extends LinearOpMode{
                 for (int i = 1; i < conveyorBeltServos.length; i++){
                     conveyorBeltServos[i].setPosition(0.5);
                 }
-            }
+            }*/
 
         }
     }
-
 }
