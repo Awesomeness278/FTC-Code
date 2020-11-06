@@ -23,7 +23,7 @@ public class driveOpModeShooting extends LinearOpMode{
         rightFrontMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         DcMotor rightBackMotor = hardwareMap.get(DcMotor.class, "Right Back Motor");
         rightBackMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        DcMotor flywheel = hardwareMap.get(DcMotor.class,"Shooter");
+        //DcMotor flywheel = hardwareMap.get(DcMotor.class,"Shooter");
 
         //DcMotor intakeMotor = hardwareMap.get(DcMotor.class, "Intake Motor");
         //DcMotor flywheelMotor = hardwareMap.get(DcMotor.class, "Flywheel Motor");
