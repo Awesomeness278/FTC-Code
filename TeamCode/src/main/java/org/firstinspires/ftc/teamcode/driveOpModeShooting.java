@@ -41,10 +41,10 @@ public class driveOpModeShooting extends LinearOpMode{
         telemetry.update();
         waitForStart();
         while(opModeIsActive()) {
-            double leftFront = 0;
-            double leftBack = 0;
-            double rightFront = 0;
-            double rightBack = 0;
+            double leftFront;
+            double leftBack;
+            double rightFront;
+            double rightBack;
             if (gamepad1.dpad_up) {
                 leftFront = 1;
                 leftBack = 1;
@@ -65,21 +65,21 @@ public class driveOpModeShooting extends LinearOpMode{
                 leftBack = 1;
                 rightFront = 1;
                 rightBack = -1;
-            } else if (gamepad1.left_stick_y != 0 || gamepad1.left_stick_x != 0){
-                double scalar = Math.sqrt(Math.pow(gamepad1.left_stick_y,2)+Math.pow(gamepad1.left_stick_x,2))/(Math.abs(gamepad1.left_stick_y)+Math.abs(gamepad1.left_stick_x));
-                leftFront = (-gamepad1.left_stick_y+gamepad1.left_stick_x)*scalar;
-                leftBack = (-gamepad1.left_stick_y-gamepad1.left_stick_x)*scalar;
-                rightFront = (-gamepad1.left_stick_y-gamepad1.left_stick_x)*scalar;
-                rightBack = (-gamepad1.left_stick_y+gamepad1.left_stick_x)*scalar;
+            } else {
+                leftFront = -gamepad1.left_stick_y+gamepad1.left_stick_x;
+                leftBack = -gamepad1.left_stick_y-gamepad1.left_stick_x;
+                rightFront = -gamepad1.left_stick_y-gamepad1.left_stick_x;
+                rightBack = -gamepad1.left_stick_y+gamepad1.left_stick_x;
             }
-            leftFront = leftFront*(1-Math.abs(gamepad1.right_stick_x)/2)+gamepad1.right_stick_x/2;
-            leftBack = leftBack*(1-Math.abs(gamepad1.right_stick_x)/2)+gamepad1.right_stick_x/2;
-            rightFront = rightFront*(1-Math.abs(gamepad1.right_stick_x)/2)-gamepad1.right_stick_x/2;
-            rightBack = rightBack*(1-Math.abs(gamepad1.right_stick_x)/2)-gamepad1.right_stick_x/2;
-            leftFrontMotor.setPower(leftFront*moveSpeed);
-            leftBackMotor.setPower(leftBack*moveSpeed);
-            rightFrontMotor.setPower(rightFront*moveSpeed);
-            rightBackMotor.setPower(rightBack*moveSpeed);
+            leftFront += gamepad1.right_stick_x;
+            leftBack += gamepad1.right_stick_x;
+            rightFront += -gamepad1.right_stick_x;
+            rightBack += -gamepad1.right_stick_x;
+            double scalar = Math.max(Math.max(leftFront,leftBack),Math.max(rightFront,rightBack));
+            leftFrontMotor.setPower(leftFront/scalar*moveSpeed);
+            leftBackMotor.setPower(leftBack/scalar*moveSpeed);
+            rightFrontMotor.setPower(rightFront/scalar*moveSpeed);
+            rightBackMotor.setPower(rightBack/scalar*moveSpeed);
             /*if(gamepad1.a){
                 flywheelMotor.setPower(1);
                 intakeMotor.setPower(1);
