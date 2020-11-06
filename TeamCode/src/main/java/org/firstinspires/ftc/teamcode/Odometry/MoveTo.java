@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.Odometry.OdometryGlobalCoordinatePosition;
+import org.firstinspires.ftc.teamcode.stateMachine.*;
 
 import java.util.Vector;
 
@@ -85,7 +86,7 @@ public class MoveTo extends LinearOpMode {
                 left_back.setPower((-y-x)*sp*scalar);
                 right_front.setPower((-y-x)*sp*scalar);
                 right_back.setPower((-y+x)*sp*scalar);
-                if(Math.sqrt(Math.pow(x-globalPositionUpdate.returnXCoordinate() / COUNTS_PER_INCH,2)+Math.pow(y-globalPositionUpdate.returnYCoordinate() / COUNTS_PER_INCH,2))<sp){
+                if(Math.sqrt(Math.pow(x-globalPositionUpdate.returnXCoordinate() / COUNTS_PER_INCH,2)+Math.pow(y-globalPositionUpdate.returnYCoordinate() / COUNTS_PER_INCH,2))<1){
                     state++;
                 }
             }else if(state == 2){
