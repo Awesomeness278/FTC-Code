@@ -75,7 +75,7 @@ public class driveOpModeShooting extends LinearOpMode{
             leftBack += gamepad1.right_stick_x;
             rightFront += -gamepad1.right_stick_x;
             rightBack += -gamepad1.right_stick_x;
-            double scalar = Math.max(Math.max(leftFront,leftBack),Math.max(rightFront,rightBack));
+            double scalar = Math.max(Math.max(Math.abs(leftFront),Math.abs(leftBack)),Math.max(Math.abs(rightFront),Math.abs(rightBack)));
             leftFrontMotor.setPower(leftFront/scalar*moveSpeed);
             leftBackMotor.setPower(leftBack/scalar*moveSpeed);
             rightFrontMotor.setPower(rightFront/scalar*moveSpeed);
