@@ -41,40 +41,38 @@ public class driveOpModeShooting extends LinearOpMode{
         telemetry.update();
         waitForStart();
         while(opModeIsActive()) {
-            double leftFront;
-            double leftBack;
-            double rightFront;
-            double rightBack;
+            double leftFront = 0;
+            double leftBack = 0;
+            double rightFront = 0;
+            double rightBack = 0;
             if (gamepad1.dpad_up) {
-                leftFront = 1;
-                leftBack = 1;
-                rightFront = 1;
-                rightBack = 1;
-            } else if (gamepad1.dpad_right) {
-                leftFront = 1;
-                leftBack = -1;
-                rightFront = -1;
-                rightBack = 1;
-            } else if (gamepad1.dpad_down) {
-                leftFront = -1;
-                leftBack = -1;
-                rightFront = -1;
-                rightBack = -1;
-            } else if (gamepad1.dpad_left) {
-                leftFront = -1;
-                leftBack = 1;
-                rightFront = 1;
-                rightBack = -1;
-            } else {
-                leftFront = -gamepad1.left_stick_y+gamepad1.left_stick_x;
-                leftBack = -gamepad1.left_stick_y-gamepad1.left_stick_x;
-                rightFront = -gamepad1.left_stick_y-gamepad1.left_stick_x;
-                rightBack = -gamepad1.left_stick_y+gamepad1.left_stick_x;
+                leftFront += 1;
+                leftBack += 1;
+                rightFront += 1;
+                rightBack += 1;
             }
-            leftFront += gamepad1.right_stick_x;
-            leftBack += gamepad1.right_stick_x;
-            rightFront += -gamepad1.right_stick_x;
-            rightBack += -gamepad1.right_stick_x;
+            if (gamepad1.dpad_right) {
+                leftFront += 1;
+                leftBack += -1;
+                rightFront += -1;
+                rightBack += 1;
+            }
+            if (gamepad1.dpad_down) {
+                leftFront += -1;
+                leftBack += -1;
+                rightFront += -1;
+                rightBack += -1;
+            }
+            if (gamepad1.dpad_left) {
+                leftFront += -1;
+                leftBack += 1;
+                rightFront += 1;
+                rightBack += -1;
+            }
+            leftFront += -gamepad1.left_stick_y+gamepad1.left_stick_x+gamepad1.right_stick_x;
+            leftBack += -gamepad1.left_stick_y-gamepad1.left_stick_x+gamepad1.right_stick_x;
+            rightFront += -gamepad1.left_stick_y-gamepad1.left_stick_x-gamepad1.right_stick_x;
+            rightBack += -gamepad1.left_stick_y+gamepad1.left_stick_x-gamepad1.right_stick_x;
             double scalar = Math.max(Math.max(Math.abs(leftFront),Math.abs(leftBack)),Math.max(Math.abs(rightFront),Math.abs(rightBack)));
             leftFrontMotor.setPower(leftFront/scalar*moveSpeed);
             leftBackMotor.setPower(leftBack/scalar*moveSpeed);
