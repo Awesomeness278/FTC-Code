@@ -97,7 +97,7 @@ public class OdometryGlobalCoordinatePosition implements Runnable{
      * Returns the robot's global y coordinate
      * @return global y coordinate
      */
-    public double returnYCoordinate(){ return -robotGlobalYCoordinatePosition; }
+    public double returnYCoordinate(){ return robotGlobalYCoordinatePosition; }
 
     /**
      * Returns the robot's global orientation
