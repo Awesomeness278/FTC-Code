@@ -18,7 +18,23 @@ public class Autonomous extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         /*
         Copy the following line and change the new State to new {name of your state}
-        manager.addState(new State());
+        manager.addState(new Start());
+        manager.addState(new Tensorflow());
+        manager.addState(new Move(squareX,squareY));
+        manager.addState(new Stop());
+        manager.addState(new WobbleDropped());
+        manager.addState(new Move(shootX,shootY));
+        manager.addState(new Stop());
+        manager.addState(new Oriented());
+        manager.addState(new Shoot());
+        manager.addState(new CheckRings());
+        manager.addState(new Move(ringX,ringY));
+        manager.addState(new Stop());
+        manager.addState(new Tensorflow());
+        manager.addState(new RingsCollected());
+        manager.addState(new Move());
+        manager.addState(new Stop());
+        manager.addState(new Finish());
         */
         manager.addState(new Start());
         manager.addState(new Move());
