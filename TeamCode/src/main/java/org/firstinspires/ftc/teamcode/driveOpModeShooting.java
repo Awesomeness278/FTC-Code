@@ -4,6 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 //import com.qualcomm.robotcore.hardware.Servo;
+//import com.qualcomm.robotcore.hardware.configuration.annotations.ServoType;
+//import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp
 public class driveOpModeShooting extends LinearOpMode{
@@ -16,6 +18,7 @@ public class driveOpModeShooting extends LinearOpMode{
 
         DcMotor leftFrontMotor = hardwareMap.get(DcMotor.class, "Left Front Motor");
         leftFrontMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         DcMotor leftBackMotor = hardwareMap.get(DcMotor.class, "Left Back Motor");
         leftBackMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -23,77 +26,72 @@ public class driveOpModeShooting extends LinearOpMode{
         rightFrontMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         DcMotor rightBackMotor = hardwareMap.get(DcMotor.class, "Right Back Motor");
         rightBackMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        DcMotor flywheel = hardwareMap.get(DcMotor.class,"Shooter");
+        rightBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        //DcMotor intakeMotor = hardwareMap.get(DcMotor.class, "Intake Motor");
-        //DcMotor flywheelMotor = hardwareMap.get(DcMotor.class, "Flywheel Motor");
+        /*DcMotor intakeMotor = hardwareMap.get(DcMotor.class, "Intake Motor");
+        DcMotor flywheelMotor = hardwareMap.get(DcMotor.class, "Flywheel Motor");
 
-        /*for(int i = 0; i < 3; i++){
+        Servo[] conveyorBeltServos = new Servo[3];
+
+        for(int i = 0; i < conveyorBeltServos.length; i++){
             conveyorBeltServos[i] = hardwareMap.get(Servo.class,"Servo "+(i));
         }*/
 
-        //color = hardwareMap.get(ColorRangeSensor.class, "colorRangeSensor");
         telemetry.addData("Status","Initialized");
         telemetry.update();
         waitForStart();
         while(opModeIsActive()) {
-            if (gamepad1.a) {
-                leftFrontMotor.setPower(moveSpeed);
-                leftBackMotor.setPower(0);
-                rightFrontMotor.setPower(0);
-                rightBackMotor.setPower(0);
-            } else if (gamepad1.b) {
-                leftFrontMotor.setPower(0);
-                leftBackMotor.setPower(moveSpeed);
-                rightFrontMotor.setPower(0);
-                rightBackMotor.setPower(0);
-            } else if (gamepad1.x) {
-                leftFrontMotor.setPower(0);
-                leftBackMotor.setPower(0);
-                rightFrontMotor.setPower(moveSpeed);
-                rightBackMotor.setPower(0);
-            } else if (gamepad1.y) {
-                leftFrontMotor.setPower(0);
-                leftBackMotor.setPower(0);
-                rightFrontMotor.setPower(0);
-                rightBackMotor.setPower(moveSpeed);
-            } else if (gamepad1.dpad_up) {
-                leftFrontMotor.setPower(moveSpeed);
-                leftBackMotor.setPower(moveSpeed);
-                rightFrontMotor.setPower(moveSpeed);
-                rightBackMotor.setPower(moveSpeed);
-            } else if (gamepad1.dpad_right) {
-                leftFrontMotor.setPower(moveSpeed);
-                leftBackMotor.setPower(-moveSpeed);
-                rightFrontMotor.setPower(-moveSpeed);
-                rightBackMotor.setPower(moveSpeed);
-            } else if (gamepad1.dpad_down) {
-                leftFrontMotor.setPower(-moveSpeed);
-                leftBackMotor.setPower(-moveSpeed);
-                rightFrontMotor.setPower(-moveSpeed);
-                rightBackMotor.setPower(-moveSpeed);
-            } else if (gamepad1.dpad_left) {
-                leftFrontMotor.setPower(-moveSpeed);
-                leftBackMotor.setPower(moveSpeed);
-                rightFrontMotor.setPower(moveSpeed);
-                rightBackMotor.setPower(-moveSpeed);
-            } else if (gamepad1.right_stick_x != 0) {
-                leftFrontMotor.setPower(moveSpeed*gamepad1.right_stick_x);
-                leftBackMotor.setPower(moveSpeed*gamepad1.right_stick_x);
-                rightFrontMotor.setPower(-moveSpeed*gamepad1.right_stick_x);
-                rightBackMotor.setPower(-moveSpeed*gamepad1.right_stick_x);
-            } else {
-                double scalar = Math.sqrt(Math.pow(gamepad1.left_stick_y,2)+Math.pow(gamepad1.left_stick_x,2))/(Math.abs(gamepad1.left_stick_y)+Math.abs(gamepad1.left_stick_x));
-                leftFrontMotor.setPower((-gamepad1.left_stick_y+gamepad1.left_stick_x)*moveSpeed*scalar);
-                leftBackMotor.setPower((-gamepad1.left_stick_y-gamepad1.left_stick_x)*moveSpeed*scalar);
-                rightFrontMotor.setPower((-gamepad1.left_stick_y-gamepad1.left_stick_x)*moveSpeed*scalar);
-                rightBackMotor.setPower((-gamepad1.left_stick_y+gamepad1.left_stick_x)*moveSpeed*scalar);
+            double leftFront = 0;
+            double leftBack = 0;
+            double rightFront = 0;
+            double rightBack = 0;
+            if (gamepad1.dpad_up) {
+                leftFront += 1;
+                leftBack += 1;
+                rightFront += 1;
+                rightBack += 1;
             }
+            if (gamepad1.dpad_right) {
+                leftFront += 1;
+                leftBack += -1;
+                rightFront += -1;
+                rightBack += 1;
+            }
+            if (gamepad1.dpad_down) {
+                leftFront += -1;
+                leftBack += -1;
+                rightFront += -1;
+                rightBack += -1;
+            }
+            if (gamepad1.dpad_left) {
+                leftFront += -1;
+                leftBack += 1;
+                rightFront += 1;
+                rightBack += -1;
+            }
+            leftFront += -gamepad1.left_stick_y+gamepad1.left_stick_x+gamepad1.right_stick_x;
+            leftBack += -gamepad1.left_stick_y-gamepad1.left_stick_x+gamepad1.right_stick_x;
+            rightFront += -gamepad1.left_stick_y-gamepad1.left_stick_x-gamepad1.right_stick_x;
+            rightBack += -gamepad1.left_stick_y+gamepad1.left_stick_x-gamepad1.right_stick_x;
+            double scalar = Math.max(Math.max(Math.abs(leftFront),Math.abs(leftBack)),Math.max(Math.abs(rightFront),Math.abs(rightBack)));
+            leftFrontMotor.setPower(leftFront/scalar*moveSpeed);
+            leftBackMotor.setPower(leftBack/scalar*moveSpeed);
+            rightFrontMotor.setPower(rightFront/scalar*moveSpeed);
+            rightBackMotor.setPower(rightBack/scalar*moveSpeed);
+            /*if(gamepad1.a){
+                flywheelMotor.setPower(1);
+                intakeMotor.setPower(1);
+                for (int i = 1; i < conveyorBeltServos.length; i++){
+                    conveyorBeltServos[i].setPosition(0.25);
+                }
+            } else {
+                flywheelMotor.setPower(0);
+                intakeMotor.setPower(0);
+                for (int i = 1; i < conveyorBeltServos.length; i++){
+                    conveyorBeltServos[i].setPosition(0.5);
+                }
+            }*/
 
-            /*double foo = this.gamepad1.a ? 0.5 : 0;
-            flywheelMotor.setPower(foo);
-            intakeMotor.setPower(foo);*/
-            //test
         }
     }
 }
