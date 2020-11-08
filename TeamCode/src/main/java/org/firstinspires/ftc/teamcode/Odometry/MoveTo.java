@@ -80,7 +80,7 @@ public class MoveTo extends LinearOpMode {
                 double y = globalPositionUpdate.returnYCoordinate() / COUNTS_PER_INCH-ty;
                 double r = 1/Math.sqrt(Math.pow(x,2)+Math.pow(y,2));
                 x = x * r;
-                y = y * r;
+                y = y * -r;
                 double scalar = Math.sqrt(Math.pow(y,2)+Math.pow(x,2))/(Math.abs(y)+Math.abs(x));
                 left_front.setPower((-y+x)*sp*scalar);
                 left_back.setPower((-y-x)*sp*scalar);
@@ -154,7 +154,7 @@ public class MoveTo extends LinearOpMode {
         left_front.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         left_back.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        left_back.setDirection(DcMotorSimple.Direction.REVERSE);
+        right_front.setDirection(DcMotorSimple.Direction.REVERSE);
 
         telemetry.addData("Status", "Hardware Map Init Complete");
         telemetry.update();
