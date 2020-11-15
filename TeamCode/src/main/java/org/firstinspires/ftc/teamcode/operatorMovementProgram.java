@@ -80,16 +80,23 @@ public class operatorMovementProgram extends LinearOpMode{
             rightBackMotor.setPower(rightBack/scalar*moveSpeed);
             if(gamepad1.a){
                 flywheelMotor.setPower(1);
-                intakeMotor.setPower(1);
-                for (int i = 1; i < conveyorBeltServos.length; i++){
-                    conveyorBeltServos[i].setPosition(0.25);
-                }
             } else {
                 flywheelMotor.setPower(0);
+            }
+            if(gamepad1.b){
+                intakeMotor.setPower(0.5);
+            } else {
                 intakeMotor.setPower(0);
-                for (int i = 1; i < conveyorBeltServos.length; i++){
-                    conveyorBeltServos[i].setPosition(0.5);
-                }
+            }
+            if(gamepad1.x){
+                conveyorBeltServos[0].setPosition(0.25);
+            } else {
+                conveyorBeltServos[0].setPosition(0.50);
+            }
+            if(gamepad1.y){
+                conveyorBeltServos[1].setPosition(0.25);
+            } else {
+                conveyorBeltServos[1].setPosition(0.50);
             }
         }
     }
