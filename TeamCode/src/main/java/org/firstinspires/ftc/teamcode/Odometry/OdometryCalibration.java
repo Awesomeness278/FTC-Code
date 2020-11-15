@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.BetterOdometry;
+package org.firstinspires.ftc.teamcode.Odometry;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
@@ -29,8 +29,8 @@ public class OdometryCalibration extends LinearOpMode {
     BNO055IMU imu;
 
     //Hardware Map Names for drive motors and odometry wheels. THIS WILL CHANGE ON EACH ROBOT, YOU NEED TO UPDATE THESE VALUES ACCORDINGLY
-    String rfName = "Right Front Motor", rbName = "Right Back Motor", lfName = "Left Front Motor", lbName = "Left Back Motor";
-    String verticalLeftEncoderName = rfName, verticalRightEncoderName = lfName, horizontalEncoderName = rbName;
+    String rfName = "rf", rbName = "rb", lfName = "lf", lbName = "lb";
+    String verticalLeftEncoderName = rbName, verticalRightEncoderName = lfName, horizontalEncoderName = rfName;
 
     final double PIVOT_SPEED = 0.5;
 
@@ -167,7 +167,9 @@ public class OdometryCalibration extends LinearOpMode {
         left_front.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         left_back.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        left_front.setDirection(DcMotorSimple.Direction.REVERSE);
         right_front.setDirection(DcMotorSimple.Direction.REVERSE);
+        right_back.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
         telemetry.addData("Status", "Hardware Map Init Complete");

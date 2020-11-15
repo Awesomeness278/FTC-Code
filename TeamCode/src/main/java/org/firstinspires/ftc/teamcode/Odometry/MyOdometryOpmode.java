@@ -1,9 +1,11 @@
-package org.firstinspires.ftc.teamcode.BetterOdometry;
+package org.firstinspires.ftc.teamcode.Odometry;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+
+import org.firstinspires.ftc.teamcode.Odometry.OdometryGlobalCoordinatePosition;
 
 /**
  * Created by Sarthak on 10/4/2019.
@@ -18,29 +20,13 @@ public class MyOdometryOpmode extends LinearOpMode {
     final double COUNTS_PER_INCH = 307.699557;
 
     //Hardware Map Names for drive motors and odometry wheels. THIS WILL CHANGE ON EACH ROBOT, YOU NEED TO UPDATE THESE VALUES ACCORDINGLY
-    String rfName = "Right Front Motor", rbName = "Right Back Motor", lfName = "Left Front Motor", lbName = "Left Back Motor";
-    String verticalLeftEncoderName = rfName, verticalRightEncoderName = lfName, horizontalEncoderName = rbName;
+    String rfName = "rf", rbName = "rb", lfName = "lf", lbName = "lb";
+    String verticalLeftEncoderName = rbName, verticalRightEncoderName = lfName, horizontalEncoderName = rfName;
 
     OdometryGlobalCoordinatePosition globalPositionUpdate;
 
     @Override
     public void runOpMode() throws InterruptedException {
-
-//hello
-
-        //hello
-        DcMotor leftFrontMotor = hardwareMap.get(DcMotor.class, "Left Front Motor");
-        leftFrontMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        DcMotor leftBackMotor = hardwareMap.get(DcMotor.class, "Left Back Motor");
-        leftBackMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        DcMotor rightFrontMotor = hardwareMap.get(DcMotor.class, "Right Front Motor");
-        rightFrontMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        DcMotor rightBackMotor = hardwareMap.get(DcMotor.class, "Right Back Motor");
-        rightBackMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-
         //Initialize hardware map values. PLEASE UPDATE THESE VALUES TO MATCH YOUR CONFIGURATION
         initDriveHardwareMap(rfName, rbName, lfName, lbName, verticalLeftEncoderName, verticalRightEncoderName, horizontalEncoderName);
 

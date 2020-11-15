@@ -1,9 +1,11 @@
-package org.firstinspires.ftc.teamcode.BetterOdometry;
+package org.firstinspires.ftc.teamcode.Odometry;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+
+import org.firstinspires.ftc.teamcode.Odometry.OdometryGlobalCoordinatePosition;
 
 /**
  * Created by Sarthak on 6/1/2019.
@@ -19,7 +21,7 @@ public class GlobalCoordinatePositionUpdateSample extends LinearOpMode {
     final double COUNTS_PER_INCH = 307.699557;
 
     //Hardware map names for the encoder wheels. Again, these will change for each robot and need to be updated below
-    String verticalLeftEncoderName = "Right Front Motor", verticalRightEncoderName = "Left Front Motor", horizontalEncoderName = "Left Back Motor";
+    String verticalLeftEncoderName = "rf", verticalRightEncoderName = "lf", horizontalEncoderName = "lb";
 
     @Override
     public void runOpMode() throws InterruptedException {
