@@ -6,28 +6,39 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.Odometry.OdometryGlobalCoordinatePosition;
+import org.firstinspires.ftc.teamcode.stateMachine.*;
+
+import java.util.Vector;
 
 /**
  * Created by Sarthak on 10/4/2019.
  */
-@TeleOp(name = "My Odometry OpMode")
-public class MyOdometryOpmode extends LinearOpMode {
-    double moveSpeed = -0.1;
+@TeleOp
+public class MoveTo extends LinearOpMode {
     //Drive motors
     DcMotor right_front, right_back, left_front, left_back;
     //Odometry Wheels
     DcMotor verticalLeft, verticalRight, horizontal;
 
     final double COUNTS_PER_INCH = 307.699557;
-
+    double tx;
+    double ty;
+    double to;
+    public void setupGoto(double tx, double ty, double to){
+        this.tx = tx;
+        this.ty = ty;
+        this.to = to;
+    }
     //Hardware Map Names for drive motors and odometry wheels. THIS WILL CHANGE ON EACH ROBOT, YOU NEED TO UPDATE THESE VALUES ACCORDINGLY
     String rfName = "Right Front Motor", rbName = "Right Back Motor", lfName = "Left Front Motor", lbName = "Left Back Motor";
-    String verticalLeftEncoderName = rbName, verticalRightEncoderName = lfName, horizontalEncoderName = rfName;
-
+    String verticalLeftEncoderName = rbName, verticalRightEncoderName = lfName, horizontalEncoderName = lbName;
+    int state = 0;
+    double sp = 0.1;
     OdometryGlobalCoordinatePosition globalPositionUpdate;
 
     @Override
     public void runOpMode() throws InterruptedException {
+        setupGoto(0,-12,0);
         //Initialize hardware map values. PLEASE UPDATE THESE VALUES TO MATCH YOUR CONFIGURATION
         initDriveHardwareMap(rfName, rbName, lfName, lbName, verticalLeftEncoderName, verticalRightEncoderName, horizontalEncoderName);
 
@@ -43,7 +54,7 @@ public class MyOdometryOpmode extends LinearOpMode {
         globalPositionUpdate.reverseRightEncoder();
         globalPositionUpdate.reverseNormalEncoder();
 
-        while(opModeIsActive()){
+        while(opModeIsActive()) {
             //Display Global (x, y, theta) coordinates
             telemetry.addData("X Position", globalPositionUpdate.returnXCoordinate() / COUNTS_PER_INCH);
             telemetry.addData("Y Position", globalPositionUpdate.returnYCoordinate() / COUNTS_PER_INCH);
@@ -52,82 +63,59 @@ public class MyOdometryOpmode extends LinearOpMode {
             telemetry.addData("Vertical left encoder position", verticalLeft.getCurrentPosition());
             telemetry.addData("Vertical right encoder position", verticalRight.getCurrentPosition());
             telemetry.addData("horizontal encoder position", horizontal.getCurrentPosition());
+            telemetry.addData("State",state);
+            telemetry.addData("X Distance",globalPositionUpdate.returnXCoordinate() / COUNTS_PER_INCH-tx);
+            telemetry.addData("Y Distance",globalPositionUpdate.returnYCoordinate() / COUNTS_PER_INCH-ty);
+            telemetry.addData("Total Distance",Math.sqrt(Math.pow(tx-globalPositionUpdate.returnXCoordinate() / COUNTS_PER_INCH,2)+Math.pow(ty-globalPositionUpdate.returnYCoordinate() / COUNTS_PER_INCH,2)));
 
             telemetry.addData("Thread Active", positionThread.isAlive());
             telemetry.update();
-            double leftFront = 0;
-            double leftBack = 0;
-            double rightFront = 0;
-            double rightBack = 0;
-            if (gamepad1.dpad_up) {
-                leftFront += 1;
-                leftBack += 1;
-                rightFront += 1;
-                rightBack += 1;
+            if(state == 0){
+                state++;
+            }if(state == 1){
+                double x = globalPositionUpdate.returnXCoordinate() / COUNTS_PER_INCH-tx;
+                double y = globalPositionUpdate.returnYCoordinate() / COUNTS_PER_INCH-ty;
+                double r = 1/Math.sqrt(Math.pow(x,2)+Math.pow(y,2));
+                x = x * -r;
+                y = y * r;
+                double scalar = Math.sqrt(Math.pow(y,2)+Math.pow(x,2))/(Math.abs(y)+Math.abs(x));
+                left_front.setPower(-sp);
+                left_back.setPower(-sp);
+                right_front.setPower(-sp);
+                right_back.setPower(-sp);
+                if(globalPositionUpdate.returnYCoordinate()/COUNTS_PER_INCH<-12){
+                    state++;
+                }
+            }else if(state == 2){
+                state++;
+                left_front.setPower(0);
+                left_back.setPower(0);
+                right_front.setPower(0);
+                right_back.setPower(0);
             }
-            if (gamepad1.dpad_right) {
-                leftFront += 1;
-                leftBack += -1;
-                rightFront += -1;
-                rightBack += 1;
-            }
-            if (gamepad1.dpad_down) {
-                leftFront += -1;
-                leftBack += -1;
-                rightFront += -1;
-                rightBack += -1;
-            }
-            if (gamepad1.dpad_left) {
-                leftFront += -1;
-                leftBack += 1;
-                rightFront += 1;
-                rightBack += -1;
-            }
-
-
-
-            if (gamepad1.a) {
-                leftFront += 1;
-                leftBack = 0;
-                rightFront = 0;
-                rightBack = 0;
-            }
-            if (gamepad1.b) {
-                leftFront = 0;
-                leftBack += 1;
-                rightFront = 0;
-                rightBack = 0 ;
-            }
-            if (gamepad1.x) {
-                leftFront = 0;
-                leftBack = 0;
-                rightFront += 1;
-                rightBack = 0;
-            }
-            if (gamepad1.y) {
-                leftFront = 0;
-                leftBack = 0;
-                rightFront = 0;
-                rightBack += 1;
-            }
-
-
-
-
-            leftFront += -gamepad1.left_stick_y+gamepad1.left_stick_x+gamepad1.right_stick_x;
-            leftBack += -gamepad1.left_stick_y-gamepad1.left_stick_x+gamepad1.right_stick_x;
-            rightFront += -gamepad1.left_stick_y-gamepad1.left_stick_x-gamepad1.right_stick_x;
-            rightBack += -gamepad1.left_stick_y+gamepad1.left_stick_x-gamepad1.right_stick_x;
-            double scalar = Math.max(Math.max(Math.abs(leftFront),Math.abs(leftBack)),Math.max(Math.abs(rightFront),Math.abs(rightBack)));
-            left_front.setPower(leftFront/scalar*moveSpeed);
-            left_back.setPower(leftBack/scalar*moveSpeed);
-            right_front.setPower(rightFront/scalar*moveSpeed);
-            right_back.setPower(rightBack/scalar*moveSpeed);
         }
-
         //Stop the thread
         globalPositionUpdate.stop();
 
+    }
+
+    private boolean OrientTo(double orientation,double targetOrientation){
+        if (Math.abs(orientation - targetOrientation) > sp) {
+            if(orientation - targetOrientation < 0) {
+                left_back.setPower(0.5);
+                left_front.setPower(0.5);
+                right_back.setPower(-0.5);
+                right_front.setPower(-0.5);
+            } else {
+                left_back.setPower(-0.5);
+                left_front.setPower(-0.5);
+                right_back.setPower(0.5);
+                right_front.setPower(0.5);
+            }
+            return false;
+        }else{
+            return true;
+        }
     }
 
     private void initDriveHardwareMap(String rfName, String rbName, String lfName, String lbName, String vlEncoderName, String vrEncoderName, String hEncoderName){
