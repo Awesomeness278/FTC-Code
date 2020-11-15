@@ -29,12 +29,12 @@ public class operatorMovementProgram extends LinearOpMode{
         rightBackMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        DcMotor intakeMotor = hardwareMap.get(DcMotor.class, "Intake Motor");
+        /*DcMotor intakeMotor = hardwareMap.get(DcMotor.class, "Intake Motor");
         DcMotor flywheelMotor = hardwareMap.get(DcMotor.class, "Flywheel Motor");
 
         Servo[] conveyorBeltServos = new Servo[2];
         conveyorBeltServos[0] = hardwareMap.get(Servo.class,"Top Servo");
-        conveyorBeltServos[1] = hardwareMap.get(Servo.class,"Bottom Servo");
+        conveyorBeltServos[1] = hardwareMap.get(Servo.class,"Bottom Servo");*/
 
         telemetry.addData("Status","Initialized");
         telemetry.update();
@@ -78,7 +78,7 @@ public class operatorMovementProgram extends LinearOpMode{
             leftBackMotor.setPower(leftBack/scalar*moveSpeed);
             rightFrontMotor.setPower(rightFront/scalar*moveSpeed);
             rightBackMotor.setPower(rightBack/scalar*moveSpeed);
-            if(gamepad1.a){
+            /*if(gamepad1.a){
                 flywheelMotor.setPower(1);
             } else {
                 flywheelMotor.setPower(0);
@@ -97,7 +97,7 @@ public class operatorMovementProgram extends LinearOpMode{
                 conveyorBeltServos[1].setPosition(0.25);
             } else {
                 conveyorBeltServos[1].setPosition(0.50);
-            }
+            }*/
         }
     }
 }
