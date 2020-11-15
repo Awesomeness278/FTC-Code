@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.BetterOdometry;
+package org.firstinspires.ftc.teamcode.Odometry;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
@@ -30,7 +30,7 @@ public class OdometryCalibration extends LinearOpMode {
 
     //Hardware Map Names for drive motors and odometry wheels. THIS WILL CHANGE ON EACH ROBOT, YOU NEED TO UPDATE THESE VALUES ACCORDINGLY
     String rfName = "Right Front Motor", rbName = "Right Back Motor", lfName = "Left Front Motor", lbName = "Left Back Motor";
-    String verticalLeftEncoderName = rfName, verticalRightEncoderName = lfName, horizontalEncoderName = rbName;
+    String verticalLeftEncoderName = rbName, verticalRightEncoderName = lfName, horizontalEncoderName = rfName;
 
     final double PIVOT_SPEED = 0.5;
 
@@ -104,10 +104,8 @@ public class OdometryCalibration extends LinearOpMode {
         THIS MAY NEED TO BE CHANGED FOR EACH ROBOT
        */
         double encoderDifference = Math.abs(verticalLeft.getCurrentPosition()) + (Math.abs(verticalRight.getCurrentPosition()));
-
         double verticalEncoderTickOffsetPerDegree = encoderDifference/angle;
-
-        double wheelBaseSeparation = (2*90*verticalEncoderTickOffsetPerDegree)/(Math.PI*COUNTS_PER_INCH);
+        double wheelBaseSeparation = (180*verticalEncoderTickOffsetPerDegree)/(Math.PI*COUNTS_PER_INCH);
 
         horizontalTickOffset = horizontal.getCurrentPosition()/Math.toRadians(getZAngle());
 
@@ -168,7 +166,6 @@ public class OdometryCalibration extends LinearOpMode {
         left_back.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         right_front.setDirection(DcMotorSimple.Direction.REVERSE);
-
 
         telemetry.addData("Status", "Hardware Map Init Complete");
         telemetry.update();

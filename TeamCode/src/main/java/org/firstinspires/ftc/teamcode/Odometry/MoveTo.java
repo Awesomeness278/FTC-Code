@@ -1,46 +1,44 @@
-package org.firstinspires.ftc.teamcode.BetterOdometry;
+package org.firstinspires.ftc.teamcode.Odometry;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+import org.firstinspires.ftc.teamcode.Odometry.OdometryGlobalCoordinatePosition;
+import org.firstinspires.ftc.teamcode.stateMachine.*;
+
+import java.util.Vector;
+
 /**
  * Created by Sarthak on 10/4/2019.
  */
-@TeleOp(name = "My Odometry OpMode")
-public class MyOdometryOpmode extends LinearOpMode {
+@TeleOp
+public class MoveTo extends LinearOpMode {
     //Drive motors
     DcMotor right_front, right_back, left_front, left_back;
     //Odometry Wheels
     DcMotor verticalLeft, verticalRight, horizontal;
 
     final double COUNTS_PER_INCH = 307.699557;
-
+    double tx;
+    double ty;
+    double to;
+    public void setupGoto(double tx, double ty, double to){
+        this.tx = tx;
+        this.ty = ty;
+        this.to = to;
+    }
     //Hardware Map Names for drive motors and odometry wheels. THIS WILL CHANGE ON EACH ROBOT, YOU NEED TO UPDATE THESE VALUES ACCORDINGLY
     String rfName = "Right Front Motor", rbName = "Right Back Motor", lfName = "Left Front Motor", lbName = "Left Back Motor";
-    String verticalLeftEncoderName = rfName, verticalRightEncoderName = lfName, horizontalEncoderName = rbName;
-
+    String verticalLeftEncoderName = rbName, verticalRightEncoderName = lfName, horizontalEncoderName = lbName;
+    int state = 0;
+    double sp = 0.1;
     OdometryGlobalCoordinatePosition globalPositionUpdate;
 
     @Override
     public void runOpMode() throws InterruptedException {
-
-//hello
-
-        //hello
-        DcMotor leftFrontMotor = hardwareMap.get(DcMotor.class, "Left Front Motor");
-        leftFrontMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        DcMotor leftBackMotor = hardwareMap.get(DcMotor.class, "Left Back Motor");
-        leftBackMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        DcMotor rightFrontMotor = hardwareMap.get(DcMotor.class, "Right Front Motor");
-        rightFrontMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        DcMotor rightBackMotor = hardwareMap.get(DcMotor.class, "Right Back Motor");
-        rightBackMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-
+        setupGoto(0,-12,0);
         //Initialize hardware map values. PLEASE UPDATE THESE VALUES TO MATCH YOUR CONFIGURATION
         initDriveHardwareMap(rfName, rbName, lfName, lbName, verticalLeftEncoderName, verticalRightEncoderName, horizontalEncoderName);
 
@@ -56,7 +54,7 @@ public class MyOdometryOpmode extends LinearOpMode {
         globalPositionUpdate.reverseRightEncoder();
         globalPositionUpdate.reverseNormalEncoder();
 
-        while(opModeIsActive()){
+        while(opModeIsActive()) {
             //Display Global (x, y, theta) coordinates
             telemetry.addData("X Position", globalPositionUpdate.returnXCoordinate() / COUNTS_PER_INCH);
             telemetry.addData("Y Position", globalPositionUpdate.returnYCoordinate() / COUNTS_PER_INCH);
@@ -65,14 +63,59 @@ public class MyOdometryOpmode extends LinearOpMode {
             telemetry.addData("Vertical left encoder position", verticalLeft.getCurrentPosition());
             telemetry.addData("Vertical right encoder position", verticalRight.getCurrentPosition());
             telemetry.addData("horizontal encoder position", horizontal.getCurrentPosition());
+            telemetry.addData("State",state);
+            telemetry.addData("X Distance",globalPositionUpdate.returnXCoordinate() / COUNTS_PER_INCH-tx);
+            telemetry.addData("Y Distance",globalPositionUpdate.returnYCoordinate() / COUNTS_PER_INCH-ty);
+            telemetry.addData("Total Distance",Math.sqrt(Math.pow(tx-globalPositionUpdate.returnXCoordinate() / COUNTS_PER_INCH,2)+Math.pow(ty-globalPositionUpdate.returnYCoordinate() / COUNTS_PER_INCH,2)));
 
             telemetry.addData("Thread Active", positionThread.isAlive());
             telemetry.update();
+            if(state == 0){
+                state++;
+            }if(state == 1){
+                double x = globalPositionUpdate.returnXCoordinate() / COUNTS_PER_INCH-tx;
+                double y = globalPositionUpdate.returnYCoordinate() / COUNTS_PER_INCH-ty;
+                double r = 1/Math.sqrt(Math.pow(x,2)+Math.pow(y,2));
+                x = x * -r;
+                y = y * r;
+                double scalar = Math.sqrt(Math.pow(y,2)+Math.pow(x,2))/(Math.abs(y)+Math.abs(x));
+                left_front.setPower(-sp);
+                left_back.setPower(-sp);
+                right_front.setPower(-sp);
+                right_back.setPower(-sp);
+                if(globalPositionUpdate.returnYCoordinate()/COUNTS_PER_INCH<-12){
+                    state++;
+                }
+            }else if(state == 2){
+                state++;
+                left_front.setPower(0);
+                left_back.setPower(0);
+                right_front.setPower(0);
+                right_back.setPower(0);
+            }
         }
-
         //Stop the thread
         globalPositionUpdate.stop();
 
+    }
+
+    private boolean OrientTo(double orientation,double targetOrientation){
+        if (Math.abs(orientation - targetOrientation) > sp) {
+            if(orientation - targetOrientation < 0) {
+                left_back.setPower(0.5);
+                left_front.setPower(0.5);
+                right_back.setPower(-0.5);
+                right_front.setPower(-0.5);
+            } else {
+                left_back.setPower(-0.5);
+                left_front.setPower(-0.5);
+                right_back.setPower(0.5);
+                right_front.setPower(0.5);
+            }
+            return false;
+        }else{
+            return true;
+        }
     }
 
     private void initDriveHardwareMap(String rfName, String rbName, String lfName, String lbName, String vlEncoderName, String vrEncoderName, String hEncoderName){
@@ -109,9 +152,7 @@ public class MyOdometryOpmode extends LinearOpMode {
         left_front.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         left_back.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        left_front.setDirection(DcMotorSimple.Direction.REVERSE);
         right_front.setDirection(DcMotorSimple.Direction.REVERSE);
-        right_back.setDirection(DcMotorSimple.Direction.REVERSE);
 
         telemetry.addData("Status", "Hardware Map Init Complete");
         telemetry.update();
