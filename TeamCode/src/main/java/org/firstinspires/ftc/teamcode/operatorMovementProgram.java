@@ -3,15 +3,16 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 //import com.qualcomm.robotcore.hardware.Servo;
 //import com.qualcomm.robotcore.hardware.configuration.annotations.ServoType;
 //import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp
-public class driveOpModeShooting extends LinearOpMode{
+public class operatorMovementProgram extends LinearOpMode{
 
     private static final double moveSpeed = 0.5;
-    //private Servo[] conveyorBeltServos = new Servo[3];
+    //private Servo[] conveyorBeltServos = new Servo[3]; 
 
     @Override
     public void runOpMode(){
@@ -28,14 +29,12 @@ public class driveOpModeShooting extends LinearOpMode{
         rightBackMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        /*DcMotor intakeMotor = hardwareMap.get(DcMotor.class, "Intake Motor");
+        DcMotor intakeMotor = hardwareMap.get(DcMotor.class, "Intake Motor");
         DcMotor flywheelMotor = hardwareMap.get(DcMotor.class, "Flywheel Motor");
 
-        Servo[] conveyorBeltServos = new Servo[3];
-
-        for(int i = 0; i < conveyorBeltServos.length; i++){
-            conveyorBeltServos[i] = hardwareMap.get(Servo.class,"Servo "+(i));
-        }*/
+        Servo[] conveyorBeltServos = new Servo[2];
+        conveyorBeltServos[0] = hardwareMap.get(Servo.class,"Top Servo");
+        conveyorBeltServos[1] = hardwareMap.get(Servo.class,"Bottom Servo");
 
         telemetry.addData("Status","Initialized");
         telemetry.update();
@@ -74,11 +73,12 @@ public class driveOpModeShooting extends LinearOpMode{
             rightFront += -gamepad1.left_stick_y-gamepad1.left_stick_x-gamepad1.right_stick_x;
             rightBack += -gamepad1.left_stick_y+gamepad1.left_stick_x-gamepad1.right_stick_x;
             double scalar = Math.max(Math.max(Math.abs(leftFront),Math.abs(leftBack)),Math.max(Math.abs(rightFront),Math.abs(rightBack)));
+            if (scalar < 1) scalar = 1;
             leftFrontMotor.setPower(leftFront/scalar*moveSpeed);
             leftBackMotor.setPower(leftBack/scalar*moveSpeed);
             rightFrontMotor.setPower(rightFront/scalar*moveSpeed);
             rightBackMotor.setPower(rightBack/scalar*moveSpeed);
-            /*if(gamepad1.a){
+            if(gamepad1.a){
                 flywheelMotor.setPower(1);
                 intakeMotor.setPower(1);
                 for (int i = 1; i < conveyorBeltServos.length; i++){
@@ -90,8 +90,7 @@ public class driveOpModeShooting extends LinearOpMode{
                 for (int i = 1; i < conveyorBeltServos.length; i++){
                     conveyorBeltServos[i].setPosition(0.5);
                 }
-            }*/
-            //comment
+            }
         }
     }
 }
