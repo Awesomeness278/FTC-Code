@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.Odometry.OdometryGlobalCoordinatePosition;
  */
 @TeleOp(name = "My Odometry OpMode")
 public class MyOdometryOpmode extends LinearOpMode {
-    double moveSpeed = -0.1;
+    double moveSpeed = 0.25;
     //Drive motors
     DcMotor right_front, right_back, left_front, left_back;
     //Odometry Wheels
@@ -119,6 +119,7 @@ public class MyOdometryOpmode extends LinearOpMode {
             rightFront += -gamepad1.left_stick_y-gamepad1.left_stick_x-gamepad1.right_stick_x;
             rightBack += -gamepad1.left_stick_y+gamepad1.left_stick_x-gamepad1.right_stick_x;
             double scalar = Math.max(Math.max(Math.abs(leftFront),Math.abs(leftBack)),Math.max(Math.abs(rightFront),Math.abs(rightBack)));
+            if (scalar < 1) scalar = 1;
             left_front.setPower(leftFront/scalar*moveSpeed);
             left_back.setPower(leftBack/scalar*moveSpeed);
             right_front.setPower(rightFront/scalar*moveSpeed);
@@ -164,7 +165,9 @@ public class MyOdometryOpmode extends LinearOpMode {
         left_front.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         left_back.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        right_front.setDirection(DcMotorSimple.Direction.REVERSE);
+        right_back.setDirection(DcMotorSimple.Direction.REVERSE);
+        left_front.setDirection(DcMotorSimple.Direction.REVERSE);
+        left_back.setDirection(DcMotorSimple.Direction.REVERSE);
 
         telemetry.addData("Status", "Hardware Map Init Complete");
         telemetry.update();
