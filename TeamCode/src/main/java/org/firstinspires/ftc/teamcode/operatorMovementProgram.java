@@ -68,9 +68,6 @@ public class operatorMovementProgram extends LinearOpMode{
                 rightFront += 1;
                 rightBack += -1;
             }
-
-
-
             if (gamepad1.a) {
                 leftFront += 1;
                 leftBack = 0;
@@ -95,10 +92,6 @@ public class operatorMovementProgram extends LinearOpMode{
                 rightFront = 0;
                 rightBack += 1;
             }
-
-
-
-
             leftFront += -gamepad1.left_stick_y+gamepad1.left_stick_x+gamepad1.right_stick_x;
             leftBack += -gamepad1.left_stick_y-gamepad1.left_stick_x+gamepad1.right_stick_x;
             rightFront += -gamepad1.left_stick_y-gamepad1.left_stick_x-gamepad1.right_stick_x;
