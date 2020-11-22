@@ -10,14 +10,10 @@ public class Vector{
         this.z = z;
     }
     public Vector(float x, float y){
-        this.x = x;
-        this.y = y;
-        this.z = 0;
+        this(x, y, 0);
     }
 
     public Vector(float x) {
-        this.x = x;
-        this.y = 0;
-        this.z = 0;
+        this(x, 0);
     }
 }
