@@ -70,11 +70,7 @@ public class operatorMovementProgramShooter extends LinearOpMode{
                 rightFront += 1;
                 rightBack += -1;
             }
-
-
-
-            /*
-            if (gamepad1.a) {
+            /*if (gamepad1.a) {
                 leftFront += 1;
                 leftBack = 0;
                 rightFront = 0;
@@ -97,19 +93,7 @@ public class operatorMovementProgramShooter extends LinearOpMode{
                 leftBack = 0;
                 rightFront = 0;
                 rightBack += 1;
-            }
-*/
-
-            if(gamepad1.left_bumper && Switch){
-                p-=0.005;
-                Switch=false;
-            }else if(gamepad1.right_bumper && Switch){
-                p+=0.005;
-                Switch=false;
-            }
-            if(!gamepad1.left_bumper&&!gamepad1.right_bumper){
-                Switch=true;
-            }
+            }*/
             leftFront += -gamepad1.left_stick_y+gamepad1.left_stick_x+gamepad1.right_stick_x;
             leftBack += -gamepad1.left_stick_y-gamepad1.left_stick_x+gamepad1.right_stick_x;
             rightFront += -gamepad1.left_stick_y+gamepad1.left_stick_x-gamepad1.right_stick_x;
@@ -120,6 +104,17 @@ public class operatorMovementProgramShooter extends LinearOpMode{
             leftBackMotor.setPower(leftBack/scalar*moveSpeed);
             rightFrontMotor.setPower(rightFront/scalar*moveSpeed);
             rightBackMotor.setPower(rightBack/scalar*moveSpeed);
+            if(gamepad1.left_bumper && Switch){
+                p-=0.005;
+                Switch=false;
+            }else if(gamepad1.right_bumper && Switch){
+                p+=0.005;
+                Switch=false;
+            }
+            if(!gamepad1.left_bumper&&!gamepad1.right_bumper){
+                Switch=true;
+            }
+
             if(gamepad1.a && change){
                 toggle = !toggle;
                 change=false;
