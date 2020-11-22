@@ -14,4 +14,10 @@ public class Vector{
         this.y = y;
         this.z = 0;
     }
+
+    public Vector(float x) {
+        this.x = x;
+        this.y = 0;
+        this.z = 0;
+    }
 }
