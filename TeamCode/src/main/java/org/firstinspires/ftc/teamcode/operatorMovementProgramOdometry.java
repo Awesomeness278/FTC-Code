@@ -101,7 +101,7 @@ public class operatorMovementProgramOdometry extends LinearOpMode{
                 rightFront = 0;
                 rightBack += 1;
             }
-*/
+            */
 
             if(gamepad1.left_bumper && Switch){
                 p-=0.005;
@@ -115,8 +115,8 @@ public class operatorMovementProgramOdometry extends LinearOpMode{
             }
             leftFront += -gamepad1.left_stick_y+gamepad1.left_stick_x+gamepad1.right_stick_x;
             leftBack += -gamepad1.left_stick_y-gamepad1.left_stick_x+gamepad1.right_stick_x;
-            rightFront += -gamepad1.left_stick_y+gamepad1.left_stick_x-gamepad1.right_stick_x;
-            rightBack += -gamepad1.left_stick_y-gamepad1.left_stick_x-gamepad1.right_stick_x;
+            rightFront += -gamepad1.left_stick_y-gamepad1.left_stick_x-gamepad1.right_stick_x;
+            rightBack += -gamepad1.left_stick_y+gamepad1.left_stick_x-gamepad1.right_stick_x;
             double scalar = Math.max(Math.max(Math.abs(leftFront),Math.abs(leftBack)),Math.max(Math.abs(rightFront),Math.abs(rightBack)));
             if (scalar < 1) scalar = 1;
             leftFrontMotor.setPower(leftFront/scalar*moveSpeed);
