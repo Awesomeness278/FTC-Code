@@ -4,7 +4,7 @@ public class Vector{
     protected float x;
     protected float y;
     protected float z;
-    
+
     public Vector(float x,float y,float z){
         this.x = x;
         this.y = y;
@@ -16,5 +16,10 @@ public class Vector{
 
     public Vector(float x) {
         this(x, 0);
+    }
+
+    public float getX()
+    {
+        return this.x;
     }
 }
