@@ -45,7 +45,8 @@ public class MoveTo extends LinearOpMode {
         telemetry.addData("Status", "Init Complete");
         telemetry.update();
         waitForStart();
-
+        double pdist = 100000000;
+        double dist = 100000000;
         //Create and start GlobalCoordinatePosition thread to constantly update the global coordinate positions
         globalPositionUpdate = new OdometryGlobalCoordinatePosition(verticalLeft, verticalRight, horizontal, COUNTS_PER_INCH, 75);
         Thread positionThread = new Thread(globalPositionUpdate);
@@ -75,6 +76,10 @@ public class MoveTo extends LinearOpMode {
             }if(state == 1){
                 double x = globalPositionUpdate.returnXCoordinate() / COUNTS_PER_INCH-tx;
                 double y = globalPositionUpdate.returnYCoordinate() / COUNTS_PER_INCH-ty;
+                double nx = x*Math.cos(Math.toDegrees(globalPositionUpdate.returnOrientation()))-y*Math.sin(Math.toDegrees(globalPositionUpdate.returnOrientation()));
+                double ny = x*Math.sin(Math.toDegrees(globalPositionUpdate.returnOrientation()))+y*Math.cos(Math.toDegrees(globalPositionUpdate.returnOrientation()));
+                x = nx;
+                y = ny;
                 double r = 1/Math.sqrt(Math.pow(x,2)+Math.pow(y,2));
                 x = x * -r;
                 y = y * r;
@@ -83,7 +88,9 @@ public class MoveTo extends LinearOpMode {
                 left_back.setPower(-sp);
                 right_front.setPower(-sp);
                 right_back.setPower(-sp);
-                if(globalPositionUpdate.returnYCoordinate()/COUNTS_PER_INCH<-12){
+                pdist = dist;
+                dist = Math.sqrt(Math.pow(x-tx,2)+Math.pow(y-ty,2));
+                if(pdist<dist){
                     state++;
                 }
             }else if(state == 2){
