@@ -1,9 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 
 public class Vector{
-    public float x;
-    public float y;
-    public float z;
+    protected float x;
+    protected float y;
+    protected float z;
+    
     public Vector(float x,float y,float z){
         this.x = x;
         this.y = y;
