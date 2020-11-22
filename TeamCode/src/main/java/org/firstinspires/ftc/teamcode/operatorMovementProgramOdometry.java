@@ -24,11 +24,12 @@ public class operatorMovementProgramOdometry extends LinearOpMode{
         leftFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         DcMotor leftBackMotor = hardwareMap.get(DcMotor.class, "Left Back Motor");
         leftBackMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         DcMotor rightFrontMotor = hardwareMap.get(DcMotor.class, "Right Front Motor");
         rightFrontMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         DcMotor rightBackMotor = hardwareMap.get(DcMotor.class, "Right Back Motor");
         rightBackMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         DcMotor intakeMotor = hardwareMap.get(DcMotor.class, "Intake Motor");
         DcMotor flywheelMotor = hardwareMap.get(DcMotor.class, "Flywheel Motor");
