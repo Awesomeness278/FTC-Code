@@ -1,6 +1,14 @@
 package org.firstinspires.ftc.teamcode.stateMachine;
 
 public class Move extends StateMachine{
+    float x;
+    float y;
+
+    public Move(float x,float y){
+        this.x = x;
+        this.y = y;
+    }
+
     @Override
     public void Run(StateManager manager, Autonomous opMode) {
         int loops = 0;

@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.configuration.annotations.ServoType;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp
-public class operatorMovementProgram extends LinearOpMode{
+public class operatorMovementProgramOdometry extends LinearOpMode{
 
     private static final double moveSpeed = 0.75;
     private Servo[] conveyorBeltServos = new Servo[3];
@@ -19,7 +19,6 @@ public class operatorMovementProgram extends LinearOpMode{
     boolean toggle = false;
     @Override
     public void runOpMode(){
-
         DcMotor leftFrontMotor = hardwareMap.get(DcMotor.class, "Left Front Motor");
         leftFrontMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
