@@ -19,13 +19,13 @@ public class Move extends StateManager {
 
     @Override
     public void Run(StateMachine manager, Autonomous opMode) {
-        DcMotor verticalLeft = opMode.motors[2];
-        DcMotor verticalRight = opMode.motors[1];
-        DcMotor horizontal = opMode.motors[3];
-        DcMotor left_back = opMode.motors[0];
-        DcMotor left_front = opMode.motors[1];
-        DcMotor right_back = opMode.motors[2];
-        DcMotor right_front = opMode.motors[3];
+        DcMotor verticalLeft = opMode.LeftBackMotor;
+        DcMotor verticalRight = opMode.LeftFrontMotor;
+        DcMotor horizontal = opMode.RightFrontMotor;
+        DcMotor left_back = opMode.LeftBackMotor;
+        DcMotor left_front = opMode.LeftFrontMotor;
+        DcMotor right_back = opMode.RightBackMotor;
+        DcMotor right_front = opMode.RightFrontMotor;
         double pdist = 100000;
         double dist = 100000;
 

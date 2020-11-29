@@ -11,7 +11,10 @@ import org.firstinspires.ftc.teamcode.Odometry.OdometryGlobalCoordinatePosition;
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous
 public class Autonomous extends LinearOpMode {
     StateMachine machine = new StateMachine();
-    DcMotor[] motors;
+    DcMotor LeftFrontMotor;
+    DcMotor RightFrontMotor;
+    DcMotor LeftBackMotor;
+    DcMotor RightBackMotor;
     ColorRangeSensor[] colors;
     Servo[] servos;
     OdometryGlobalCoordinatePosition globalPositionUpdate;
