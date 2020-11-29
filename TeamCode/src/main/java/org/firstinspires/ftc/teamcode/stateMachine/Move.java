@@ -1,12 +1,8 @@
 package org.firstinspires.ftc.teamcode.stateMachine;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-import org.firstinspires.ftc.teamcode.Odometry.MoveTo;
-import org.firstinspires.ftc.teamcode.Odometry.OdometryGlobalCoordinatePosition;
-
-public class Move extends StateMachine{
+public class Move extends StateManager {
     float tx;
     float ty;
     double sp;
@@ -22,7 +18,7 @@ public class Move extends StateMachine{
     }
 
     @Override
-    public void Run(StateManager manager, Autonomous opMode) {
+    public void Run(StateMachine manager, Autonomous opMode) {
         DcMotor verticalLeft = opMode.motors[2];
         DcMotor verticalRight = opMode.motors[1];
         DcMotor horizontal = opMode.motors[3];
@@ -60,7 +56,7 @@ public class Move extends StateMachine{
     }
 
     @Override
-    public void Exit(StateManager manager, Autonomous opMode) {
+    public void Exit(StateMachine manager, Autonomous opMode) {
         opMode.telemetry.addData("Moved","Yes");
         manager.states.get(exit).Run(manager,opMode);
         opMode.stop();

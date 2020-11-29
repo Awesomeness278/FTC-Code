@@ -1,14 +1,10 @@
 package org.firstinspires.ftc.teamcode.stateMachine;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-
-public class Start extends StateMachine{
+public class Start extends StateManager {
     @Override
-    public void Run(StateManager manager, Autonomous opMode) {
+    public void Run(StateMachine manager, Autonomous opMode) {
         while(!ExitCondition(opMode)){
 
         }
@@ -21,7 +17,7 @@ public class Start extends StateMachine{
     }
 
     @Override
-    public void Exit(StateManager manager, Autonomous opMode) {
+    public void Exit(StateMachine manager, Autonomous opMode) {
         opMode.telemetry.addData("status","starting");
         opMode.motors = new DcMotor[4];
         opMode.motors[0] = opMode.hardwareMap.get(DcMotor.class,"Left Back Motor");

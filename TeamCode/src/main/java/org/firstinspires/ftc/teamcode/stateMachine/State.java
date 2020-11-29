@@ -1,12 +1,8 @@
 package org.firstinspires.ftc.teamcode.stateMachine;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-
-import java.util.ArrayList;
-
-public class State extends StateMachine{
+public class State extends StateManager {
     @Override
-    public void Run(StateManager manager, Autonomous opMode) {
+    public void Run(StateMachine manager, Autonomous opMode) {
         while(!ExitCondition(opMode)){
 
         }
@@ -19,8 +15,8 @@ public class State extends StateMachine{
     }
 
     @Override
-    public void Exit(StateManager manager, Autonomous opMode) {
+    public void Exit(StateMachine manager, Autonomous opMode) {
         int stateNumber = 0;
-        manager.states.get(stateNumber).Run(manager,opMode);;
+        manager.states.get(stateNumber).Run(manager,opMode);
     }
 }
