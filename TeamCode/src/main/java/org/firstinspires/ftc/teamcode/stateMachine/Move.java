@@ -18,7 +18,8 @@ public class Move extends StateManager {
     }
 
     @Override
-    public void Run(StateMachine manager, Autonomous opMode) {
+    public void Run(StateMachine machine) {
+        Autonomous opMode = machine.opMode;
         DcMotor verticalLeft = opMode.LeftBackMotor;
         DcMotor verticalRight = opMode.LeftFrontMotor;
         DcMotor horizontal = opMode.RightFrontMotor;
@@ -30,10 +31,10 @@ public class Move extends StateManager {
         double dist = 100000;
 
         while(dist<=pdist) {
-            double x = opMode.globalPositionUpdate.returnXCoordinate() / COUNTS_PER_INCH - tx;
-            double y = opMode.globalPositionUpdate.returnYCoordinate() / COUNTS_PER_INCH - ty;
-            double nx = x * Math.cos(Math.toDegrees(opMode.globalPositionUpdate.returnOrientation())) - y * Math.sin(Math.toDegrees(opMode.globalPositionUpdate.returnOrientation()));
-            double ny = x * Math.sin(Math.toDegrees(opMode.globalPositionUpdate.returnOrientation())) + y * Math.cos(Math.toDegrees(opMode.globalPositionUpdate.returnOrientation()));
+            double x = opMode.odometry.returnXCoordinate() / COUNTS_PER_INCH - tx;
+            double y = opMode.odometry.returnYCoordinate() / COUNTS_PER_INCH - ty;
+            double nx = x * Math.cos(Math.toDegrees(opMode.odometry.returnOrientation())) - y * Math.sin(Math.toDegrees(opMode.odometry.returnOrientation()));
+            double ny = x * Math.sin(Math.toDegrees(opMode.odometry.returnOrientation())) + y * Math.cos(Math.toDegrees(opMode.odometry.returnOrientation()));
             x = nx;
             y = ny;
             double r = 1 / Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
@@ -47,18 +48,17 @@ public class Move extends StateManager {
             pdist = dist;
             dist = Math.sqrt(Math.pow(x - tx, 2) + Math.pow(y - ty, 2));
         }
-        Exit(manager, opMode);
+        Exit(machine);
     }
 
     @Override
-    public boolean ExitCondition(Autonomous opMode) {
+    public boolean ExitCondition(StateMachine machine) {
         return true;
     }
 
     @Override
-    public void Exit(StateMachine manager, Autonomous opMode) {
-        opMode.telemetry.addData("Moved","Yes");
-        manager.states.get(exit).Run(manager,opMode);
-        opMode.stop();
+    public void Exit(StateMachine machine) {
+        machine.opMode.telemetry.addData("Moved","Yes");
+        machine.runState(States.MOVETOWOBBLE);
     }
 }

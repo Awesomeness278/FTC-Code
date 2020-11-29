@@ -2,21 +2,21 @@ package org.firstinspires.ftc.teamcode.stateMachine;
 
 public class State extends StateManager {
     @Override
-    public void Run(StateMachine manager, Autonomous opMode) {
-        while(!ExitCondition(opMode)){
+    public void Run(StateMachine machine) {
+        while(!ExitCondition(machine)){
 
         }
-        Exit(manager, opMode);
+        Exit(machine);
     }
 
     @Override
-    public boolean ExitCondition(Autonomous opMode) {
+    public boolean ExitCondition(StateMachine machine) {
         return true;
     }
 
     @Override
-    public void Exit(StateMachine manager, Autonomous opMode) {
+    public void Exit(StateMachine machine) {
         int stateNumber = 0;
-        manager.states.get(stateNumber).Run(manager,opMode);
+        machine.runState(States.START);
     }
 }
