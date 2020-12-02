@@ -136,9 +136,14 @@ public class ShootingDrivetrain extends LinearOpMode {
                 leftBumperPressed = false;
             }
             arm.setTargetPosition(armTargetPosition);
-
+            if(gamepad1.x){
+                grip.setPosition(0.25);
+            } else if (gamepad1.y) {
+                grip.setPosition(0.75);
+            } else {
+                grip.setPosition(0.50);
+            }
         }
-
     }
 
     private void initDriveHardwareMap(String rfName, String rbName, String lfName, String lbName, String shootName, String convName, String armName, String intakeName, String gripName){
