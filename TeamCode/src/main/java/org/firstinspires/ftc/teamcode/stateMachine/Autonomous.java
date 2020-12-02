@@ -2,10 +2,13 @@ package org.firstinspires.ftc.teamcode.stateMachine;
 
 
 import com.qualcomm.hardware.lynx.LynxEmbeddedIMU;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+
+
 
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous
 public class Autonomous extends LinearOpMode {
@@ -15,6 +18,7 @@ public class Autonomous extends LinearOpMode {
     Servo[] servos;
     LynxEmbeddedIMU imu;
     @Override
+
     public void runOpMode() throws InterruptedException {
         /*
         Copy the following line and change the new State to new {name of your state}
@@ -36,13 +40,13 @@ public class Autonomous extends LinearOpMode {
         manager.addState(new Stop());
         manager.addState(new Finish());
         */
-        manager.addState(new Start());
-        manager.addState(new Move());
-        waitForStart();
-        manager.states.get(0).Run(manager,this);
-        while(opModeIsActive()){
-            telemetry.update();
-        }
+//        manager.addState(new Start());
+////        manager.addState(new Move());
+////        waitForStart();
+////        manager.states.get(0).Run(manager,this);
+////        while(opModeIsActive()){
+////            telemetry.update();
+    //    }
     }
     /*
     * Any methods that you use more than once can be defined here.
