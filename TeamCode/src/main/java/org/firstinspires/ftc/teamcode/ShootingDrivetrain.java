@@ -22,8 +22,8 @@ public class ShootingDrivetrain extends LinearOpMode {
         initDriveHardwareMap(rfName, rbName, lfName, lbName, shootName, convName, armName, intakeName, gripName);
         telemetry.addData("Status", "Init Complete");
         telemetry.update();
+
         double flywheelPower = 0;
-        double armPosition = -1;
         double gripAmount = 0;
 
         boolean dPadUpPressed = false;
@@ -32,6 +32,7 @@ public class ShootingDrivetrain extends LinearOpMode {
         boolean leftBumperPressed = false;
 
         int flywheelSwitch = 0;
+        int armTargetPosition = 0;
 
         waitForStart();
         while(opModeIsActive()){
@@ -124,7 +125,11 @@ public class ShootingDrivetrain extends LinearOpMode {
 
             if(gamepad2.left_bumper){
                 if(!leftBumperPressed) {
-
+                    if(armTargetPosition==0){
+                        armTargetPosition = 90;
+                    }else{
+                        armTargetPosition = 0;
+                    }
                 }
                 leftBumperPressed = true;
             } else {
@@ -132,11 +137,6 @@ public class ShootingDrivetrain extends LinearOpMode {
             }
             arm.setTargetPosition(armTargetPosition);
 
-            if(){
-
-            }else{
-                arm.setTargetPosition(0);
-            }
         }
 
     }
