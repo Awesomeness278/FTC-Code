@@ -23,7 +23,7 @@ public class ShootingDrivetrain extends LinearOpMode {
         telemetry.addData("Status", "Init Complete");
         telemetry.update();
 
-        double flywheelPower = 0;
+        double flywheelPower = 0.3;
         double gripAmount = 0;
 
         boolean dPadUpPressed = false;
