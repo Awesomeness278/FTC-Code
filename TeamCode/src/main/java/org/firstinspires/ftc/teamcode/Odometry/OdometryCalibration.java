@@ -32,7 +32,7 @@ public class OdometryCalibration extends LinearOpMode {
     String rfName = "Right Front Motor", rbName = "Right Back Motor", lfName = "Left Front Motor", lbName = "Left Back Motor";
     String verticalLeftEncoderName = rbName, verticalRightEncoderName = lfName, horizontalEncoderName = rfName;
 
-    final double PIVOT_SPEED = 0.5;
+    final double PIVOT_SPEED = 0.2;
 
     //The amount of encoder ticks for each inch the robot moves. THIS WILL CHANGE FOR EACH ROBOT AND NEEDS TO BE UPDATED HERE
     final double COUNTS_PER_INCH = 307.699557;
@@ -177,7 +177,9 @@ public class OdometryCalibration extends LinearOpMode {
      * @return the angle of the robot
      */
     private double getZAngle(){
-        return (-imu.getAngularOrientation().firstAngle);
+        double heading = -imu.getAngularOrientation().firstAngle;
+        if(heading<=0) return (heading);
+        else return (-360 + heading);
     }
 
     /**
