@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp(name = "Shooting + Arm + Drivetrain")
 public class ShootingDrivetrain extends LinearOpMode {
-    double moveSpeed = 0.5;
+    double moveSpeed = 0.4;
     //Drive motors
     DcMotor right_front, right_back, left_front, left_back, shooter, conveyor, arm, intake;
     Servo grip;
@@ -22,7 +22,7 @@ public class ShootingDrivetrain extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         //Initialize hardware map values.
         initDriveHardwareMap(rfName, rbName, lfName, lbName, shootName, convName, armName, intakeName, gripName);
-        arm.setTargetPosition(0);
+        arm.setTargetPosition(-200);
         arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         telemetry.addData("Status", "Init Complete");
@@ -72,10 +72,10 @@ public class ShootingDrivetrain extends LinearOpMode {
                 rightFront += 1;
                 rightBack += -1;
             }
-            leftFront += -gamepad1.left_stick_y+gamepad1.left_stick_x+gamepad1.right_stick_x;
-            leftBack += -gamepad1.left_stick_y-gamepad1.left_stick_x+gamepad1.right_stick_x;
-            rightFront += -gamepad1.left_stick_y-gamepad1.left_stick_x-gamepad1.right_stick_x;
-            rightBack += -gamepad1.left_stick_y+gamepad1.left_stick_x-gamepad1.right_stick_x;
+            leftFront += -gamepad1.left_stick_y+gamepad1.left_stick_x-gamepad1.right_stick_x;
+            leftBack += -gamepad1.left_stick_y-gamepad1.left_stick_x-gamepad1.right_stick_x;
+            rightFront += -gamepad1.left_stick_y-gamepad1.left_stick_x+gamepad1.right_stick_x;
+            rightBack += -gamepad1.left_stick_y+gamepad1.left_stick_x+gamepad1.right_stick_x;
             double scalar = Math.max(Math.max(Math.abs(leftFront),Math.abs(leftBack)),Math.max(Math.abs(rightFront),Math.abs(rightBack)));
             if (scalar < 1) scalar = 1;
             left_front.setPower(leftFront/scalar*moveSpeed);
@@ -111,6 +111,7 @@ public class ShootingDrivetrain extends LinearOpMode {
                 dPadDownPressed = false;
             }
             telemetry.addData("Flywheel Power: ",flywheelPower);
+            telemetry.addData("Arm Position", arm.getCurrentPosition());
             telemetry.update();
             if(gamepad2.right_bumper){
                 if(!rightBumperPressed) {
@@ -138,11 +139,12 @@ public class ShootingDrivetrain extends LinearOpMode {
             //Arm
 
             if(gamepad2.left_bumper){
+                arm.setPower(0.1);
                 if(!leftBumperPressed) {
-                    if(armTargetPosition==0){
-                        armTargetPosition = 90;
+                    if(armTargetPosition==-200){
+                        armTargetPosition = -330;
                     }else{
-                        armTargetPosition = 0;
+                        armTargetPosition = -200;
                     }
                 }
                 leftBumperPressed = true;
@@ -150,15 +152,15 @@ public class ShootingDrivetrain extends LinearOpMode {
                 leftBumperPressed = false;
             }
             arm.setTargetPosition(armTargetPosition);
-            arm.setPower(0.5);
+
 
 
             if(gamepad2.x){
-                grip.setPosition(0.25);
+                grip.setPosition(-0.05);
             } else if (gamepad2.y) {
-                grip.setPosition(0.75);
-            } else {
                 grip.setPosition(0.50);
+            } else {
+                grip.setPosition(0.25);
             }
         }
     }
@@ -189,9 +191,11 @@ public class ShootingDrivetrain extends LinearOpMode {
         left_front.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         left_back.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        left_front.setDirection(DcMotorSimple.Direction.REVERSE);
-        right_front.setDirection(DcMotorSimple.Direction.REVERSE);
-        left_back.setDirection(DcMotorSimple.Direction.REVERSE);
+        //left_front.setDirection(DcMotorSimple.Direction.REVERSE);
+        //right_front.setDirection(DcMotorSimple.Direction.REVERSE);
+        //left_back.setDirection(DcMotorSimple.Direction.REVERSE);
+        right_back.setDirection(DcMotorSimple.Direction.REVERSE);
+
 
         telemetry.addData("Status", "Hardware Map Init Complete");
         telemetry.update();
