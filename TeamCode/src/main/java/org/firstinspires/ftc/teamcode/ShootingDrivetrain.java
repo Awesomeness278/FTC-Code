@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp(name = "Shooting + Arm + Drivetrain")
 public class ShootingDrivetrain extends LinearOpMode {
-    double moveSpeed = 0.4;
+    double moveSpeed = 1;
     //Drive motors
     DcMotor right_front, right_back, left_front, left_back, shooter, conveyor, arm, intake;
     Servo grip;
@@ -22,7 +22,7 @@ public class ShootingDrivetrain extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         //Initialize hardware map values.
         initDriveHardwareMap(rfName, rbName, lfName, lbName, shootName, convName, armName, intakeName, gripName);
-        arm.setTargetPosition(-200);
+        arm.setTargetPosition(0);
         arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         telemetry.addData("Status", "Init Complete");
@@ -35,9 +35,11 @@ public class ShootingDrivetrain extends LinearOpMode {
         boolean dPadDownPressed = false;
         boolean rightBumperPressed = false;
         boolean leftBumperPressed = false;
+        boolean xPressed = false;
 
         int flywheelSwitch = 0;
         int armTargetPosition = 0;
+        boolean gripToggle = false;
 
         waitForStart();
         while(opModeIsActive()){
@@ -112,6 +114,8 @@ public class ShootingDrivetrain extends LinearOpMode {
             }
             telemetry.addData("Flywheel Power: ",flywheelPower);
             telemetry.addData("Arm Position", arm.getCurrentPosition());
+            telemetry.addData("x is pressed: ", xPressed);
+            telemetry.addData("Grip toggle: ", gripToggle);
             telemetry.update();
             if(gamepad2.right_bumper){
                 if(!rightBumperPressed) {
@@ -139,12 +143,12 @@ public class ShootingDrivetrain extends LinearOpMode {
             //Arm
 
             if(gamepad2.left_bumper){
-                arm.setPower(0.1);
+                arm.setPower(0.5);
                 if(!leftBumperPressed) {
-                    if(armTargetPosition==-200){
-                        armTargetPosition = -330;
+                    if(armTargetPosition==-150){
+                        armTargetPosition = -280;
                     }else{
-                        armTargetPosition = -200;
+                        armTargetPosition = -150;
                     }
                 }
                 leftBumperPressed = true;
@@ -153,13 +157,16 @@ public class ShootingDrivetrain extends LinearOpMode {
             }
             arm.setTargetPosition(armTargetPosition);
 
-
-
             if(gamepad2.x){
-                grip.setPosition(-0.05);
-            } else if (gamepad2.y) {
-                grip.setPosition(0.50);
-            } else {
+                if(!xPressed) {
+                    gripToggle = !gripToggle;
+                }
+                xPressed = true;
+            } else xPressed = false;
+
+            if(gripToggle == true){
+                grip.setPosition(-0.15);
+            }else{
                 grip.setPosition(0.25);
             }
         }
