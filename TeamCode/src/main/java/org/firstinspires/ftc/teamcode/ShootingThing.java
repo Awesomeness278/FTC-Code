@@ -18,7 +18,7 @@ public class ShootingThing extends LinearOpMode {
 
     //Hardware Map Names for drive motors and odometry wheels. THIS WILL CHANGE ON EACH ROBOT, YOU NEED TO UPDATE THESE VALUES ACCORDINGLY
     String rfName = "Right Front Motor", rbName = "Right Back Motor", lfName = "Left Front Motor", lbName = "Left Back Motor";
-
+    //IllegalArgumentException
     @Override
     public void runOpMode() throws InterruptedException {
         //Initialize hardware map values. PLEASE UPDATE THESE VALUES TO MATCH YOUR CONFIGURATION
@@ -34,8 +34,6 @@ public class ShootingThing extends LinearOpMode {
         double leftBack;
         double rightFront;
         double rightBack;
-        //double intake;
-        //double shooter;
 
         waitForStart();
 
@@ -45,8 +43,6 @@ public class ShootingThing extends LinearOpMode {
             leftBack = 0.0;
             rightFront = 0.0;
             rightBack = 0.0;
-            //intake = 0.0;
-            //shooter = 0.0;
 
             bottom += 1.0;
 

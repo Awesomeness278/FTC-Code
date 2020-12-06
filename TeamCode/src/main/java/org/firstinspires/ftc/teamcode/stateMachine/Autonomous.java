@@ -15,7 +15,7 @@ public class Autonomous extends LinearOpMode {
     Servo[] servos;
     LynxEmbeddedIMU imu;
     @Override
-    public void runOpMode() throws InterruptedException {
+    public void runOpMode() {
         /*
         Copy the following line and change the new State to new {name of your state}
         manager.addState(new Start());
@@ -37,7 +37,7 @@ public class Autonomous extends LinearOpMode {
         manager.addState(new Finish());
         */
         manager.addState(new Start());
-        manager.addState(new Move());
+        //manager.addState(new Move());
         waitForStart();
         manager.states.get(0).Run(manager,this);
         while(opModeIsActive()){
