@@ -85,6 +85,13 @@ public class ShootingDrivetrain extends LinearOpMode {
 
             //Flywheel
 
+          /*  if(gamepad2.dpad_up && !dPadUpPressed){
+                flywheelPower += 0.005;
+                dPadUpPressed = true;
+            } else if(!gamepad2.dpad_up){
+                dPadUpPressed = false;
+            }*/
+
             if(gamepad2.dpad_up){
                 if(!dPadUpPressed) {
                     flywheelPower += 0.005;
