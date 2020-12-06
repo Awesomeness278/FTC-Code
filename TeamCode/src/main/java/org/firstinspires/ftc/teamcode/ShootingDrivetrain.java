@@ -16,8 +16,11 @@ public class ShootingDrivetrain extends LinearOpMode {
     //Hardware Map Names for drive motors and odometry wheels.
     String rfName = "Right Front Motor", rbName = "Right Back Motor", lfName = "Left Front Motor", lbName = "Left Back Motor", shootName = "Shooter", convName = "Conveyor", armName = "Arm", intakeName = "Intake", gripName = "Grip";
 
+
+
     @Override
     public void runOpMode() throws InterruptedException {
+        arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         //Initialize hardware map values.
         initDriveHardwareMap(rfName, rbName, lfName, lbName, shootName, convName, armName, intakeName, gripName);
         telemetry.addData("Status", "Init Complete");
@@ -88,6 +91,8 @@ public class ShootingDrivetrain extends LinearOpMode {
             } else {
                 dPadUpPressed = false;
             }
+
+
             if(gamepad2.dpad_down){
                 if(!dPadDownPressed) {
                     flywheelPower -= 0.005;
@@ -106,7 +111,7 @@ public class ShootingDrivetrain extends LinearOpMode {
             } else {
                 rightBumperPressed = false;
             }
-            shooter.setPower(flywheelSwitch*flywheelPower);
+            shooter.setPower(-(flywheelSwitch*flywheelPower));
 
             //Intake and Conveyor
 
@@ -136,9 +141,12 @@ public class ShootingDrivetrain extends LinearOpMode {
                 leftBumperPressed = false;
             }
             arm.setTargetPosition(armTargetPosition);
-            if(gamepad1.x){
+            arm.setPower(0.5);
+
+
+            if(gamepad2.x){
                 grip.setPosition(0.25);
-            } else if (gamepad1.y) {
+            } else if (gamepad2.y) {
                 grip.setPosition(0.75);
             } else {
                 grip.setPosition(0.50);
