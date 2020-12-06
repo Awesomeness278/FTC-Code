@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.Odometry.OdometryGlobalCoordinatePosition;
  */
 @TeleOp(name = "My Odometry OpMode")
 public class MyOdometryOpmode extends LinearOpMode {
-    double moveSpeed = 0.25;
+    double moveSpeed = 0.2;
     //Drive motors
     DcMotor right_front, right_back, left_front, left_back;
     //Odometry Wheels
