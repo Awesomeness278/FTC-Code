@@ -38,7 +38,7 @@ public class ShootingDrivetrain extends LinearOpMode {
         boolean xPressed = false;
 
         int flywheelSwitch = 0;
-        int armTargetPosition = 0;
+        int armTargetPosition = -54;
         boolean gripToggle = false;
 
         waitForStart();
@@ -145,10 +145,10 @@ public class ShootingDrivetrain extends LinearOpMode {
             if(gamepad2.left_bumper){
                 arm.setPower(0.5);
                 if(!leftBumperPressed) {
-                    if(armTargetPosition==-150){
-                        armTargetPosition = -280;
+                    if(armTargetPosition==-206){
+                        armTargetPosition = -340;
                     }else{
-                        armTargetPosition = -150;
+                        armTargetPosition = -206;
                     }
                 }
                 leftBumperPressed = true;
