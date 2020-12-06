@@ -20,13 +20,15 @@ public class ShootingDrivetrain extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         //Initialize hardware map values.
         initDriveHardwareMap(rfName, rbName, lfName, lbName, shootName, convName, armName, intakeName, gripName);
+        arm.setTargetPosition(0);
+        arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
         telemetry.addData("Status", "Init Complete");
         telemetry.update();
 
-        double flywheelPower = 0.3;
+        double flywheelPower = 0.8;
         double gripAmount = 0;
 
         boolean dPadUpPressed = false;
@@ -121,7 +123,7 @@ public class ShootingDrivetrain extends LinearOpMode {
                 intake.setPower(0);
             }
             if(gamepad2.b){
-                conveyor.setPower(1);
+                conveyor.setPower(0.7);
             } else {
                 conveyor.setPower(0);
             }
