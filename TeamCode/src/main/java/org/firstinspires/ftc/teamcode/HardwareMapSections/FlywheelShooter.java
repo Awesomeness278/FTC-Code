@@ -62,5 +62,6 @@ public class FlywheelShooter {
         shooter = hardwareMap.dcMotor.get(shootName);
         conveyor = hardwareMap.dcMotor.get(convName);
         intake = hardwareMap.dcMotor.get(intakeName);
+
     }
 }
