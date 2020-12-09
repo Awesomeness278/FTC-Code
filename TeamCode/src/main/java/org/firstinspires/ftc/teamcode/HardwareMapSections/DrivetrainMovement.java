@@ -11,47 +11,40 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.tel
 public class DrivetrainMovement {
     DcMotor left_front, left_back, right_front, right_back;
     double moveSpeed = 1;
+    int motorChange = 1;
+    double leftFront = 0;
+    double leftBack = 0;
+    double rightFront = 0;
+    double rightBack = 0;
+    double scalarConstant = 1;
     String rfname = "Right Front Motor", rbname = "Right Back Motor", lfname = "Left Back Motor", lbname = "Left Back Motor";
 
-    public void DriveRobot(){
-        double leftFront = 0;
-        double leftBack = 0;
-        double rightFront = 0;
-        double rightBack = 0;
-        if (gamepad1.dpad_up) {
-            leftFront += 1;
-            leftBack += 1;
-            rightFront += 1;
-            rightBack += 1;
+    public void DriveRobot() {
+        DPadInput(gamepad1.dpad_up, motorChange, motorChange, motorChange, motorChange);
+        DPadInput(gamepad1.dpad_right, motorChange, -motorChange, -motorChange, motorChange);
+        DPadInput(gamepad1.dpad_down, -motorChange, -motorChange, -motorChange, -motorChange);
+        DPadInput(gamepad1.dpad_left, -motorChange, motorChange, motorChange, -motorChange);
+
+        DPadInput(true, -gamepad1.left_stick_y + gamepad1.left_stick_x - gamepad1.right_stick_x,
+                -gamepad1.left_stick_y - gamepad1.left_stick_x - gamepad1.right_stick_x,
+                -gamepad1.left_stick_y - gamepad1.left_stick_x - gamepad1.right_stick_x,
+                -gamepad1.left_stick_y + gamepad1.left_stick_x + gamepad1.right_stick_x);
+        double scalar = Math.max(Math.max(Math.abs(leftFront), Math.abs(leftBack)), Math.max(Math.abs(rightFront), Math.abs(rightBack)));
+        if (scalar < scalarConstant) scalar = scalarConstant;
+        left_front.setPower(leftFront / scalar * moveSpeed);
+        left_back.setPower(leftBack / scalar * moveSpeed);
+        right_front.setPower(rightFront / scalar * moveSpeed);
+        right_back.setPower(rightBack / scalar * moveSpeed);
+    }
+
+    public void DPadInput(boolean DPadButton, float lfChange, float lbChange, float rfChange, float rbChange){
+
+        if (DPadButton) {
+            leftFront += lfChange;
+            leftBack += lbChange;
+            rightFront += rfChange;
+            rightBack += rbChange;
         }
-        if (gamepad1.dpad_right) {
-            leftFront += 1;
-            leftBack += -1;
-            rightFront += -1;
-            rightBack += 1;
-        }
-        if (gamepad1.dpad_down) {
-            leftFront += -1;
-            leftBack += -1;
-            rightFront += -1;
-            rightBack += -1;
-        }
-        if (gamepad1.dpad_left) {
-            leftFront += -1;
-            leftBack += 1;
-            rightFront += 1;
-            rightBack += -1;
-        }
-        leftFront += -gamepad1.left_stick_y+gamepad1.left_stick_x-gamepad1.right_stick_x;
-        leftBack += -gamepad1.left_stick_y-gamepad1.left_stick_x-gamepad1.right_stick_x;
-        rightFront += -gamepad1.left_stick_y-gamepad1.left_stick_x+gamepad1.right_stick_x;
-        rightBack += -gamepad1.left_stick_y+gamepad1.left_stick_x+gamepad1.right_stick_x;
-        double scalar = Math.max(Math.max(Math.abs(leftFront),Math.abs(leftBack)),Math.max(Math.abs(rightFront),Math.abs(rightBack)));
-        if (scalar < 1) scalar = 1;
-        left_front.setPower(leftFront/scalar*moveSpeed);
-        left_back.setPower(leftBack/scalar*moveSpeed);
-        right_front.setPower(rightFront/scalar*moveSpeed);
-        right_back.setPower(rightBack/scalar*moveSpeed);
     }
 
     public void HardwareMap(HardwareMap hardwareMap){

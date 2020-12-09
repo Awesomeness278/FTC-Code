@@ -13,7 +13,7 @@ public class FlywheelShooter {
     double flywheelPower = 0.8;
     boolean dPadUpPressed = false;
     boolean dPadDownPressed = false;
-    boolean rightBumperPressed = false;
+    boolean rightTriggerPressed = false;
     int flywheelSwitch = 0;
 
     public void ShootRing(){
@@ -26,7 +26,6 @@ public class FlywheelShooter {
             dPadUpPressed = false;
         }
 
-
         if(gamepad2.dpad_down){
             if(!dPadDownPressed) {
                 flywheelPower -= 0.005;
@@ -36,13 +35,13 @@ public class FlywheelShooter {
             dPadDownPressed = false;
         }
 
-        if(gamepad2.right_bumper){
-            if(!rightBumperPressed) {
+        if(gamepad2.right_trigger > 0.05){
+            if(!rightTriggerPressed) {
                 flywheelSwitch = (flywheelSwitch + 1) % 2;
             }
-            rightBumperPressed = true;
+            rightTriggerPressed = true;
         } else {
-            rightBumperPressed = false;
+            rightTriggerPressed = false;
         }
         shooter.setPower(-(flywheelSwitch*flywheelPower));
 
