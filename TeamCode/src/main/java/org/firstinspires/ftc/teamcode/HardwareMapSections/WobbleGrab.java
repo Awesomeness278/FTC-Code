@@ -11,19 +11,24 @@ public class WobbleGrab {
     DcMotor arm;
     Servo grip;
 
+    int armStartPosition = -54;
+
+    int armVerticalPosition = armStartPosition - 152;
+    int armHorizontalPosition = armStartPosition - 286;
+
     boolean leftTriggerPressed = false;
     boolean xPressed = false;
     boolean gripToggle = false;
-    int armTargetPosition = -54;
+    int armTargetPosition = armStartPosition;
 
     public void ArmLogic(){
         if(gamepad2.left_trigger > 0.05){
             arm.setPower(0.5);
             if(!leftTriggerPressed) {
-                if(armTargetPosition==-206){
-                    armTargetPosition = -340;
+                if(armTargetPosition==armVerticalPosition){
+                    armTargetPosition = armHorizontalPosition;
                 }else{
-                    armTargetPosition = -206;
+                    armTargetPosition = armVerticalPosition;
                 }
             }
             leftTriggerPressed = true;
