@@ -18,11 +18,9 @@ public class WobbleGrab {
     double gripOpenPosition = -0.15;
     double gripClosedPosition = 0.25;
 
-    boolean leftTriggerPressed = false;
     boolean xPressed = false;
     boolean gripToggle = false;
     boolean armToggle = false;
-    int armTargetPosition = armStartPosition;
 
     public void ArmLogic() throws InterruptedException {
         if(gamepad2.x){
