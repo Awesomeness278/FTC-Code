@@ -1,9 +1,9 @@
 package org.firstinspires.ftc.teamcode.stateMachine;
 
 public enum States {
-    START(0),
-    TENSORFLOW(1),
-    MOVETOWOBBLE(2),
+    Start(0),
+    Tensorflow(1),
+    MoveToWobble(2),
     StopMovingToWobble(3),
     DropWobble(4);
     public int stateNum;

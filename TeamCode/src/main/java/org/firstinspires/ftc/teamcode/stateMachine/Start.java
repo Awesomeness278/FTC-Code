@@ -25,6 +25,6 @@ public class Start extends StateManager {
         opMode.RightBackMotor = opMode.hardwareMap.get(DcMotor.class,"Right Back Motor");
         opMode.RightFrontMotor = opMode.hardwareMap.get(DcMotor.class,"Right Front Motor");
         int stateNumber = 1;
-        machine.runState(States.TENSORFLOW);
+        machine.runState(States.Tensorflow);
     }
 }
