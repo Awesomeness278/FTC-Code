@@ -15,39 +15,41 @@ public class WobbleGrab {
 
     int armVerticalPosition = armStartPosition - 152;
     int armHorizontalPosition = armStartPosition - 286;
+    double gripOpenPosition = -0.15;
+    double gripClosedPosition = 0.25;
 
     boolean leftTriggerPressed = false;
     boolean xPressed = false;
     boolean gripToggle = false;
+    boolean armToggle = false;
     int armTargetPosition = armStartPosition;
 
-    public void ArmLogic(){
-        if(gamepad2.left_trigger > 0.05){
-            arm.setPower(0.5);
-            if(!leftTriggerPressed) {
-                if(armTargetPosition==armVerticalPosition){
-                    armTargetPosition = armHorizontalPosition;
-                }else{
-                    armTargetPosition = armVerticalPosition;
-                }
-            }
-            leftTriggerPressed = true;
-        } else {
-            leftTriggerPressed = false;
-        }
-        arm.setTargetPosition(armTargetPosition);
-
+    public void ArmLogic() throws InterruptedException {
         if(gamepad2.x){
             if(!xPressed) {
-                gripToggle = !gripToggle;
+                if(armToggle) {
+                    gripToggle = true;
+                    wait(2000);
+                    armToggle = !armToggle;
+                }else{
+                    armToggle = !armToggle;
+                    wait(2000);
+                    gripToggle = false;
+                }
             }
             xPressed = true;
         } else xPressed = false;
 
         if(gripToggle){
-            grip.setPosition(-0.15);
+            grip.setPosition(gripOpenPosition);
         }else{
-            grip.setPosition(0.25);
+            grip.setPosition(gripClosedPosition);
+        }
+
+        if(armToggle){
+            arm.setTargetPosition(armHorizontalPosition);
+        }else{
+            arm.setTargetPosition(armVerticalPosition);
         }
 
         telemetry.addData("Arm Position", arm.getCurrentPosition());

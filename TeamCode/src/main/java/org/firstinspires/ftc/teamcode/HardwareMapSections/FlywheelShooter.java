@@ -16,7 +16,7 @@ public class FlywheelShooter {
     boolean rightTriggerPressed = false;
     int flywheelSwitch = 0;
 
-    public void ShootRing(){
+    public void ShootRing() throws InterruptedException {
         if(gamepad2.dpad_up){
             if(!dPadUpPressed) {
                 flywheelPower += 0.005;
@@ -38,9 +38,12 @@ public class FlywheelShooter {
         if(gamepad2.right_trigger > 0.05){
             if(!rightTriggerPressed) {
                 flywheelSwitch = (flywheelSwitch + 1) % 2;
+                wait(1000);
+                conveyor.setPower(0.7);
             }
             rightTriggerPressed = true;
         } else {
+            conveyor.setPower(0);
             rightTriggerPressed = false;
         }
         shooter.setPower(-(flywheelSwitch*flywheelPower));
@@ -51,17 +54,16 @@ public class FlywheelShooter {
         } else {
             intake.setPower(0);
         }
-        if(gamepad2.b){
+     /*   if(gamepad2.b){
             conveyor.setPower(0.7);
         } else {
             conveyor.setPower(0);
-        }
+        }*/
         telemetry.addData("Flywheel Power: ",flywheelPower);
     }
     public void HardwareMap(HardwareMap hardwareMap){
         shooter = hardwareMap.dcMotor.get(shootName);
         conveyor = hardwareMap.dcMotor.get(convName);
         intake = hardwareMap.dcMotor.get(intakeName);
-
     }
 }
