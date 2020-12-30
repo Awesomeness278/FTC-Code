@@ -29,7 +29,6 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import java.util.List;
@@ -87,15 +86,33 @@ public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
     public void runOpMode() {
         // The TFObjectDetector uses the camera frames from the VuforiaLocalizer, so we create that
         // first.
-        initVuforia();
-        initTfod();
+        try {
+            initVuforia();
+            initTfod();
 
-        /**
-         * Activate TensorFlow Object Detection before we wait for the start command.
-         * Do it here so that the Camera Stream window will have the TensorFlow annotations visible.
-         **/
-        if (tfod != null) {
-            tfod.activate();
+            /**
+             * Activate TensorFlow Object Detection before we wait for the start command.
+             * Do it here so that the Camera Stream window will have the TensorFlow annotations visible.
+             **/
+            if (tfod != null) {
+                tfod.activate();
+            }
+        }catch (Exception ex)
+        {
+            StackTraceElement[] stackTrace = ex.getStackTrace();
+
+            String fullTrace = "";
+
+            for (StackTraceElement trace : stackTrace) {
+                String traceInfo
+                        = trace.getClassName() + "."
+                        + trace.getMethodName() + ":" + trace.getLineNumber()
+                        + "(" + trace.getFileName() + ")\n";
+
+                fullTrace.concat(traceInfo);
+            }
+            telemetry.addData("Trace",fullTrace);
+            telemetry.update();
         }
 
         /** Wait for the game to begin */
@@ -156,8 +173,8 @@ public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
             "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-       tfodParameters.minResultConfidence = 0.8f;
-       tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
-       tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
+        tfodParameters.minResultConfidence = 0.8f;
+        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
+        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
     }
 }
