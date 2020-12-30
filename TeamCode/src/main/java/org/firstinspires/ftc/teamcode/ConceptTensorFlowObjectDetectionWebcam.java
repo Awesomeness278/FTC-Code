@@ -97,23 +97,7 @@ public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
             if (tfod != null) {
                 tfod.activate();
             }
-        }catch (Exception ex)
-        {
-            StackTraceElement[] stackTrace = ex.getStackTrace();
 
-            String fullTrace = "";
-
-            for (StackTraceElement trace : stackTrace) {
-                String traceInfo
-                        = trace.getClassName() + "."
-                        + trace.getMethodName() + ":" + trace.getLineNumber()
-                        + "(" + trace.getFileName() + ")\n";
-
-                fullTrace.concat(traceInfo);
-            }
-            telemetry.addData("Trace",fullTrace);
-            telemetry.update();
-        }
 
         /** Wait for the game to begin */
         telemetry.addData(">", "Press Play to start op mode");
@@ -145,6 +129,23 @@ public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
 
         if (tfod != null) {
             tfod.shutdown();
+        }
+        }catch (Exception ex)
+        {
+            StackTraceElement[] stackTrace = ex.getStackTrace();
+
+            String fullTrace = "";
+
+            for (StackTraceElement trace : stackTrace) {
+                String traceInfo
+                        = trace.getClassName() + "."
+                        + trace.getMethodName() + ":" + trace.getLineNumber()
+                        + "(" + trace.getFileName() + ")\n";
+
+                fullTrace.concat(traceInfo);
+            }
+            telemetry.addData("Trace",fullTrace);
+            telemetry.update();
         }
     }
 
