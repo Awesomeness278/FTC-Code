@@ -37,9 +37,7 @@ public class ShootingDrivetrain extends LinearOpMode {
 
                 for (StackTraceElement trace : stackTrace) {
                     String traceInfo
-                            = trace.getClassName() + "."
-                            + trace.getMethodName() + ":" + trace.getLineNumber()
-                            + "(" + trace.getFileName() + ")\n";
+                            = trace.getClassName().concat(".").concat(trace.getMethodName()).concat(":").concat(trace.getLineNumber()+"").concat("(").concat(trace.getFileName()).concat(")\n");
 
                     fullTrace.concat(traceInfo);
                 }
