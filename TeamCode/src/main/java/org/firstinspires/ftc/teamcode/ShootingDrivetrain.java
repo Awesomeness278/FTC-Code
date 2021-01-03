@@ -26,9 +26,26 @@ public class ShootingDrivetrain extends LinearOpMode {
 
         waitForStart();
         while(opModeIsActive()){
-            drivetrain.DriveRobot();
-            ringShooting.ShootRing();
-            grabWobble.ArmLogic();
+            try {
+                drivetrain.DriveRobot();
+                ringShooting.ShootRing();
+                grabWobble.ArmLogic();
+            }catch(Exception ex){
+                StackTraceElement[] stackTrace = ex.getStackTrace();
+
+                String fullTrace = "";
+
+                for (StackTraceElement trace : stackTrace) {
+                    String traceInfo
+                            = trace.getClassName() + "."
+                            + trace.getMethodName() + ":" + trace.getLineNumber()
+                            + "(" + trace.getFileName() + ")\n";
+
+                    fullTrace.concat(traceInfo);
+                }
+                telemetry.addData("Trace",fullTrace);
+                telemetry.update();
+            }
         }
     }
 }
