@@ -30,7 +30,7 @@ public class ShootingDrivetrain extends LinearOpMode {
         double flywheelPower = 0.8;
         double gripAmount = 0;
         final double movementConstant = 0.8;
-        final double rotationConstant = 0.2;
+        final double rotationConstant = 0.5;
 
         boolean dPadUpPressed = false;
         boolean dPadDownPressed = false;
@@ -83,10 +83,10 @@ public class ShootingDrivetrain extends LinearOpMode {
             leftBack*=movementConstant;
             rightBack*=movementConstant;
 
-            leftFront += (-gamepad1.left_stick_y + gamepad1.left_stick_x)*movementConstant - gamepad1.right_stick_x*rotationConstant;
-            leftBack += (-gamepad1.left_stick_y - gamepad1.left_stick_x)*movementConstant - gamepad1.right_stick_x*rotationConstant;
-            rightFront += (-gamepad1.left_stick_y - gamepad1.left_stick_x)*movementConstant + gamepad1.right_stick_x*rotationConstant;
-            rightBack += (-gamepad1.left_stick_y + gamepad1.left_stick_x)*movementConstant + gamepad1.right_stick_x*rotationConstant;
+            leftFront += (-gamepad1.left_stick_y + gamepad1.left_stick_x)*movementConstant - gamepad1.right_stick_x*-rotationConstant;
+            leftBack += (-gamepad1.left_stick_y - gamepad1.left_stick_x)*movementConstant - gamepad1.right_stick_x*-rotationConstant;
+            rightFront += (-gamepad1.left_stick_y - gamepad1.left_stick_x)*movementConstant + gamepad1.right_stick_x*-rotationConstant;
+            rightBack += (-gamepad1.left_stick_y + gamepad1.left_stick_x)*movementConstant + gamepad1.right_stick_x*-rotationConstant;
             double scalar = Math.max(Math.max(Math.abs(leftFront), Math.abs(leftBack)), Math.max(Math.abs(rightFront), Math.abs(rightBack)));
             if (scalar < 1) scalar = 1;
             left_front.setPower(leftFront / scalar * moveSpeed);

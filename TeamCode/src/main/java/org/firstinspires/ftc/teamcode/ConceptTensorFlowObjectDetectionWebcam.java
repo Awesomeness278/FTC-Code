@@ -53,7 +53,7 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
  * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
  * is explained below.
  */
-@Autonomous(name = "Concept: TensorFlow Object Detection Webcam", group = "Concept")
+@Autonomous(name = "tfod")
 
 public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
     private static final String TFOD_MODEL_ASSET = "UltimateGoal.tflite";
@@ -94,10 +94,10 @@ public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
     @SuppressLint("DefaultLocale")
     @Override
     public void runOpMode() {
-        left_back = hardwareMap.get(DcMotor.class, "Left Back");
-        right_back = hardwareMap.get(DcMotor.class, "Right Back");
-        right_front = hardwareMap.get(DcMotor.class, "Right Front");
-        left_front = hardwareMap.get(DcMotor.class, "Left Front");
+        left_back = hardwareMap.get(DcMotor.class, "Left Back Motor");
+        right_back = hardwareMap.get(DcMotor.class, "Right Back Motor");
+        right_front = hardwareMap.get(DcMotor.class, "Right Front Motor");
+        left_front = hardwareMap.get(DcMotor.class, "Left Front Motor");
         left_front.setDirection(DcMotorSimple.Direction.REVERSE);
         left_back.setDirection(DcMotorSimple.Direction.REVERSE);
         // The TFObjectDetector uses the camera frames from the VuforiaLocalizer, so we create that
@@ -150,11 +150,6 @@ public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
                                 leftBack += -movementConstant;
                                 rightFront += -movementConstant;
                                 rightBack += movementConstant;
-                            }else{
-                                leftFront +=  rotationConstant;
-                                leftBack +=  rotationConstant;
-                                rightFront +=  -rotationConstant;
-                                rightBack += -rotationConstant;
                             }
                             double scalar = Math.max(Math.max(Math.abs(leftFront), Math.abs(leftBack)), Math.max(Math.abs(rightFront), Math.abs(rightBack)));
                             if (scalar < 1) scalar = 1;
@@ -168,6 +163,12 @@ public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
                                 recognition.getLeft(), recognition.getTop());
                             telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f",
                                 recognition.getRight(), recognition.getBottom());
+                        }
+                        if(updatedRecognitions.size() == 0){
+                            leftFront +=  rotationConstant;
+                            leftBack +=  rotationConstant;
+                            rightFront +=  -rotationConstant;
+                            rightBack += -rotationConstant;
                         }
                         telemetry.update();
                     }
