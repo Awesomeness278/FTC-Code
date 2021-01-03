@@ -34,6 +34,7 @@ import android.annotation.SuppressLint;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import java.util.List;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -97,6 +98,8 @@ public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
         right_back = hardwareMap.get(DcMotor.class, "Right Back");
         right_front = hardwareMap.get(DcMotor.class, "Right Front");
         left_front = hardwareMap.get(DcMotor.class, "Left Front");
+        left_front.setDirection(DcMotorSimple.Direction.REVERSE);
+        left_back.setDirection(DcMotorSimple.Direction.REVERSE);
         // The TFObjectDetector uses the camera frames from the VuforiaLocalizer, so we create that
         // first.
         try {
