@@ -29,9 +29,12 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import android.annotation.SuppressLint;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+
 import java.util.List;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -55,6 +58,18 @@ public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
     private static final String TFOD_MODEL_ASSET = "UltimateGoal.tflite";
     private static final String LABEL_FIRST_ELEMENT = "Quad";
     private static final String LABEL_SECOND_ELEMENT = "Single";
+    double moveSpeed = 0.5;
+    double movementConstant = 0.3;
+    double rotationConstant = 0.3;
+    double leftFront = 0;
+    double rightFront = 0;
+    double leftBack = 0;
+    double rightBack = 0;
+    DcMotor left_back;
+    DcMotor right_back;
+    DcMotor right_front;
+    DcMotor left_front;
+
 
     /*
      * IMPORTANT: You need to obtain your own license key to use Vuforia. The string below with which
@@ -71,30 +86,22 @@ public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
     private static final String VUFORIA_KEY =
             "AfweTBj/////AAABmZ1QwFXvX0ltj9QRI7IS1wtULCTBA7CyU8KibbraimizSOgb5iPrsHVE4P/nnAbJuNWXHsqZgW784iI7nfekundyBUv80cdOoe8y/O9125JNbD4fkyufJvrK2RSpv2w9GPY1AtM3fxo70t6r89/WQnpcAHPp244gr0Ua8GL5qUt8XPPE3WcTATty3C/GayFSfe+MTbV8OtB5qN34XhstZYDUgxHcJ+xQLwkYj+FtLTyDc+kRrg+oqLkYA3zNwksq9vWEvTTV0SzsFtU3NbFZtz3P068I25yPHOSqd4bNq36LAcrJchYGidrbJLtRqrEG+4lFD8FWEkpKoWIm4d1DiM0xCcQhiqHH/KQ3fDNP7Xd3";
 
-    /**
-     * {@link #vuforia} is the variable we will use to store our instance of the Vuforia
-     * localization engine.
-     */
     private VuforiaLocalizer vuforia;
 
-    /**
-     * {@link #tfod} is the variable we will use to store our instance of the TensorFlow Object
-     * Detection engine.
-     */
     private TFObjectDetector tfod;
 
+    @SuppressLint("DefaultLocale")
     @Override
     public void runOpMode() {
+        left_back = hardwareMap.get(DcMotor.class, "Left Back");
+        right_back = hardwareMap.get(DcMotor.class, "Right Back");
+        right_front = hardwareMap.get(DcMotor.class, "Right Front");
+        left_front = hardwareMap.get(DcMotor.class, "Left Front");
         // The TFObjectDetector uses the camera frames from the VuforiaLocalizer, so we create that
         // first.
         try {
             initVuforia();
             initTfod();
-
-            /**
-             * Activate TensorFlow Object Detection before we wait for the start command.
-             * Do it here so that the Camera Stream window will have the TensorFlow annotations visible.
-             **/
             if (tfod != null) {
                 tfod.activate();
             }
@@ -110,17 +117,15 @@ public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
                         + trace.getMethodName() + ":" + trace.getLineNumber()
                         + "(" + trace.getFileName() + ")\n";
 
-                fullTrace.concat(traceInfo);
+                fullTrace = fullTrace.concat(traceInfo);
             }
             telemetry.addData("Trace",fullTrace);
             telemetry.update();
         }
 
-        /** Wait for the game to begin */
         telemetry.addData(">", "Press Play to start op mode");
         telemetry.update();
         waitForStart();
-
         if (opModeIsActive()) {
             while (opModeIsActive()) {
                 if (tfod != null) {
@@ -128,17 +133,39 @@ public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
                     // the last time that call was made.
                     List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
                     if (updatedRecognitions != null) {
-                      telemetry.addData("# Object Detected", updatedRecognitions.size());
-                      // step through the list of recognitions and display boundary info.
-                      int i = 0;
-                      for (Recognition recognition : updatedRecognitions) {
-                        telemetry.addData(String.format("label (%d)", i), recognition.getLabel());
-                        telemetry.addData(String.format("  left,top (%d)", i), "%.03f , %.03f",
+                        telemetry.addData("# Object Detected", updatedRecognitions.size());
+                        // step through the list of recognitions and display boundary info.
+                        int i = 0;
+                        for (Recognition recognition : updatedRecognitions) {
+                            if(recognition.getLabel().equals(LABEL_FIRST_ELEMENT)){
+                                leftFront += -movementConstant;
+                                leftBack += movementConstant;
+                                rightFront += movementConstant;
+                                rightBack += -movementConstant;
+                            }else if(recognition.getLabel().equals(LABEL_SECOND_ELEMENT)){
+                                leftFront += movementConstant;
+                                leftBack += -movementConstant;
+                                rightFront += -movementConstant;
+                                rightBack += movementConstant;
+                            }else{
+                                leftFront +=  rotationConstant;
+                                leftBack +=  rotationConstant;
+                                rightFront +=  -rotationConstant;
+                                rightBack += -rotationConstant;
+                            }
+                            double scalar = Math.max(Math.max(Math.abs(leftFront), Math.abs(leftBack)), Math.max(Math.abs(rightFront), Math.abs(rightBack)));
+                            if (scalar < 1) scalar = 1;
+                            left_front.setPower(leftFront / scalar * moveSpeed);
+                            left_back.setPower(leftBack / scalar * moveSpeed);
+                            right_front.setPower(rightFront / scalar * moveSpeed);
+                            right_back.setPower(rightBack / scalar * moveSpeed);
+                            telemetry.addData(String.format("label (%d)", i), recognition.getLabel());
+                            telemetry.addData(String.format("  left,top (%d)", i), "%.03f , %.03f",
                                 recognition.getLeft(), recognition.getTop());
-                        telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f",
+                            telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f",
                                 recognition.getRight(), recognition.getBottom());
-                      }
-                      telemetry.update();
+                        }
+                        telemetry.update();
                     }
                 }
             }
