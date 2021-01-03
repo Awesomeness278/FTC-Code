@@ -158,6 +158,7 @@ public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
                             }
                             double scalar = Math.max(Math.max(Math.abs(leftFront), Math.abs(leftBack)), Math.max(Math.abs(rightFront), Math.abs(rightBack)));
                             if (scalar < 1) scalar = 1;
+                            telemetry.addData("Motor powers",""+leftFront+","+leftBack+","+rightBack+","+rightFront);
                             left_front.setPower(leftFront / scalar * moveSpeed);
                             left_back.setPower(leftBack / scalar * moveSpeed);
                             right_front.setPower(rightFront / scalar * moveSpeed);
