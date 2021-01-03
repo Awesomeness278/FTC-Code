@@ -2,11 +2,18 @@ package org.firstinspires.ftc.teamcode.HardwareMapSections;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad1;
 
 public class DrivetrainMovement {
+    public DrivetrainMovement(Gamepad gamepad1, Gamepad gamepad2){
+        this.gamepad1 = gamepad1;
+        this.gamepad2 = gamepad2;
+    }
+    Gamepad gamepad1;
+    Gamepad gamepad2;
     DcMotor left_front, left_back, right_front, right_back;
     double moveSpeed = 1;
     int motorChange = 1;

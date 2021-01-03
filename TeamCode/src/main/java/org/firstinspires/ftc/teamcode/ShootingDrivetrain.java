@@ -11,9 +11,9 @@ import org.firstinspires.ftc.teamcode.HardwareMapSections.WobbleGrab;
 
 @TeleOp(name = "Shooting + Arm + Drivetrain")
 public class ShootingDrivetrain extends LinearOpMode {
-    DrivetrainMovement drivetrain;
-    FlywheelShooter ringShooting;
-    WobbleGrab grabWobble;
+    DrivetrainMovement drivetrain = new DrivetrainMovement(gamepad1, gamepad2);
+    FlywheelShooter ringShooting = new FlywheelShooter(gamepad1, gamepad2);
+    WobbleGrab grabWobble = new WobbleGrab(gamepad1, gamepad2);
 
     @Override
     public void runOpMode() throws InterruptedException {

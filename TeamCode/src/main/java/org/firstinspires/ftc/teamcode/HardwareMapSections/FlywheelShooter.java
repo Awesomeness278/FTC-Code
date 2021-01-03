@@ -1,12 +1,19 @@
 package org.firstinspires.ftc.teamcode.HardwareMapSections;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad2;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
 
 public class FlywheelShooter {
+    public FlywheelShooter(Gamepad gamepad1, Gamepad gamepad2){
+        this.gamepad1 = gamepad1;
+        this.gamepad2 = gamepad2;
+    }
+    Gamepad gamepad1;
+    Gamepad gamepad2;
     DcMotor shooter, intake, conveyor;
     String shootName = "Shooter", convName = "Conveyor", intakeName = "Intake";
 
