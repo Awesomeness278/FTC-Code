@@ -29,6 +29,8 @@ public class ShootingDrivetrain extends LinearOpMode {
 
         double flywheelPower = 0.8;
         double gripAmount = 0;
+        final double movementConstant = 0.8;
+        final double rotationConstant = 0.2;
 
         boolean dPadUpPressed = false;
         boolean dPadDownPressed = false;
@@ -37,7 +39,9 @@ public class ShootingDrivetrain extends LinearOpMode {
         boolean xPressed = false;
 
         int flywheelSwitch = 0;
-        int armTargetPosition = -54;
+        int armTargetPosition = 0;
+        int vertArmPos = -146;
+        int horArmPos = -283;
         boolean gripToggle = false;
 
         waitForStart();
@@ -73,10 +77,16 @@ public class ShootingDrivetrain extends LinearOpMode {
                 rightFront += 1;
                 rightBack += -1;
             }
-            leftFront += -gamepad1.left_stick_y + gamepad1.left_stick_x - gamepad1.right_stick_x;
-            leftBack += -gamepad1.left_stick_y - gamepad1.left_stick_x - gamepad1.right_stick_x;
-            rightFront += -gamepad1.left_stick_y - gamepad1.left_stick_x + gamepad1.right_stick_x;
-            rightBack += -gamepad1.left_stick_y + gamepad1.left_stick_x + gamepad1.right_stick_x;
+
+            leftFront*=movementConstant;
+            rightFront*=movementConstant;
+            leftBack*=movementConstant;
+            rightBack*=movementConstant;
+
+            leftFront += (-gamepad1.left_stick_y + gamepad1.left_stick_x)*movementConstant - gamepad1.right_stick_x*rotationConstant;
+            leftBack += (-gamepad1.left_stick_y - gamepad1.left_stick_x)*movementConstant - gamepad1.right_stick_x*rotationConstant;
+            rightFront += (-gamepad1.left_stick_y - gamepad1.left_stick_x)*movementConstant + gamepad1.right_stick_x*rotationConstant;
+            rightBack += (-gamepad1.left_stick_y + gamepad1.left_stick_x)*movementConstant + gamepad1.right_stick_x*rotationConstant;
             double scalar = Math.max(Math.max(Math.abs(leftFront), Math.abs(leftBack)), Math.max(Math.abs(rightFront), Math.abs(rightBack)));
             if (scalar < 1) scalar = 1;
             left_front.setPower(leftFront / scalar * moveSpeed);
@@ -144,10 +154,10 @@ public class ShootingDrivetrain extends LinearOpMode {
             if (gamepad2.left_bumper) {
                 arm.setPower(0.5);
                 if (!leftBumperPressed) {
-                    if (armTargetPosition == -206) {
-                        armTargetPosition = -340;
+                    if (armTargetPosition == vertArmPos) {
+                        armTargetPosition = horArmPos;
                     } else {
-                        armTargetPosition = -206;
+                        armTargetPosition = vertArmPos;
                     }
                 }
                 leftBumperPressed = true;
@@ -197,10 +207,10 @@ public class ShootingDrivetrain extends LinearOpMode {
         left_front.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         left_back.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        //left_front.setDirection(DcMotorSimple.Direction.REVERSE);
+        left_front.setDirection(DcMotorSimple.Direction.REVERSE);
         //right_front.setDirection(DcMotorSimple.Direction.REVERSE);
-        //left_back.setDirection(DcMotorSimple.Direction.REVERSE);
-        right_back.setDirection(DcMotorSimple.Direction.REVERSE);
+        left_back.setDirection(DcMotorSimple.Direction.REVERSE);
+        //right_back.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
         telemetry.addData("Status", "Hardware Map Init Complete");
