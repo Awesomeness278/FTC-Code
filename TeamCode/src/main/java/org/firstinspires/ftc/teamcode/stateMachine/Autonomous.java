@@ -34,26 +34,6 @@ public class Autonomous extends LinearOpMode {
         odometry.reverseRightEncoder();
         odometry.reverseNormalEncoder();
         positionThread.start();
-        /*
-        Copy the following line and change the new State to new {name of your state}
-        machine.addState(new Start());
-        machine.addState(new Tensorflow());
-        machine.addState(new Move(squareX,squareY));
-        machine.addState(new Stop());
-        machine.addState(new WobbleDropped());
-        machine.addState(new Move(shootX,shootY));
-        machine.addState(new Stop());
-        machine.addState(new Oriented());
-        machine.addState(new Shoot());
-        machine.addState(new CheckRings());
-        machine.addState(new Move(ringX,ringY));
-        machine.addState(new Stop());
-        machine.addState(new Tensorflow());
-        machine.addState(new RingsCollected());
-        machine.addState(new Move(lineX,lineY));
-        machine.addState(new Stop());
-        machine.addState(new Finish());
-        */
         machine.addState(States.Start,new Start());
         machine.addState(States.MoveToWobble,new Move(12,72,States.StopMovingToWobble.stateNum));
         waitForStart();
