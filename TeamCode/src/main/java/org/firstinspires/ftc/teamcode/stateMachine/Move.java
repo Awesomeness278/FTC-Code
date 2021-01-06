@@ -59,6 +59,6 @@ public class Move extends StateManager {
     @Override
     public void Exit(StateMachine machine) {
         machine.opMode.telemetry.addData("Moved","Yes");
-        machine.runState(States.MOVETOWOBBLE);
+        machine.runState(States.MoveToWobble);
     }
 }
