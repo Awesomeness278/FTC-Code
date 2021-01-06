@@ -1,10 +1,14 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.Hardware;
+import java.util.Date;
+//import java.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
+import java.util.Calendar;
 
 @TeleOp(name = "Shooting + Arm + Drivetrain")
 public class ShootingDrivetrain extends LinearOpMode {
@@ -40,12 +44,18 @@ public class ShootingDrivetrain extends LinearOpMode {
 
         int flywheelSwitch = 0;
         int armTargetPosition = 0;
-        int vertArmPos = -146;
-        int horArmPos = -283;
+        int vertArmPos = -123;
+        int horArmPos = -272;
+        int homeArmPos = 0;
         boolean gripToggle = false;
+        int timeSinceLeftBumper = 0;
 
         waitForStart();
         while (opModeIsActive()) {
+
+            arm.setPower(0.25);
+
+            timeSinceLeftBumper--;
 
             //Movement
 
@@ -96,12 +106,12 @@ public class ShootingDrivetrain extends LinearOpMode {
 
             //Flywheel
 
-          /*  if(gamepad2.dpad_up && !dPadUpPressed){
-                flywheelPower += 0.005;
-                dPadUpPressed = true;
-            } else if(!gamepad2.dpad_up){
-                dPadUpPressed = false;
-            }*/
+		  /*  if(gamepad2.dpad_up && !dPadUpPressed){
+				flywheelPower += 0.005;
+				dPadUpPressed = true;
+			} else if(!gamepad2.dpad_up){
+				dPadUpPressed = false;
+			}*/
 
             if (gamepad2.dpad_up) {
                 if (!dPadUpPressed) {
@@ -148,20 +158,20 @@ public class ShootingDrivetrain extends LinearOpMode {
             } else {
                 conveyor.setPower(0);
             }
-
             //Arm
-
-            if (gamepad2.left_bumper) {
-                arm.setPower(0.5);
-                if (!leftBumperPressed) {
+            if(gamepad2.left_bumper && !leftBumperPressed){
+                if(timeSinceLeftBumper>0){
+                    armTargetPosition = homeArmPos;
+                }else{
                     if (armTargetPosition == vertArmPos) {
                         armTargetPosition = horArmPos;
                     } else {
                         armTargetPosition = vertArmPos;
                     }
+                    timeSinceLeftBumper = 50;
                 }
                 leftBumperPressed = true;
-            } else {
+            }else if(!gamepad2.left_bumper){
                 leftBumperPressed = false;
             }
             arm.setTargetPosition(armTargetPosition);
