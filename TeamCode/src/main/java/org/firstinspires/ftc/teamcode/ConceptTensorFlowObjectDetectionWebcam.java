@@ -59,9 +59,8 @@ public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
     private static final String TFOD_MODEL_ASSET = "UltimateGoal.tflite";
     private static final String LABEL_FIRST_ELEMENT = "Quad";
     private static final String LABEL_SECOND_ELEMENT = "Single";
-    double moveSpeed = 0.5;
-    double movementConstant = 0.3;
-    double rotationConstant = 0.3;
+    double moveSpeed = 1;
+    double movementConstant = 1;
     double leftFront = 0;
     double rightFront = 0;
     double leftBack = 0;
@@ -88,7 +87,6 @@ public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
             "AfweTBj/////AAABmZ1QwFXvX0ltj9QRI7IS1wtULCTBA7CyU8KibbraimizSOgb5iPrsHVE4P/nnAbJuNWXHsqZgW784iI7nfekundyBUv80cdOoe8y/O9125JNbD4fkyufJvrK2RSpv2w9GPY1AtM3fxo70t6r89/WQnpcAHPp244gr0Ua8GL5qUt8XPPE3WcTATty3C/GayFSfe+MTbV8OtB5qN34XhstZYDUgxHcJ+xQLwkYj+FtLTyDc+kRrg+oqLkYA3zNwksq9vWEvTTV0SzsFtU3NbFZtz3P068I25yPHOSqd4bNq36LAcrJchYGidrbJLtRqrEG+4lFD8FWEkpKoWIm4d1DiM0xCcQhiqHH/KQ3fDNP7Xd3";
 
     private VuforiaLocalizer vuforia;
-
     private TFObjectDetector tfod;
 
     @SuppressLint("DefaultLocale")
@@ -140,35 +138,11 @@ public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
                         // step through the list of recognitions and display boundary info.
                         int i = 0;
                         for (Recognition recognition : updatedRecognitions) {
-                            if(recognition.getLabel().equals(LABEL_FIRST_ELEMENT)){
-                                leftFront += -movementConstant;
-                                leftBack += movementConstant;
-                                rightFront += movementConstant;
-                                rightBack += -movementConstant;
-                            }else if(recognition.getLabel().equals(LABEL_SECOND_ELEMENT)){
-                                leftFront += movementConstant;
-                                leftBack += -movementConstant;
-                                rightFront += -movementConstant;
-                                rightBack += movementConstant;
-                            }
-                            double scalar = Math.max(Math.max(Math.abs(leftFront), Math.abs(leftBack)), Math.max(Math.abs(rightFront), Math.abs(rightBack)));
-                            if (scalar < 1) scalar = 1;
-                            telemetry.addData("Motor powers",""+leftFront+","+leftBack+","+rightBack+","+rightFront);
-                            left_front.setPower(leftFront / scalar * moveSpeed);
-                            left_back.setPower(leftBack / scalar * moveSpeed);
-                            right_front.setPower(rightFront / scalar * moveSpeed);
-                            right_back.setPower(rightBack / scalar * moveSpeed);
                             telemetry.addData(String.format("label (%d)", i), recognition.getLabel());
                             telemetry.addData(String.format("  left,top (%d)", i), "%.03f , %.03f",
                                 recognition.getLeft(), recognition.getTop());
                             telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f",
                                 recognition.getRight(), recognition.getBottom());
-                        }
-                        if(updatedRecognitions.size() == 0){
-                            leftFront +=  rotationConstant;
-                            leftBack +=  rotationConstant;
-                            rightFront +=  -rotationConstant;
-                            rightBack += -rotationConstant;
                         }
                         telemetry.update();
                     }
