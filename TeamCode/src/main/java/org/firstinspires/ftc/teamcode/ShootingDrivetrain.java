@@ -44,12 +44,11 @@ public class ShootingDrivetrain extends LinearOpMode {
 
         int flywheelSwitch = 0;
         int armTargetPosition = 0;
-        int vertArmPos = -123;
-        int horArmPos = -272;
-        int homeArmPos = 0;
+        int vertArmPos = arm.getCurrentPosition()-123;
+        int horArmPos = arm.getCurrentPosition()-272;
+        int homeArmPos = arm.getCurrentPosition();
         boolean gripToggle = false;
         int timeSinceLeftBumper = 0;
-
         waitForStart();
         while (opModeIsActive()) {
 
@@ -121,7 +120,6 @@ public class ShootingDrivetrain extends LinearOpMode {
             } else {
                 dPadUpPressed = false;
             }
-
 
             if (gamepad2.dpad_down) {
                 if (!dPadDownPressed) {
