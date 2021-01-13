@@ -55,7 +55,7 @@ public class Autonomous extends LinearOpMode {
         machine.addState(new Finish());
         */
         machine.addState(States.Start,new Start());
-        machine.addState(States.MoveToWobble,new Move(12,72,States.StopMovingToWobble.stateNum));
+        machine.addState(States.MoveToWobble,new Move());
         waitForStart();
         machine.runState(States.Start);
     }

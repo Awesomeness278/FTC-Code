@@ -17,6 +17,6 @@ public class State extends StateManager {
     @Override
     public void Exit(StateMachine machine) {
         int stateNumber = 0;
-        machine.runState(States.START);
+        machine.runState(States.Start);
     }
 }
