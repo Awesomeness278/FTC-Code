@@ -73,9 +73,6 @@ public class operatorMovementProgramOdometry extends LinearOpMode{
                 rightFront += 1;
                 rightBack += -1;
             }
-
-
-
             /*
             if (gamepad1.a) {
                 leftFront += 1;
