@@ -5,7 +5,7 @@ public class MoveToWobble extends StateManager {
     public void Run(StateMachine machine) {
         Autonomous opMode = machine.opMode;
         if(opMode.recognition.getLabel()=="Quad"){
-            Move move = new Move(0.0f,0.0f,States.StopMovingToWobble.stateNum);
+            MoveTest move = new MoveTest(0.0f,0.0f,States.StopMovingToWobble);
         }
         Exit(machine);
     }

@@ -15,7 +15,9 @@ import org.firstinspires.ftc.teamcode.Odometry.OdometryGlobalCoordinatePosition;
 
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous
 public class Autonomous extends LinearOpMode {
-    StateMachine machine = new StateMachine();
+    public Autonomous(){
+    }
+    StateMachine machine = new StateMachine(this);
     DcMotor LeftFrontMotor;
     DcMotor RightFrontMotor;
     DcMotor LeftBackMotor;
@@ -43,20 +45,24 @@ public class Autonomous extends LinearOpMode {
     Recognition recognition;
     @Override
     public void runOpMode() throws InterruptedException {
-        initVuforia();
-        initTfod();
-        if (tfod != null) {
-            tfod.activate();
-        }
         odometry = new OdometryGlobalCoordinatePosition(verticalLeft, verticalRight, horizontal, COUNTS_PER_INCH, 75);
         Thread positionThread = new Thread(odometry);
         odometry.reverseRightEncoder();
         odometry.reverseNormalEncoder();
         positionThread.start();
-        machine.addState(States.Start,new Start());
-        machine.addState(States.MoveToWobble,new Move());
         waitForStart();
-        machine.runState(States.Start);
+        MoveTest test = new MoveTest(12,12,States.Start);
+        test.Run(machine);
+//        initVuforia();
+//        initTfod();
+//        if (tfod != null) {
+//            tfod.activate();
+//        }
+//        machine.addState(States.Start,new Start());
+//        machine.addState(States.MoveToWobble,new MoveToWobble());
+//        machine.addState(States.Tensorflow,new Tensorflow());
+//        waitForStart();
+//        machine.runState(States.Start);
     }
     /*
     * Any methods that you use more than once can be defined here.
@@ -86,5 +92,8 @@ public class Autonomous extends LinearOpMode {
         tfodParameters.minResultConfidence = 0.8f;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
+    }
+    public double dist(double x1, double y1, double x2, double y2){
+        return Math.sqrt(Math.pow(x2-x1,2)+Math.pow(y2-y1,2));
     }
 }
