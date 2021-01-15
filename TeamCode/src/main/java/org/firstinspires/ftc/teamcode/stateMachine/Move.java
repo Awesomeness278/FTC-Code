@@ -15,9 +15,14 @@ public class Move extends StateManager {
             double orient = Math.atan(slope)/180;
         }
 
-
-
-
+        leftFront += -gamepad1.left_stick_y+gamepad1.left_stick_x+gamepad1.right_stick_x;
+        leftBack += -gamepad1.left_stick_y-gamepad1.left_stick_x+gamepad1.right_stick_x;
+        rightFront += -gamepad1.left_stick_y+gamepad1.left_stick_x-gamepad1.right_stick_x;
+        rightBack += -gamepad1.left_stick_y-gamepad1.left_stick_x-gamepad1.right_stick_x;
+        leftFrontMotor.setPower(leftFront/scalar*moveSpeed);
+        leftBackMotor.setPower(leftBack/scalar*moveSpeed);
+        rightFrontMotor.setPower(rightFront/scalar*moveSpeed);
+        rightBackMotor.setPower(rightBack/scalar*moveSpeed);
 
         while(!ExitCondition(machine)){
 
