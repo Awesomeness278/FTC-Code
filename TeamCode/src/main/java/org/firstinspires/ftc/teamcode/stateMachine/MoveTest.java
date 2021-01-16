@@ -62,6 +62,9 @@ public class MoveTest extends StateManager {
         left_front.setPower(0);
         right_back.setPower(0);
         right_front.setPower(0);
+        if(!opMode.opModeIsActive()){
+            opMode.stop();
+        }
         Exit(machine);
     }
 
@@ -75,7 +78,8 @@ public class MoveTest extends StateManager {
     public void Exit(StateMachine machine) {
         if(exit.stateNum==States.Stop.stateNum){
             machine.opMode.stop();
+        }else{
+            machine.runState(exit);
         }
-        machine.runState(exit);
     }
 }

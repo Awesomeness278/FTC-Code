@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.stateMachine;
 public class State extends StateManager {
     @Override
     public void Run(StateMachine machine) {
-        while(!ExitCondition(machine)){
+        while(!ExitCondition(machine)&&!machine.opMode.opModeIsActive()){
 
         }
         Exit(machine);

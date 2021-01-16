@@ -31,8 +31,6 @@ public class Autonomous extends LinearOpMode {
     DcMotor Conveyor;
     DcMotor Intake;
     DcMotor Claw;
-    ColorRangeSensor[] colors;
-    Servo[] servos;
     String rfName = "Right Front Motor", rbName = "Right Back Motor", lfName = "Left Front Motor", lbName = "Left Back Motor";
     String verticalLeftEncoderName = rbName, verticalRightEncoderName = lfName, horizontalEncoderName = rfName;
     OdometryGlobalCoordinatePosition odometry;
@@ -57,17 +55,19 @@ public class Autonomous extends LinearOpMode {
         if (tfod != null) {
             tfod.activate();
         }
+        tfod.setZoom(2,1.777777);
         initDriveHardwareMap(rfName, rbName, lfName, lbName, verticalLeftEncoderName, verticalRightEncoderName, horizontalEncoderName);
         odometry = new OdometryGlobalCoordinatePosition(verticalLeft, verticalRight, horizontal, COUNTS_PER_INCH, 75);
-        Thread positionThread = new Thread(odometry);
         odometry.reverseRightEncoder();
+        Thread positionThread = new Thread(odometry);
         positionThread.start();
         waitForStart();
         machine.addState(States.Tensorflow,new Tensorflow());
         machine.addState(States.MoveToWobble,new MoveToWobble());
         machine.addState(States.Move2,new MoveTest(12,48,States.Move3));
-        machine.addState(States.Move3,new MoveTest(12,60,States.Stop));
+        machine.addState(States.Move3,new MoveTest(12,68,States.Stop));
         machine.runState(States.Tensorflow);
+        stop();
     }
     /*
     * Any methods that you use more than once can be defined here.
@@ -94,7 +94,7 @@ public class Autonomous extends LinearOpMode {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-        tfodParameters.minResultConfidence = 0.8f;
+        tfodParameters.minResultConfidence = 0.75f;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
     }

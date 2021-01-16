@@ -72,18 +72,18 @@ public class OdometryCalibration extends LinearOpMode {
         waitForStart();
 
         //Begin calibration (if robot is unable to pivot at these speeds, please adjust the constant at the top of the code
-        while(getZAngle() < 90 && opModeIsActive()){
+        while(-getZAngle() < 90 && opModeIsActive()){
             right_front.setPower(-PIVOT_SPEED);
             right_back.setPower(-PIVOT_SPEED);
             left_front.setPower(PIVOT_SPEED);
             left_back.setPower(PIVOT_SPEED);
-            if(getZAngle() < 60) {
+            if(-getZAngle() < 60) {
                 setPowerAll(-PIVOT_SPEED, -PIVOT_SPEED, PIVOT_SPEED, PIVOT_SPEED);
             }else{
                 setPowerAll(-PIVOT_SPEED/2, -PIVOT_SPEED/2, PIVOT_SPEED/2, PIVOT_SPEED/2);
             }
 
-            telemetry.addData("IMU Angle", getZAngle());
+            telemetry.addData("IMU Angle", -getZAngle());
             telemetry.update();
         }
 
@@ -91,12 +91,12 @@ public class OdometryCalibration extends LinearOpMode {
         setPowerAll(0, 0, 0, 0);
         timer.reset();
         while(timer.milliseconds() < 1000 && opModeIsActive()){
-            telemetry.addData("IMU Angle", getZAngle());
+            telemetry.addData("IMU Angle", -getZAngle());
             telemetry.update();
         }
 
         //Record IMU and encoder values to calculate the constants for the global position algorithm
-        double angle = getZAngle();
+        double angle = -getZAngle();
 
         /*
         Encoder Difference is calculated by the formula (leftEncoder - rightEncoder)
@@ -107,7 +107,7 @@ public class OdometryCalibration extends LinearOpMode {
         double verticalEncoderTickOffsetPerDegree = encoderDifference/angle;
         double wheelBaseSeparation = (180*verticalEncoderTickOffsetPerDegree)/(Math.PI*COUNTS_PER_INCH);
 
-        horizontalTickOffset = horizontal.getCurrentPosition()/Math.toRadians(getZAngle());
+        horizontalTickOffset = horizontal.getCurrentPosition()/Math.toRadians(-getZAngle());
 
         //Write the constants to text files
         ReadWriteFile.writeFile(wheelBaseSeparationFile, String.valueOf(wheelBaseSeparation));
@@ -120,7 +120,7 @@ public class OdometryCalibration extends LinearOpMode {
             telemetry.addData("Horizontal Encoder Offset", horizontalTickOffset);
 
             //Display raw values
-            telemetry.addData("IMU Angle", getZAngle());
+            telemetry.addData("IMU Angle", -getZAngle());
             telemetry.addData("Vertical Left Position", -verticalLeft.getCurrentPosition());
             telemetry.addData("Vertical Right Position", verticalRight.getCurrentPosition());
             telemetry.addData("Horizontal Position", horizontal.getCurrentPosition());

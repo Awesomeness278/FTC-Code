@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 public class Start extends StateManager {
     @Override
     public void Run(StateMachine machine) {
-        while(!ExitCondition(machine)){
+        while(!ExitCondition(machine)&&machine.opMode.opModeIsActive()){
 
         }
         Exit(machine);
