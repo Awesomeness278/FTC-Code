@@ -37,6 +37,8 @@ public class MoveTest extends StateManager {
             double y = opMode.odometry.returnYCoordinate() / COUNTS_PER_INCH - ty;
             opMode.telemetry.addData("Orientation",opMode.odometry.returnOrientation());
             opMode.telemetry.addData("Runtime",opMode.getRuntime());
+            opMode.telemetry.addData("X",opMode.odometry.returnXCoordinate());
+            opMode.telemetry.addData("Y",opMode.odometry.returnYCoordinate());
             opMode.telemetry.update();
             double r = 1 / Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
             x = x * -r;
@@ -60,6 +62,7 @@ public class MoveTest extends StateManager {
         left_front.setPower(0);
         right_back.setPower(0);
         right_front.setPower(0);
+        Exit(machine);
     }
 
     @Override
@@ -70,7 +73,6 @@ public class MoveTest extends StateManager {
 
     @Override
     public void Exit(StateMachine machine) {
-        int stateNumber = 0;
         machine.runState(exit);
     }
 }
