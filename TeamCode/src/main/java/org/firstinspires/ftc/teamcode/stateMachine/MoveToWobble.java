@@ -6,12 +6,12 @@ public class MoveToWobble extends StateManager {
         Autonomous opMode = machine.opMode;
         if(opMode.recognition!=null){
             if(opMode.recognition.getLabel()=="Quad"){
-                machine.addState(States.Move2,new MoveTest(36,108,States.Move3));
+                machine.addState(States.Move1,new MoveTest(36,108,States.Move2));
             }else if(opMode.recognition.getLabel()=="Single"){
-                machine.addState(States.Move2,new MoveTest(12,84,States.Move3));
+                machine.addState(States.Move1,new MoveTest(12,84,States.Move2));
             }
         }else{
-            machine.addState(States.Move2,new MoveTest(36,60,States.Move3));
+            machine.addState(States.Move1,new MoveTest(36,60,States.Move2));
         }
         Exit(machine);
     }
@@ -23,7 +23,6 @@ public class MoveToWobble extends StateManager {
 
     @Override
     public void Exit(StateMachine machine) {
-        int stateNumber = 0;
-        machine.runState(States.Move2);
+        machine.runState(States.Move1);
     }
 }

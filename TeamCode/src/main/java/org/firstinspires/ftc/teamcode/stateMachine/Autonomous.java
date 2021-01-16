@@ -65,10 +65,9 @@ public class Autonomous extends LinearOpMode {
         waitForStart();
         machine.addState(States.Tensorflow,new Tensorflow());
         machine.addState(States.MoveToWobble,new MoveToWobble());
-        machine.addState(States.Move1,new MoveTest(12,48,States.Move2));
+        machine.addState(States.Move2,new MoveTest(12,48,States.Move3));
         machine.addState(States.Move3,new MoveTest(12,60,States.Stop));
         machine.runState(States.Tensorflow);
-        stop();
     }
     /*
     * Any methods that you use more than once can be defined here.
