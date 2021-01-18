@@ -44,14 +44,17 @@ public class ShootingDrivetrain extends LinearOpMode {
 
         int flywheelSwitch = 0;
         int armTargetPosition = 0;
-        int vertArmPos = 0;
-        int horArmPos = -245;
+        int vertArmPos = arm.getCurrentPosition()-123;
+        int horArmPos = arm.getCurrentPosition()-272;
+        int homeArmPos = arm.getCurrentPosition();
         boolean gripToggle = false;
-
+        int timeSinceLeftBumper = 0;
         waitForStart();
         while (opModeIsActive()) {
 
-            arm.setPower(0.15);
+            arm.setPower(0.25);
+
+            timeSinceLeftBumper--;
 
             //Movement
 
@@ -118,7 +121,6 @@ public class ShootingDrivetrain extends LinearOpMode {
                 dPadUpPressed = false;
             }
 
-
             if (gamepad2.dpad_down) {
                 if (!dPadDownPressed) {
                     flywheelPower -= 0.005;
@@ -143,42 +145,34 @@ public class ShootingDrivetrain extends LinearOpMode {
             shooter.setPower(-(flywheelSwitch * flywheelPower));
 
             //Intake and Conveyor
-            if(gamepad2.a){
+
+            if (gamepad2.a) {
                 intake.setPower(1);
-            }else{
+            } else {
                 intake.setPower(0);
             }
             if (gamepad2.b) {
                 conveyor.setPower(0.7);
-                intake.setPower(1);
             } else {
                 conveyor.setPower(0);
-                intake.setPower(0);
             }
             //Arm
-            if(gamepad1.y){
-                armTargetPosition -= 1;
-                arm.setTargetPosition(armTargetPosition);
-            }
-            if(gamepad1.x){
-                armTargetPosition += 1;
-                arm.setTargetPosition(armTargetPosition);
-            }
-            if(gamepad2.y){
-                armTargetPosition = -215;
-                arm.setTargetPosition(armTargetPosition);
-            }
             if(gamepad2.left_bumper && !leftBumperPressed){
-                if (armTargetPosition == vertArmPos) {
-                    armTargetPosition = horArmPos;
-                } else {
-                    armTargetPosition = vertArmPos;
+                if(timeSinceLeftBumper>0){
+                    armTargetPosition = homeArmPos;
+                }else{
+                    if (armTargetPosition == vertArmPos) {
+                        armTargetPosition = horArmPos;
+                    } else {
+                        armTargetPosition = vertArmPos;
+                    }
+                    timeSinceLeftBumper = 50;
                 }
                 leftBumperPressed = true;
-                arm.setTargetPosition(armTargetPosition);
             }else if(!gamepad2.left_bumper){
                 leftBumperPressed = false;
             }
+            arm.setTargetPosition(armTargetPosition);
 
             if (gamepad2.x) {
                 if (!xPressed) {

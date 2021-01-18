@@ -8,8 +8,6 @@ import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-
-
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous
 public class Autonomous extends LinearOpMode {
     StateManager manager = new StateManager();

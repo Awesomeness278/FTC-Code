@@ -41,7 +41,6 @@ public class MyOdometryOpmode extends LinearOpMode {
         positionThread.start();
 
         globalPositionUpdate.reverseRightEncoder();
-        globalPositionUpdate.reverseNormalEncoder();
 
         while(opModeIsActive()){
             //Display Global (x, y, theta) coordinates
