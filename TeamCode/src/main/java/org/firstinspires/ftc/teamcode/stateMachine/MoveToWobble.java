@@ -8,12 +8,12 @@ public class MoveToWobble extends StateManager {
         machine.addState(States.Move1,new MoveTest(-12,36,States.Move2));
         if(opMode.recognition!=null){
             if(opMode.recognition.getLabel().equals("Quad")){
-                machine.addState(States.Move2,new MoveTest(36,108,States.Move3));
+                machine.addState(States.Move2,new MoveTest(32,108,States.Move3));
             }else if(opMode.recognition.getLabel().equals("Single")){
-                machine.addState(States.Move2,new MoveTest(12,84,States.Move3));
+                machine.addState(States.Move2,new MoveTest(8,84,States.Move3));
             }
         }else{
-            machine.addState(States.Move2,new MoveTest(36,60,States.Move3));
+            machine.addState(States.Move2,new MoveTest(32,60,States.Move3));
         }
         Exit(machine);
     }

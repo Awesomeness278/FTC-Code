@@ -6,8 +6,9 @@ public enum States {
     Move1(2),
     Move2(3),
     Move3(4),
-    Move4(5),
-    Stop(5);
+    Wait(5),
+    Move4(6),
+    Stop(7);
     public int stateNum;
     States(int stateNum){
         this.stateNum = stateNum;

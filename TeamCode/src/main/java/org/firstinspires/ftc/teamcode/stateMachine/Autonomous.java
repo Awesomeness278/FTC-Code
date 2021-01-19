@@ -62,10 +62,12 @@ public class Autonomous extends LinearOpMode {
         Thread positionThread = new Thread(odometry);
         positionThread.start();
         waitForStart();
+        resetStartTime();
         while(!opModeIsActive()){}
         machine.addState(States.Tensorflow,new Tensorflow());
         machine.addState(States.MoveToWobble,new MoveToWobble());
-        machine.addState(States.Move3,new MoveTest(12,48,States.Move4));
+        machine.addState(States.Move3,new MoveTest(12,58,States.Wait));
+        machine.addState(States.Wait,new wait());
         machine.addState(States.Move4,new MoveTest(12,68,States.Stop));
         machine.runState(States.Tensorflow);
         stop();
