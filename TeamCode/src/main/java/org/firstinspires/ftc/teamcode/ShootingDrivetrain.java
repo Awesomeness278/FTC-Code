@@ -31,7 +31,7 @@ public class ShootingDrivetrain extends LinearOpMode {
         telemetry.addData("Status", "Init Complete");
         telemetry.update();
 
-        double flywheelPower = 0.8;
+        double flywheelPower = 0.97;
         double gripAmount = 0;
         final double movementConstant = 0.8;
         final double rotationConstant = 0.5;
@@ -47,6 +47,7 @@ public class ShootingDrivetrain extends LinearOpMode {
         int vertArmPos = 0;
         int horArmPos = -245;
         boolean gripToggle = false;
+
         waitForStart();
         while (opModeIsActive()) {
 
@@ -117,6 +118,7 @@ public class ShootingDrivetrain extends LinearOpMode {
                 dPadUpPressed = false;
             }
 
+
             if (gamepad2.dpad_down) {
                 if (!dPadDownPressed) {
                     flywheelPower -= 0.005;
@@ -185,8 +187,8 @@ public class ShootingDrivetrain extends LinearOpMode {
                 xPressed = true;
             } else xPressed = false;
 
-            if (gripToggle) {
-                grip.setPosition(-0.15);
+            if (gripToggle == true) {
+                grip.setPosition(1);
             } else {
                 grip.setPosition(0.25);
             }
