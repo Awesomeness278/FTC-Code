@@ -27,8 +27,7 @@ public class MyOdometryOpmode extends LinearOpMode {
     OdometryGlobalCoordinatePosition globalPositionUpdate;
 
     @Override
-    public void runOpMode() throws InterruptedException {
-        int x = 1/0;
+    public void runOpMode() {
         //Initialize hardware map values. PLEASE UPDATE THESE VALUES TO MATCH YOUR CONFIGURATION
         initDriveHardwareMap(rfName, rbName, lfName, lbName, verticalLeftEncoderName, verticalRightEncoderName, horizontalEncoderName);
 
