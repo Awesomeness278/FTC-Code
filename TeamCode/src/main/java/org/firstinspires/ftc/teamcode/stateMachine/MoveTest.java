@@ -37,8 +37,8 @@ public class MoveTest extends StateManager {
             double y = opMode.odometry.returnYCoordinate() / COUNTS_PER_INCH - ty;
             opMode.telemetry.addData("Orientation",opMode.odometry.returnOrientation());
             opMode.telemetry.addData("Runtime",opMode.getRuntime());
-            opMode.telemetry.addData("X",opMode.odometry.returnXCoordinate());
-            opMode.telemetry.addData("Y",opMode.odometry.returnYCoordinate());
+            opMode.telemetry.addData("X",opMode.odometry.returnXCoordinate()/COUNTS_PER_INCH);
+            opMode.telemetry.addData("Y",opMode.odometry.returnYCoordinate()/COUNTS_PER_INCH);
             opMode.telemetry.update();
             double radius = 1 / Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
             x = x * -radius;
@@ -64,14 +64,15 @@ public class MoveTest extends StateManager {
         right_front.setPower(0);
         if(!opMode.opModeIsActive()){
             opMode.stop();
+        }else {
+            Exit(machine);
         }
-        Exit(machine);
     }
 
     @Override
     public boolean ExitCondition(StateMachine machine) {
         Autonomous opMode = machine.opMode;
-        return opMode.dist(tx,ty,opMode.odometry.returnXCoordinate()/COUNTS_PER_INCH,opMode.odometry.returnYCoordinate()/COUNTS_PER_INCH)<2;
+        return opMode.dist(tx,ty,opMode.odometry.returnXCoordinate()/COUNTS_PER_INCH,opMode.odometry.returnYCoordinate()/COUNTS_PER_INCH)>2;
     }
 
     @Override

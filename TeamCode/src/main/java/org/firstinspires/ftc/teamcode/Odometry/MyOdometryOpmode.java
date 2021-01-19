@@ -28,6 +28,7 @@ public class MyOdometryOpmode extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+        int x = 1/0;
         //Initialize hardware map values. PLEASE UPDATE THESE VALUES TO MATCH YOUR CONFIGURATION
         initDriveHardwareMap(rfName, rbName, lfName, lbName, verticalLeftEncoderName, verticalRightEncoderName, horizontalEncoderName);
 
@@ -54,6 +55,8 @@ public class MyOdometryOpmode extends LinearOpMode {
             telemetry.addData("horizontal encoder position", horizontal.getCurrentPosition());
 
             telemetry.addData("Thread Active", positionThread.isAlive());
+            telemetry.addData("Gamepad 1 right stick x",gamepad1.right_stick_x);
+            telemetry.addData("Gamepad 1 right stick y",gamepad1.right_stick_y);
             telemetry.update();
             double leftFront = 0;
             double leftBack = 0;

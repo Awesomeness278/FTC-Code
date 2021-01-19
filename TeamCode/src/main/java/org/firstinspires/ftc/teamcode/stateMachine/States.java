@@ -6,6 +6,7 @@ public enum States {
     Move1(2),
     Move2(3),
     Move3(4),
+    Move4(5),
     Stop(5);
     public int stateNum;
     States(int stateNum){
