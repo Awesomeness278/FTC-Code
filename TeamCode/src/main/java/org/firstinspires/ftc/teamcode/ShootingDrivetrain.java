@@ -109,6 +109,23 @@ public class ShootingDrivetrain extends LinearOpMode {
 				dPadUpPressed = false;
 			}*/
 
+            if(gamepad2.right_bumper) {
+                if (!rightBumperPressed) {
+                    flywheelSwitch = (flywheelSwitch + 1) % 2;
+                } else {
+                    rightBumperPressed = false;
+                }
+                shooter.setPower(-(flywheelSwitch * flywheelPower));
+                rightBumperPressed = true;
+                for(int i = 0;i<3;i++) {
+                    sleep(250);
+                    conveyor.setPower(0.7);
+                    sleep(500);
+                    conveyor.setPower(0);
+                }
+                shooter.setPower(0);
+            }
+
             if (gamepad2.dpad_up) {
                 if (!dPadUpPressed) {
                     flywheelPower += 0.005;
@@ -132,15 +149,15 @@ public class ShootingDrivetrain extends LinearOpMode {
             telemetry.addData("x is pressed: ", xPressed);
             telemetry.addData("Grip toggle: ", gripToggle);
             telemetry.update();
-            if (gamepad2.right_bumper) {
-                if (!rightBumperPressed) {
-                    flywheelSwitch = (flywheelSwitch + 1) % 2;
-                }
-                rightBumperPressed = true;
-            } else {
-                rightBumperPressed = false;
-            }
-            shooter.setPower(-(flywheelSwitch * flywheelPower));
+            // if (gamepad2.right_bumper) {
+            //     if (!rightBumperPressed) {
+            //        flywheelSwitch = (flywheelSwitch + 1) % 2;
+            //      }
+            //       rightBumperPressed = true;
+            //  } else {
+            //      rightBumperPressed = false;
+            //   }
+            //shooter.setPower(-(flywheelSwitch * flywheelPower));
 
             //Intake and Conveyor
             if(gamepad2.left_trigger>=0.5){
