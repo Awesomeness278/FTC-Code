@@ -143,12 +143,23 @@ public class ShootingDrivetrain extends LinearOpMode {
             shooter.setPower(-(flywheelSwitch * flywheelPower));
 
             //Intake and Conveyor
+            if(gamepad2.left_trigger>=0.5){
+                intake.setDirection(DcMotorSimple.Direction.REVERSE);
+                intake.setPower(1);
+            }
+            if(gamepad2.right_trigger>=0.5){
+                conveyor.setDirection(DcMotorSimple.Direction.REVERSE);
+                conveyor.setPower(0.15);
+            }
             if(gamepad2.a){
+                intake.setDirection(DcMotorSimple.Direction.FORWARD);
                 intake.setPower(1);
             }else{
                 intake.setPower(0);
             }
             if (gamepad2.b) {
+                intake.setDirection(DcMotorSimple.Direction.FORWARD);
+                conveyor.setDirection(DcMotorSimple.Direction.FORWARD);
                 conveyor.setPower(0.7);
                 intake.setPower(1);
             } else {
