@@ -1,10 +1,6 @@
 package org.firstinspires.ftc.teamcode.stateMachine;
 
-
-import android.graphics.Path;
-
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -15,8 +11,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.Odometry.OdometryGlobalCoordinatePosition;
-
-import static org.firstinspires.ftc.teamcode.stateMachine.Tensorflow.*;
 
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous
 public class Autonomous extends LinearOpMode {
@@ -30,7 +24,9 @@ public class Autonomous extends LinearOpMode {
     DcMotor Shooter;
     DcMotor Conveyor;
     DcMotor Intake;
-    DcMotor Claw;
+    DcMotor Arm;
+    Servo Claw;
+    int rings = 3;
     String rfName = "Right Front Motor", rbName = "Right Back Motor", lfName = "Left Front Motor", lbName = "Left Back Motor";
     String verticalLeftEncoderName = rbName, verticalRightEncoderName = lfName, horizontalEncoderName = rfName;
     OdometryGlobalCoordinatePosition odometry;
@@ -41,7 +37,8 @@ public class Autonomous extends LinearOpMode {
             "AfweTBj/////AAABmZ1QwFXvX0ltj9QRI7IS1wtULCTBA7CyU8KibbraimizSOgb5iPrsHVE4P/nnAbJuNWXHsqZgW784iI7nfekundyBUv80cdOoe8y/O9125JNbD4fkyufJvrK2RSpv2w9GPY1AtM3fxo70t6r89/WQnpcAHPp244gr0Ua8GL5qUt8XPPE3WcTATty3C/GayFSfe+MTbV8OtB5qN34XhstZYDUgxHcJ+xQLwkYj+FtLTyDc+kRrg+oqLkYA3zNwksq9vWEvTTV0SzsFtU3NbFZtz3P068I25yPHOSqd4bNq36LAcrJchYGidrbJLtRqrEG+4lFD8FWEkpKoWIm4d1DiM0xCcQhiqHH/KQ3fDNP7Xd3";
 
     VuforiaLocalizer vuforia;
-
+    int startingPos = 0;
+    int delay = -1;
     TFObjectDetector tfod;
     static final String TFOD_MODEL_ASSET = "UltimateGoal.tflite";
     static final String LABEL_FIRST_ELEMENT = "Quad";
@@ -61,11 +58,38 @@ public class Autonomous extends LinearOpMode {
         odometry.reverseRightEncoder();
         Thread positionThread = new Thread(odometry);
         positionThread.start();
+        while(startingPos==0){
+            if(gamepad1.a){
+                startingPos = 1;
+            }
+            if(gamepad1.b){
+                startingPos = 2;
+            }
+            if(gamepad1.x){
+                startingPos = 3;
+            }
+            if(gamepad1.y){
+                startingPos = 4;
+            }
+        }
+        telemetry.addData("Starting Position",startingPos);
+        telemetry.update();
+        while(delay==-1){
+            if(gamepad1.left_trigger>0.3){
+                delay = 0;
+            }
+            if(gamepad1.right_trigger>0.3){
+                delay = 3;
+            }
+        }
+        telemetry.addData("Starting Delay",delay);
         waitForStart();
         resetStartTime();
+        while(getRuntime()<delay){}
         while(!opModeIsActive()){}
         machine.addState(States.Tensorflow,new Tensorflow());
         machine.addState(States.MoveToWobble,new MoveToWobble());
+        machine.addState(States.DropWobble,new DropWobble());
         machine.addState(States.Move3,new MoveTest(12,58,States.Wait));
         machine.addState(States.Wait,new wait());
         machine.addState(States.Move4,new MoveTest(12,68,States.Stop));
@@ -144,5 +168,9 @@ public class Autonomous extends LinearOpMode {
 
         telemetry.addData("Status", "Hardware Map Init Complete");
         telemetry.update();
+        Conveyor = hardwareMap.get(DcMotor.class,"Conveyor");
+        Shooter = hardwareMap.get(DcMotor.class,"Shooter");
+        Arm = hardwareMap.get(DcMotor.class,"Arm");
+        Claw = hardwareMap.get(Servo.class,"Grip");
     }
 }

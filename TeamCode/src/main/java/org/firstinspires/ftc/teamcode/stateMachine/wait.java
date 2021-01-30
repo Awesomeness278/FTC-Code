@@ -4,7 +4,16 @@ public class wait extends StateManager {
     public wait(){}
     @Override
     public void Run(StateMachine machine) {
-        while(!ExitCondition(machine)&&machine.opMode.opModeIsActive()){}
+        double delay = 2;
+        while(!ExitCondition(machine)&&machine.opMode.opModeIsActive()){
+            machine.opMode.Shooter.setPower(1);
+            if(machine.opMode.getRuntime()-delay<machine.opMode.getRuntime()-machine.opMode.getRuntime()%(2*delay)) {
+                machine.opMode.Conveyor.setPower(1);
+            }else{
+                machine.opMode.Conveyor.setPower(0);
+            }
+        }
+        machine.opMode.Shooter.setPower(0);
         Exit(machine);
     }
 
