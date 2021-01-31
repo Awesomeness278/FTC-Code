@@ -32,7 +32,7 @@ public class OdometryCalibration extends LinearOpMode {
     String rfName = "Right Front Motor", rbName = "Right Back Motor", lfName = "Left Front Motor", lbName = "Left Back Motor";
     String verticalLeftEncoderName = rbName, verticalRightEncoderName = lfName, horizontalEncoderName = rfName;
 
-    final double PIVOT_SPEED = 0.5;
+    final double PIVOT_SPEED = 0.25;
 
     //The amount of encoder ticks for each inch the robot moves. THIS WILL CHANGE FOR EACH ROBOT AND NEEDS TO BE UPDATED HERE
     final double COUNTS_PER_INCH = 307.699557;
@@ -72,18 +72,12 @@ public class OdometryCalibration extends LinearOpMode {
         waitForStart();
 
         //Begin calibration (if robot is unable to pivot at these speeds, please adjust the constant at the top of the code
-        while(-getZAngle() < 90 && opModeIsActive()){
+        while(!gamepad1.a && opModeIsActive()){
             right_front.setPower(-PIVOT_SPEED);
             right_back.setPower(-PIVOT_SPEED);
             left_front.setPower(PIVOT_SPEED);
             left_back.setPower(PIVOT_SPEED);
-            if(-getZAngle() < 60) {
-                setPowerAll(-PIVOT_SPEED, -PIVOT_SPEED, PIVOT_SPEED, PIVOT_SPEED);
-            }else{
-                setPowerAll(-PIVOT_SPEED/2, -PIVOT_SPEED/2, PIVOT_SPEED/2, PIVOT_SPEED/2);
-            }
-
-            telemetry.addData("IMU Angle", -getZAngle());
+            telemetry.addData("IMU Angle", getYAngle());
             telemetry.update();
         }
 
@@ -91,12 +85,11 @@ public class OdometryCalibration extends LinearOpMode {
         setPowerAll(0, 0, 0, 0);
         timer.reset();
         while(timer.milliseconds() < 1000 && opModeIsActive()){
-            telemetry.addData("IMU Angle", -getZAngle());
+            telemetry.addData("IMU Angle", getYAngle());
             telemetry.update();
         }
 
         //Record IMU and encoder values to calculate the constants for the global position algorithm
-        double angle = -getZAngle();
 
         /*
         Encoder Difference is calculated by the formula (leftEncoder - rightEncoder)
@@ -104,10 +97,10 @@ public class OdometryCalibration extends LinearOpMode {
         THIS MAY NEED TO BE CHANGED FOR EACH ROBOT
        */
         double encoderDifference = Math.abs(verticalLeft.getCurrentPosition()) + (Math.abs(verticalRight.getCurrentPosition()));
-        double verticalEncoderTickOffsetPerDegree = encoderDifference/angle;
+        double verticalEncoderTickOffsetPerDegree = encoderDifference/90;
         double wheelBaseSeparation = (180*verticalEncoderTickOffsetPerDegree)/(Math.PI*COUNTS_PER_INCH);
 
-        horizontalTickOffset = horizontal.getCurrentPosition()/Math.toRadians(-getZAngle());
+        horizontalTickOffset = horizontal.getCurrentPosition()/Math.toRadians(-getYAngle());
 
         //Write the constants to text files
         ReadWriteFile.writeFile(wheelBaseSeparationFile, String.valueOf(wheelBaseSeparation));
@@ -120,7 +113,7 @@ public class OdometryCalibration extends LinearOpMode {
             telemetry.addData("Horizontal Encoder Offset", horizontalTickOffset);
 
             //Display raw values
-            telemetry.addData("IMU Angle", -getZAngle());
+            telemetry.addData("IMU Angle", -getYAngle());
             telemetry.addData("Vertical Left Position", -verticalLeft.getCurrentPosition());
             telemetry.addData("Vertical Right Position", verticalRight.getCurrentPosition());
             telemetry.addData("Horizontal Position", horizontal.getCurrentPosition());
@@ -166,6 +159,7 @@ public class OdometryCalibration extends LinearOpMode {
         left_back.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         right_front.setDirection(DcMotorSimple.Direction.REVERSE);
+        right_back.setDirection(DcMotorSimple.Direction.REVERSE);
 
         telemetry.addData("Status", "Hardware Map Init Complete");
         telemetry.update();
@@ -176,8 +170,8 @@ public class OdometryCalibration extends LinearOpMode {
      * Gets the orientation of the robot using the REV IMU
      * @return the angle of the robot
      */
-    private double getZAngle(){
-        return (-imu.getAngularOrientation().firstAngle);
+    private double getYAngle(){
+        return (-imu.getAngularOrientation().thirdAngle);
     }
 
     /**

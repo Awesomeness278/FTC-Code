@@ -23,10 +23,8 @@ public class Autonomous extends LinearOpMode {
     DcMotor right_back;
     DcMotor Shooter;
     DcMotor Conveyor;
-    DcMotor Intake;
     DcMotor Arm;
     Servo Claw;
-    int rings = 3;
     String rfName = "Right Front Motor", rbName = "Right Back Motor", lfName = "Left Front Motor", lbName = "Left Back Motor";
     String verticalLeftEncoderName = rbName, verticalRightEncoderName = lfName, horizontalEncoderName = rfName;
     OdometryGlobalCoordinatePosition odometry;
@@ -46,46 +44,49 @@ public class Autonomous extends LinearOpMode {
     double COUNTS_PER_INCH = 307.699557;
     Recognition recognition;
     @Override
-    public void runOpMode() throws InterruptedException {
+    public void runOpMode() {
+        Arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         initVuforia();
         initTfod();
         if (tfod != null) {
             tfod.activate();
         }
+        assert tfod != null;
         tfod.setZoom(2,1.777777);
         initDriveHardwareMap(rfName, rbName, lfName, lbName, verticalLeftEncoderName, verticalRightEncoderName, horizontalEncoderName);
         odometry = new OdometryGlobalCoordinatePosition(verticalLeft, verticalRight, horizontal, COUNTS_PER_INCH, 75);
         odometry.reverseRightEncoder();
+        odometry.reverseLeftEncoder();
         Thread positionThread = new Thread(odometry);
         positionThread.start();
-        while(startingPos==0){
-            if(gamepad1.a){
-                startingPos = 1;
-            }
-            if(gamepad1.b){
-                startingPos = 2;
-            }
-            if(gamepad1.x){
-                startingPos = 3;
-            }
-            if(gamepad1.y){
-                startingPos = 4;
-            }
-        }
-        telemetry.addData("Starting Position",startingPos);
-        telemetry.update();
-        while(delay==-1){
-            if(gamepad1.left_trigger>0.3){
-                delay = 0;
-            }
-            if(gamepad1.right_trigger>0.3){
-                delay = 3;
-            }
-        }
-        telemetry.addData("Starting Delay",delay);
+//        while(startingPos==0){
+//            if(gamepad1.a){
+//                startingPos = 1;
+//            }
+//            if(gamepad1.b){
+//                startingPos = 2;
+//            }
+//            if(gamepad1.x){
+//                startingPos = 3;
+//            }
+//            if(gamepad1.y){
+//                startingPos = 4;
+//            }
+//        }
+//        telemetry.addData("Starting Position",startingPos);
+//        telemetry.update();
+//        while(delay==-1){
+//            if(gamepad1.left_trigger>0.3){
+//                delay = 0;
+//            }
+//            if(gamepad1.right_trigger>0.3){
+//                delay = 3;
+//            }
+//        }
+//        telemetry.addData("Starting Delay",delay);
         waitForStart();
         resetStartTime();
-        while(getRuntime()<delay){}
+//        while(getRuntime()<delay){}
         while(!opModeIsActive()){}
         machine.addState(States.Tensorflow,new Tensorflow());
         machine.addState(States.MoveToWobble,new MoveToWobble());
@@ -162,7 +163,6 @@ public class Autonomous extends LinearOpMode {
         left_front.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         left_back.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        right_back.setDirection(DcMotorSimple.Direction.REVERSE);
         left_front.setDirection(DcMotorSimple.Direction.REVERSE);
         left_back.setDirection(DcMotorSimple.Direction.REVERSE);
 

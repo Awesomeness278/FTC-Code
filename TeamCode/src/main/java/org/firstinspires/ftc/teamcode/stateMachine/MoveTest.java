@@ -10,10 +10,10 @@ public class MoveTest extends StateManager {
     double ty;
     double COUNTS_PER_INCH = 307.699557;
     States exit;
-    double sp = 0.4;
+    double sp = 0.6;
     public MoveTest(double tx, double ty,States exit){
-        this.tx = tx;
-        this.ty = ty;
+        this.tx = -tx;
+        this.ty = -ty;
         this.exit = exit;
     }
     double startX;

@@ -41,7 +41,7 @@ public class MyOdometryOpmode extends LinearOpMode {
         positionThread.start();
 
         globalPositionUpdate.reverseRightEncoder();
-        //globalPositionUpdate.reverseNormalEncoder();
+        globalPositionUpdate.reverseLeftEncoder();
 
         while(opModeIsActive()){
             //Display Global (x, y, theta) coordinates
@@ -167,7 +167,6 @@ public class MyOdometryOpmode extends LinearOpMode {
         left_front.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         left_back.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        right_back.setDirection(DcMotorSimple.Direction.REVERSE);
         left_front.setDirection(DcMotorSimple.Direction.REVERSE);
         left_back.setDirection(DcMotorSimple.Direction.REVERSE);
 

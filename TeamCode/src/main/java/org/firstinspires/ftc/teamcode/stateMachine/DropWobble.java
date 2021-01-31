@@ -3,12 +3,14 @@ package org.firstinspires.ftc.teamcode.stateMachine;
 public class DropWobble extends StateManager {
     @Override
     public void Run(StateMachine machine) {
+        machine.opMode.Arm.setPower(-0.15);
         machine.opMode.Arm.setTargetPosition(-245);
-        while(machine.opMode.Arm.getCurrentPosition()!=-245&&machine.opMode.opModeIsActive()){}
-        machine.opMode.Claw.setPosition(0.25);
-        while(machine.opMode.Claw.getPosition()!=0.25&&machine.opMode.opModeIsActive()){}
-        if(!machine.opMode.opModeIsActive()){
-            machine.opMode.stop();
+        double startWait = machine.opMode.getRuntime();
+        while(machine.opMode.getRuntime()-startWait<1){
+        }
+        machine.opMode.Claw.setPosition(1);
+        startWait = machine.opMode.getRuntime();
+        while(machine.opMode.getRuntime()-startWait<1){
         }
         Exit(machine);
     }
