@@ -45,7 +45,6 @@ public class Autonomous extends LinearOpMode {
     Recognition recognition;
     @Override
     public void runOpMode() {
-        Arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         initVuforia();
         initTfod();
         if (tfod != null) {
@@ -172,5 +171,7 @@ public class Autonomous extends LinearOpMode {
         Shooter = hardwareMap.get(DcMotor.class,"Shooter");
         Arm = hardwareMap.get(DcMotor.class,"Arm");
         Claw = hardwareMap.get(Servo.class,"Grip");
+        Arm.setTargetPosition(0);
+        Arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 }

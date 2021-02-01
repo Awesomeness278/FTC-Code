@@ -5,6 +5,7 @@ public class wait extends StateManager {
     @Override
     public void Run(StateMachine machine) {
         double delay = 2;
+        double time = 0.2;
         while(!ExitCondition(machine)&&machine.opMode.opModeIsActive()) {
             double leftFront = 0;
             double rightFront = 0;
@@ -21,7 +22,7 @@ public class wait extends StateManager {
             machine.opMode.right_front.setPower(rightFront / scalar * 0.1);
             machine.opMode.right_back.setPower(rightBack / scalar * 0.1);
             machine.opMode.Shooter.setPower(-1);
-            if (machine.opMode.getRuntime() - delay < machine.opMode.getRuntime() - machine.opMode.getRuntime() % (2 * delay)) {
+            if (machine.opMode.getRuntime() - time < machine.opMode.getRuntime() - machine.opMode.getRuntime() % (time+delay)) {
                 machine.opMode.Conveyor.setPower(1);
             } else {
                 machine.opMode.Conveyor.setPower(0);
