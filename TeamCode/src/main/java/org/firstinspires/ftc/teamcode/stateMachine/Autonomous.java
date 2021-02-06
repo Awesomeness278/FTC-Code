@@ -20,6 +20,7 @@ public class Autonomous extends LinearOpMode {
     DcMotor left_front;
     DcMotor right_front;
     DcMotor left_back;
+    int position = 3;
     DcMotor right_back;
     DcMotor Shooter;
     DcMotor Conveyor;
@@ -33,7 +34,6 @@ public class Autonomous extends LinearOpMode {
     DcMotor horizontal;
     private static final String VUFORIA_KEY =
             "AfweTBj/////AAABmZ1QwFXvX0ltj9QRI7IS1wtULCTBA7CyU8KibbraimizSOgb5iPrsHVE4P/nnAbJuNWXHsqZgW784iI7nfekundyBUv80cdOoe8y/O9125JNbD4fkyufJvrK2RSpv2w9GPY1AtM3fxo70t6r89/WQnpcAHPp244gr0Ua8GL5qUt8XPPE3WcTATty3C/GayFSfe+MTbV8OtB5qN34XhstZYDUgxHcJ+xQLwkYj+FtLTyDc+kRrg+oqLkYA3zNwksq9vWEvTTV0SzsFtU3NbFZtz3P068I25yPHOSqd4bNq36LAcrJchYGidrbJLtRqrEG+4lFD8FWEkpKoWIm4d1DiM0xCcQhiqHH/KQ3fDNP7Xd3";
-
     VuforiaLocalizer vuforia;
     int startingPos = 0;
     int delay = -1;
@@ -51,7 +51,7 @@ public class Autonomous extends LinearOpMode {
             tfod.activate();
         }
         assert tfod != null;
-        tfod.setZoom(2,1.777777);
+        tfod.setZoom(1.3,16.0/9.0);
         initDriveHardwareMap(rfName, rbName, lfName, lbName, verticalLeftEncoderName, verticalRightEncoderName, horizontalEncoderName);
         odometry = new OdometryGlobalCoordinatePosition(verticalLeft, verticalRight, horizontal, COUNTS_PER_INCH, 75);
         odometry.reverseRightEncoder();
@@ -86,14 +86,26 @@ public class Autonomous extends LinearOpMode {
         waitForStart();
         resetStartTime();
 //        while(getRuntime()<delay){}
-        while(!opModeIsActive()){}
-        machine.addState(States.Tensorflow,new Tensorflow());
-        machine.addState(States.MoveToWobble,new MoveToWobble());
-        machine.addState(States.DropWobble,new DropWobble());
-        machine.addState(States.Move3,new MoveTest(12,58,States.Wait));
-        machine.addState(States.Wait,new wait());
-        machine.addState(States.Move4,new MoveTest(12,68,States.Stop));
-        machine.runState(States.Tensorflow);
+        if(position == 2) {
+            machine.opMode.Claw.setPosition(0);
+            machine.addState(States.Tensorflow, new Tensorflow());
+            machine.addState(States.MoveToWobble, new MoveToWobble(position));
+            machine.addState(States.DropWobble, new DropWobble());
+            machine.addState(States.Move3, new MoveTest(-8, 60, States.Wait));
+            machine.addState(States.Wait, new wait());
+            machine.addState(States.Move4, new MoveTest(-12, 68, States.Stop));
+            machine.runState(States.Tensorflow);
+        }
+        if(position == 3) {
+            machine.opMode.Claw.setPosition(0);
+            machine.addState(States.Tensorflow, new Tensorflow());
+            machine.addState(States.MoveToWobble, new MoveToWobble(position));
+            machine.addState(States.DropWobble, new DropWobble());
+            machine.addState(States.Move3, new MoveTest(8, 60, States.Wait));
+            machine.addState(States.Wait, new wait());
+            machine.addState(States.Move4, new MoveTest(12, 68, States.Stop));
+            machine.runState(States.Tensorflow);
+        }
         stop();
     }
     /*

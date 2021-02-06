@@ -1,9 +1,6 @@
 package org.firstinspires.ftc.teamcode.stateMachine;
 
-import android.sax.StartElementListener;
-
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 public class MoveTest extends StateManager {
     double tx;

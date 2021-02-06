@@ -173,8 +173,8 @@ public class ShootingDrivetrain extends LinearOpMode {
                 xPressed = true;
             } else xPressed = false;
 
-            if (gripToggle == true) {
-                grip.setPosition(-0.15);
+            if (gripToggle) {
+                grip.setPosition(0);
             } else {
                 grip.setPosition(0.25);
             }

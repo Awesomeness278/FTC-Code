@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.stateMachine;
 
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
 import java.util.ArrayList;
 
 public class StateMachine {
