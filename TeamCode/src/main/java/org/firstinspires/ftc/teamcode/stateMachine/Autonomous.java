@@ -58,32 +58,32 @@ public class Autonomous extends LinearOpMode {
         odometry.reverseLeftEncoder();
         Thread positionThread = new Thread(odometry);
         positionThread.start();
-        while(startingPos==0){
-            if(gamepad1.a){
-                startingPos = 1;
-            }
-            if(gamepad1.b){
-                startingPos = 2;
-            }
-            if(gamepad1.x){
-                startingPos = 3;
-            }
-            if(gamepad1.y){
-                startingPos = 4;
-            }
-        }
-        telemetry.addData("Starting Position",startingPos);
-        telemetry.update();
-        while(delay==-1){
-            if(gamepad1.left_trigger>0.3){
-                delay = 0;
-            }
-            if(gamepad1.right_trigger>0.3){
-                delay = 3;
-            }
-        }
-        telemetry.addData("Starting Delay",delay);
-        telemetry.update();
+//        while(startingPos==0){
+//            if(gamepad1.a){
+//                startingPos = 1;
+//            }
+//            if(gamepad1.b){
+//                startingPos = 2;
+//            }
+//            if(gamepad1.x){
+//                startingPos = 3;
+//            }
+//            if(gamepad1.y){
+//                startingPos = 4;
+//            }
+//        }
+//        telemetry.addData("Starting Position",startingPos);
+//        telemetry.update();
+//        while(delay==-1){
+//            if(gamepad1.left_trigger>0.3){
+//                delay = 0;
+//            }
+//            if(gamepad1.right_trigger>0.3){
+//                delay = 3;
+//            }
+//        }
+//        telemetry.addData("Starting Delay",delay);
+//        telemetry.update();
         waitForStart();
         resetStartTime();
         AutonomousData.getInstance().SetStartingLocation(position);

@@ -42,7 +42,7 @@ public class wait extends StateManager {
                 shoot = true;
             }
             if ((machine.opMode.getRuntime()-currentTime) - time < (machine.opMode.getRuntime()-currentTime) - (machine.opMode.getRuntime()-currentTime) % (time+delay) && shoot) {
-                machine.opMode.Conveyor.setPower(1);
+                machine.opMode.Conveyor.setPower(-1);
                 if(!updated){
                     rings--;
                     updated=true;
