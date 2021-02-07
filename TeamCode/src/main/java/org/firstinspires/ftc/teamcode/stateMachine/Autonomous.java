@@ -86,27 +86,17 @@ public class Autonomous extends LinearOpMode {
         telemetry.update();
         waitForStart();
         resetStartTime();
+        AutonomousData.getInstance().SetStartingLocation(position);
 //        while(getRuntime()<delay){}
-        if(position == 2) {
-            machine.opMode.Claw.setPosition(0);
-            machine.addState(States.Tensorflow, new Tensorflow());
-            machine.addState(States.MoveToWobble, new MoveToWobble(position));
-            machine.addState(States.DropWobble, new DropWobble());
-            machine.addState(States.Move3, new MoveTest(-8, 60, States.Wait));
-            machine.addState(States.Wait, new wait());
-            machine.addState(States.Move4, new MoveTest(-12, 68, States.Stop));
-            machine.runState(States.Tensorflow);
-        }
-        if(position == 3) {
-            machine.opMode.Claw.setPosition(0);
-            machine.addState(States.Tensorflow, new Tensorflow());
-            machine.addState(States.MoveToWobble, new MoveToWobble(position));
-            machine.addState(States.DropWobble, new DropWobble());
-            machine.addState(States.Move3, new MoveTest(8, 60, States.Wait));
-            machine.addState(States.Wait, new wait());
-            machine.addState(States.Move4, new MoveTest(12, 68, States.Stop));
-            machine.runState(States.Tensorflow);
-        }
+        machine.opMode.Claw.setPosition(0);
+        machine.addState(States.Tensorflow, new Tensorflow());
+        machine.addState(States.MoveToWobble, new MoveToWobble());
+        machine.addState(States.DropWobble, new DropWobble());
+        machine.addState(States.Move3, new MoveTest(AutonomousData.getInstance().getShootingXPosition(), 60, States.Wait));
+        machine.addState(States.Wait, new wait());
+        machine.addState(States.Move4, new MoveTest(AutonomousData.getInstance().getLineXPosition(), 68, States.Stop));
+        machine.runState(States.Tensorflow);
+
         stop();
     }
     /*
@@ -186,5 +176,7 @@ public class Autonomous extends LinearOpMode {
         Claw = hardwareMap.get(Servo.class,"Grip");
         Arm.setTargetPosition(0);
         Arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //Conveyor.setTargetPosition(0);
+        //Conveyor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 }
