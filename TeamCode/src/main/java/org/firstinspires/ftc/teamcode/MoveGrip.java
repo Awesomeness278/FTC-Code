@@ -23,11 +23,11 @@ public class MoveGrip extends LinearOpMode {
         while (opModeIsActive()) {
 
             if(gamepad1.a) {
-                pos+=-0.005;
+                pos+=-0.001;
             }
 
             if(gamepad1.b) {
-                pos-=-0.005;
+                pos-=-0.001;
             }
             grip.setPosition(pos);
         }
