@@ -30,6 +30,8 @@ public class MoveGrip extends LinearOpMode {
                 pos-=-0.001;
             }
             grip.setPosition(pos);
+
+            telemetry.addData("Grip position:",grip.getPosition());
         }
     }
     private void initDriveHardwareMap(String gripName) {
