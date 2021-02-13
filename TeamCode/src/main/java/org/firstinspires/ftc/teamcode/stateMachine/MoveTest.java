@@ -72,8 +72,9 @@ public class MoveTest extends StateManager {
 
     @Override
     public boolean ExitCondition(StateMachine machine) {
+
         Autonomous opMode = machine.opMode;
-        return opMode.dist(startX,startY,opMode.odometry.returnXCoordinate()/COUNTS_PER_INCH,opMode.odometry.returnYCoordinate()/COUNTS_PER_INCH)<=opMode.dist(startX,startY,tx,ty);
+        return opMode.dist(opMode.odometry.returnXCoordinate()/COUNTS_PER_INCH,opMode.odometry.returnYCoordinate()/COUNTS_PER_INCH,tx,ty)>=4;
     }
 
     @Override
