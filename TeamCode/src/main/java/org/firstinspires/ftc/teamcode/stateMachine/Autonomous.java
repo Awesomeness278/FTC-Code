@@ -20,7 +20,7 @@ public class Autonomous extends LinearOpMode {
     DcMotor left_front;
     DcMotor right_front;
     DcMotor left_back;
-    int position = 3;
+    int position = 0;
     DcMotor right_back;
     DcMotor Shooter;
     DcMotor Conveyor;
@@ -58,54 +58,46 @@ public class Autonomous extends LinearOpMode {
         odometry.reverseLeftEncoder();
         Thread positionThread = new Thread(odometry);
         positionThread.start();
-//        while(startingPos==0){
-//            if(gamepad1.a){
-//                startingPos = 1;
-//            }
-//            if(gamepad1.b){
-//                startingPos = 2;
-//            }
-//            if(gamepad1.x){
-//                startingPos = 3;
-//            }
-//            if(gamepad1.y){
-//                startingPos = 4;
-//            }
-//        }
-//        telemetry.addData("Starting Position",startingPos);
-//        telemetry.update();
-//        while(delay==-1){
-//            if(gamepad1.left_trigger>0.3){
-//                delay = 0;
-//            }
-//            if(gamepad1.right_trigger>0.3){
-//                delay = 3;
-//            }
-//        }
-//        telemetry.addData("Starting Delay",delay);
+        while(position==0){
+            if(gamepad1.a){
+                position = 1;
+            }
+            if(gamepad1.b){
+                position = 2;
+            }
+            if(gamepad1.x){
+                position = 3;
+            }
+            if(gamepad1.y){
+                position = 4;
+            }
+        }
+        telemetry.addData("Starting Position",position);
+        telemetry.update();
+        while(delay==-1){
+            if(gamepad1.left_trigger>0.3){
+                delay = 0;
+            }
+            if(gamepad1.right_trigger>0.3){
+                delay = 3;
+            }
+        }
+        telemetry.addData("Starting Delay",delay);
+        telemetry.update();
         waitForStart();
         resetStartTime();
+        AutonomousData.getInstance().SetStartingLocation(position);
 //        while(getRuntime()<delay){}
-        if(position == 2) {
-            machine.opMode.Claw.setPosition(0);
-            machine.addState(States.Tensorflow, new Tensorflow());
-            machine.addState(States.MoveToWobble, new MoveToWobble(position));
-            machine.addState(States.DropWobble, new DropWobble());
-            machine.addState(States.Move3, new MoveTest(-8, 60, States.Wait));
-            machine.addState(States.Wait, new wait());
-            machine.addState(States.Move4, new MoveTest(-12, 68, States.Stop));
-            machine.runState(States.Tensorflow);
-        }
-        if(position == 3) {
-            machine.opMode.Claw.setPosition(0);
-            machine.addState(States.Tensorflow, new Tensorflow());
-            machine.addState(States.MoveToWobble, new MoveToWobble(position));
-            machine.addState(States.DropWobble, new DropWobble());
-            machine.addState(States.Move3, new MoveTest(8, 60, States.Wait));
-            machine.addState(States.Wait, new wait());
-            machine.addState(States.Move4, new MoveTest(12, 68, States.Stop));
-            machine.runState(States.Tensorflow);
-        }
+        machine.opMode.Claw.setPosition(0);
+        machine.addState(States.Tensorflow, new Tensorflow());
+        machine.addState(States.MoveToWobble, new MoveToWobble());
+        machine.addState(States.Rotate, new Rotate(AutonomousData.getInstance().getWobbleRotation()));
+        machine.addState(States.DropWobble, new DropWobble());
+        machine.addState(States.Move3, new MoveTest(AutonomousData.getInstance().getShootingXPosition(), 60, States.Wait));
+        machine.addState(States.Wait, new wait());
+        machine.addState(States.Move4, new MoveTest(AutonomousData.getInstance().getLineXPosition(), 68, States.Stop));
+        machine.runState(States.Tensorflow);
+
         stop();
     }
     /*
@@ -185,5 +177,7 @@ public class Autonomous extends LinearOpMode {
         Claw = hardwareMap.get(Servo.class,"Grip");
         Arm.setTargetPosition(0);
         Arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //Conveyor.setTargetPosition(0);
+        //Conveyor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 }

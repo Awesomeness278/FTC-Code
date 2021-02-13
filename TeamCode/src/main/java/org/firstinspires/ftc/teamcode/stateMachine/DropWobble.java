@@ -9,7 +9,7 @@ public class DropWobble extends StateManager {
         double startWait = machine.opMode.getRuntime();
         while(machine.opMode.getRuntime()-startWait<2){
         }
-        machine.opMode.Claw.setPosition(0.75);
+        machine.opMode.Claw.setPosition(0.5);
         startWait = machine.opMode.getRuntime();
         machine.opMode.Arm.setTargetPosition(0);
         while(machine.opMode.getRuntime()-startWait<1){

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.stateMachine;
+    package org.firstinspires.ftc.teamcode.stateMachine;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -10,6 +10,8 @@ public class wait extends StateManager {
         double delay = 2.5;
         double time = 0.15;
         int rings = 4;
+        int increase = 100;
+        int current = 0;
         boolean updated = false;
         boolean shoot = false;
         double currentTime = machine.opMode.getRuntime();
@@ -40,10 +42,12 @@ public class wait extends StateManager {
                 shoot = true;
             }
             if ((machine.opMode.getRuntime()-currentTime) - time < (machine.opMode.getRuntime()-currentTime) - (machine.opMode.getRuntime()-currentTime) % (time+delay) && shoot) {
-                machine.opMode.Conveyor.setPower(1);
+                machine.opMode.Conveyor.setPower(-1);
                 if(!updated){
                     rings--;
                     updated=true;
+//                    current+=increase;
+//                    machine.opMode.Conveyor.setTargetPosition(current);
                 }
             } else {
                 machine.opMode.Conveyor.setPower(0);
