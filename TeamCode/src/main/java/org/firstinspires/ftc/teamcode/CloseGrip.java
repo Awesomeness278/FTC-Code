@@ -1,0 +1,31 @@
+package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
+
+@Autonomous(name = "Close Grip")
+public class CloseGrip extends LinearOpMode {
+    Servo grip;
+
+    @Override
+    public void runOpMode() {
+        initDriveHardwareMap("Grip");
+
+        telemetry.addData("Status", "Init Complete");
+        telemetry.update();
+
+        waitForStart();
+        while (opModeIsActive()) {
+            grip.setPosition(0.25);
+        }
+    }
+    private void initDriveHardwareMap(String gripName) {
+        grip = hardwareMap.get(Servo.class, gripName);
+        telemetry.addData("Status", "Hardware Map Init Complete");
+        telemetry.update();
+    }
+}
