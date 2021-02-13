@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 @TeleOp(name = "Move Grip")
 public class MoveGrip extends LinearOpMode {
     Servo grip;
-    double pos = 0;
+    double pos = 0.25;
 
     @Override
     public void runOpMode() {
