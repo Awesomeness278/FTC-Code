@@ -40,6 +40,10 @@ public class MoveTest extends StateManager {
             double radius = 1 / Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
             x = x * -radius;
             y = y * radius;
+            double px = x;
+            double py = y;
+            x = px*Math.cos(Math.toRadians(opMode.odometry.returnOrientation()))-py*Math.sin(Math.toRadians(opMode.odometry.returnOrientation()));
+            y = px*Math.sin(Math.toRadians(opMode.odometry.returnOrientation()) )+py*Math.cos(Math.toRadians(opMode.odometry.returnOrientation()));
             leftFront += (-y + x)-opMode.odometry.returnOrientation()/10;
             leftBack += (-y - x)-opMode.odometry.returnOrientation()/10;
             rightFront += (-y - x)+opMode.odometry.returnOrientation()/10;
