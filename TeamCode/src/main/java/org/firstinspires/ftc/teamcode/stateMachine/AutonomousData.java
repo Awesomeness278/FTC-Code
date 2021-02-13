@@ -8,9 +8,9 @@ public class AutonomousData {
     private double fourRingXPosition = 0;
     private double oneRingXPosition = 0;
     private double noRingXPosition = 0;
+    private double wobbleRotation = 0;
 
     private AutonomousData(){
-
     }
 
     public static AutonomousData getInstance(){
@@ -29,6 +29,7 @@ public class AutonomousData {
                 oneRingXPosition = 12;
                 noRingXPosition = -12;
                 fourRingXPosition = -12;
+                wobbleRotation = -45;
                 break;
             case 2:
                 shootingXPosition = -8;
@@ -37,6 +38,7 @@ public class AutonomousData {
                 fourRingXPosition = -36;
                 oneRingXPosition = -12;
                 noRingXPosition = -32;
+                wobbleRotation = -45;
                 break;
             case 3:
                 shootingXPosition = 8;
@@ -45,6 +47,7 @@ public class AutonomousData {
                 fourRingXPosition = 36;
                 oneRingXPosition = 12;
                 noRingXPosition = 32;
+                wobbleRotation = 0;
                 break;
             case 4:
                 dodgeRingXPosition = 8;
@@ -53,6 +56,7 @@ public class AutonomousData {
                 oneRingXPosition = -12;
                 noRingXPosition = 12;
                 fourRingXPosition = 12;
+                wobbleRotation = 0;
                 break;
             default:
                 int a = 0;
@@ -83,4 +87,6 @@ public class AutonomousData {
     public double getNoRingXPosition(){
         return noRingXPosition;
     }
+
+    public double getWobbleRotation() { return wobbleRotation; }
 }

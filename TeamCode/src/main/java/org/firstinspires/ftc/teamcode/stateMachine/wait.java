@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.stateMachine;
+    package org.firstinspires.ftc.teamcode.stateMachine;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -9,7 +9,7 @@ public class wait extends StateManager {
     public void Run(StateMachine machine) {
         double delay = 2.5;
         double time = 0.15;
-        int rings = 3;
+        int rings = 4;
         int increase = 100;
         int current = 0;
         boolean updated = false;
