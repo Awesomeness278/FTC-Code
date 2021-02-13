@@ -18,7 +18,7 @@ public class Rotate extends StateManager {
         DcMotor left_back = machine.opMode.left_back;
         DcMotor right_front = machine.opMode.right_front;
         DcMotor right_back = machine.opMode.right_back;
-        while(Math.abs(targetDegrees)<Math.abs(odometry.returnOrientation())){
+        while(Math.abs(targetDegrees)-dir*odometry.returnOrientation()>0){
             double leftFront = 0;
             double rightFront = 0;
             double leftBack = 0;
@@ -54,6 +54,6 @@ public class Rotate extends StateManager {
 
     @Override
     public void Exit(StateMachine machine) {
-        machine.runState(States.Tensorflow);
+        machine.runState(States.DropWobble);
     }
 }

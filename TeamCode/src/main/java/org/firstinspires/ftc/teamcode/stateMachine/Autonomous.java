@@ -93,6 +93,7 @@ public class Autonomous extends LinearOpMode {
         machine.addState(States.MoveToWobble, new MoveToWobble());
         machine.addState(States.Rotate, new Rotate(AutonomousData.getInstance().getWobbleRotation()));
         machine.addState(States.DropWobble, new DropWobble());
+        machine.addState(States.Rotate2,new Rotate(0));
         machine.addState(States.Move3, new MoveTest(AutonomousData.getInstance().getShootingXPosition(), 60, States.Wait));
         machine.addState(States.Wait, new wait());
         machine.addState(States.Move4, new MoveTest(AutonomousData.getInstance().getLineXPosition(), 68, States.Stop));

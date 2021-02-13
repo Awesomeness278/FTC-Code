@@ -7,10 +7,11 @@ public enum States {
     Move2(3),
     Rotate(4),
     DropWobble(5),
-    Move3(6),
-    Wait(7),
-    Move4(8),
-    Stop(9);
+    Rotate2(6),
+    Move3(7),
+    Wait(8),
+    Move4(9),
+    Stop(10);
     public int stateNum;
     States(int stateNum){
         this.stateNum = stateNum;

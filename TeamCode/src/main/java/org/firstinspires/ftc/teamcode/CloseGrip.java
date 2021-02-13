@@ -20,7 +20,7 @@ public class CloseGrip extends LinearOpMode {
 
         waitForStart();
         while (opModeIsActive()) {
-            grip.setPosition(0.25);
+            grip.setPosition(0);
         }
     }
     private void initDriveHardwareMap(String gripName) {
