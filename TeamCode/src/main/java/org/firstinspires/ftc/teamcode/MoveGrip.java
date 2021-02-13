@@ -7,9 +7,10 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@Autonomous(name = "Close Grip")
-public class CloseGrip extends LinearOpMode {
+@TeleOp(name = "Move Grip")
+public class MoveGrip extends LinearOpMode {
     Servo grip;
+    double pos = 0;
 
     @Override
     public void runOpMode() {
@@ -20,7 +21,15 @@ public class CloseGrip extends LinearOpMode {
 
         waitForStart();
         while (opModeIsActive()) {
-            grip.setPosition(0.25);
+
+            if(gamepad1.a) {
+                pos+=-0.005;
+            }
+
+            if(gamepad1.b) {
+                pos-=-0.005;
+            }
+            grip.setPosition(pos);
         }
     }
     private void initDriveHardwareMap(String gripName) {
