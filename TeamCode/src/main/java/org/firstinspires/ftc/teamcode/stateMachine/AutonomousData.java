@@ -41,7 +41,7 @@ public class AutonomousData {
                 wobbleRotation = -30;
                 break;
             case 3:
-                shootingXPosition = 8;
+                shootingXPosition = 10;
                 lineXPosition = 12;
                 dodgeRingXPosition = -12;
                 fourRingXPosition = 36;

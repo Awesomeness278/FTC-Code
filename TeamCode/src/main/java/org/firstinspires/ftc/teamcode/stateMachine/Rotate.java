@@ -29,10 +29,10 @@ public class Rotate extends StateManager {
             rightBack -= dir;
             double scalar = Math.max(Math.max(Math.abs(leftFront), Math.abs(leftBack)), Math.max(Math.abs(rightFront), Math.abs(rightBack)));
             if (scalar < 1) scalar = 1;
-            left_front.setPower(leftFront / scalar * 1);
-            left_back.setPower(leftBack / scalar * 1);
-            right_front.setPower(rightFront / scalar * 1);
-            right_back.setPower(rightBack / scalar * 1);
+            left_front.setPower(leftFront / scalar * 0.4);
+            left_back.setPower(leftBack / scalar * 0.4);
+            right_front.setPower(rightFront / scalar * 0.4);
+            right_back.setPower(rightBack / scalar * 0.4);
         }
         left_back.setPower(0);
         left_front.setPower(0);
@@ -41,10 +41,12 @@ public class Rotate extends StateManager {
         Exit(machine);
     }
 
+    States state;
     double targetDegrees;
 
-    public Rotate(double targetDegrees){
+    public Rotate(double targetDegrees, States state){
         this.targetDegrees = targetDegrees;
+        this.state = state;
     }
 
     @Override
@@ -54,6 +56,6 @@ public class Rotate extends StateManager {
 
     @Override
     public void Exit(StateMachine machine) {
-        machine.runState(States.DropWobble);
+        machine.runState(state);
     }
 }

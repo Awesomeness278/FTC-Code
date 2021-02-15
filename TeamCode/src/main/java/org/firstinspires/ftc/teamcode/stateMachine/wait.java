@@ -31,7 +31,7 @@ public class wait extends StateManager {
             left_back.setPower(leftBack / scalar * 0.3);
             right_front.setPower(rightFront / scalar * 0.3);
             right_back.setPower(rightBack / scalar * 0.3);
-            machine.opMode.Shooter.setPower(-0.95);
+            machine.opMode.Shooter.setPower(-1);
             if(machine.opMode.getRuntime()-currentTime>2){
                 currentTime = machine.opMode.getRuntime();
                 shoot = true;
