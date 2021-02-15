@@ -20,7 +20,7 @@ public class ShootingDrivetrain extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         //Initialize hardware map values.
-        initDriveHardwareMap(rfName, rbName, lfName, lbName, shootName, convName, armName, intakeName, gripName);
+        initDriveHardwareMap(rfName, rbName, lfName, lbName, shootName);
         arm.setTargetPosition(0);
         arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
@@ -28,7 +28,6 @@ public class ShootingDrivetrain extends LinearOpMode {
         telemetry.update();
 
         double flywheelPower = 0.8;
-        double gripAmount = 0;
         final double movementConstant = 0.8;
         final double rotationConstant = 0.5;
 
@@ -181,7 +180,7 @@ public class ShootingDrivetrain extends LinearOpMode {
         }
     }
 
-    private void initDriveHardwareMap(String rfName, String rbName, String lfName, String lbName, String shootName, String convName, String armName, String intakeName, String gripName) {
+    private void initDriveHardwareMap(String rfName, String rbName, String lfName, String lbName, String shootName) {
         right_front = hardwareMap.dcMotor.get(rfName);
         right_back = hardwareMap.dcMotor.get(rbName);
         left_front = hardwareMap.dcMotor.get(lfName);
