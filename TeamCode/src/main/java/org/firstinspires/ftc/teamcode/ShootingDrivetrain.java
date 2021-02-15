@@ -1,10 +1,14 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.Hardware;
+import java.util.Date;
+//import java.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
+import java.util.Calendar;
 
 @TeleOp(name = "Shooting + Arm + Drivetrain")
 public class ShootingDrivetrain extends LinearOpMode {
@@ -20,31 +24,35 @@ public class ShootingDrivetrain extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         //Initialize hardware map values.
-        initDriveHardwareMap(rfName, rbName, lfName, lbName, shootName);
+        initDriveHardwareMap(rfName, rbName, lfName, lbName, shootName, convName, armName, intakeName, gripName);
         arm.setTargetPosition(0);
         arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         telemetry.addData("Status", "Init Complete");
         telemetry.update();
 
-        double flywheelPower = 0.8;
+        double flywheelPower = 0.95;
+        double gripAmount = 0;
         final double movementConstant = 0.8;
-        final double rotationConstant = 0.5;
+        final double rotationConstant = 0.75;
 
         boolean dPadUpPressed = false;
         boolean dPadDownPressed = false;
         boolean rightBumperPressed = false;
         boolean leftBumperPressed = false;
         boolean xPressed = false;
+        double armMoving = 0;
 
         int flywheelSwitch = 0;
         int armTargetPosition = 0;
-        int vertArmPos = -146;
-        int horArmPos = -283;
+        int vertArmPos = 100;
+        int horArmPos = -100;
+        //int horArmPos = -245;
         boolean gripToggle = false;
 
         waitForStart();
         while (opModeIsActive()) {
+
 
             //Movement
 
@@ -102,6 +110,7 @@ public class ShootingDrivetrain extends LinearOpMode {
                 dPadUpPressed = false;
             }*/
 
+
             if (gamepad2.dpad_up) {
                 if (!dPadUpPressed) {
                     flywheelPower += 0.005;
@@ -136,34 +145,55 @@ public class ShootingDrivetrain extends LinearOpMode {
             shooter.setPower(-(flywheelSwitch * flywheelPower));
 
             //Intake and Conveyor
-
-            if (gamepad2.a) {
+            if(gamepad2.left_trigger>=0.5){
+                intake.setDirection(DcMotorSimple.Direction.REVERSE);
                 intake.setPower(1);
-            } else {
+            }
+            if(gamepad2.right_trigger>=0.5){
+                conveyor.setDirection(DcMotorSimple.Direction.FORWARD);
+                conveyor.setPower(0.15);
+            }
+            if(gamepad2.a){
+                intake.setDirection(DcMotorSimple.Direction.FORWARD);
+                intake.setPower(1);
+            }else{
                 intake.setPower(0);
             }
             if (gamepad2.b) {
-                conveyor.setPower(0.7);
+                intake.setDirection(DcMotorSimple.Direction.FORWARD);
+                conveyor.setDirection(DcMotorSimple.Direction.REVERSE);
+                conveyor.setPower(1);
+                intake.setPower(1);
             } else {
                 conveyor.setPower(0);
+                intake.setPower(0);
             }
-
             //Arm
-
-            if (gamepad2.left_bumper) {
-                arm.setPower(0.5);
-                if (!leftBumperPressed) {
-                    if (armTargetPosition == vertArmPos) {
-                        armTargetPosition = horArmPos;
-                    } else {
-                        armTargetPosition = vertArmPos;
-                    }
+            if(gamepad1.y){
+                armTargetPosition -= 1;
+                arm.setTargetPosition(armTargetPosition);
+            }
+            if(gamepad1.x){
+                armTargetPosition += 1;
+                arm.setTargetPosition(armTargetPosition);
+            }
+            if(gamepad2.left_bumper && !leftBumperPressed){
+                arm.setPower(0.15);
+                if (armTargetPosition == vertArmPos) {
+                    armTargetPosition = horArmPos;
+                    armMoving = getRuntime();
+                } else {
+                    armTargetPosition = vertArmPos;
+                    armMoving = getRuntime();
                 }
                 leftBumperPressed = true;
-            } else {
+                arm.setTargetPosition(armTargetPosition);
+            }else if(!gamepad2.left_bumper){
                 leftBumperPressed = false;
+                if(getRuntime()-armMoving>2) {
+                    arm.setPower(0);
+                }
             }
-            arm.setTargetPosition(armTargetPosition);
 
             if (gamepad2.x) {
                 if (!xPressed) {
@@ -172,15 +202,15 @@ public class ShootingDrivetrain extends LinearOpMode {
                 xPressed = true;
             } else xPressed = false;
 
-            if (gripToggle) {
-                grip.setPosition(0);
+            if (gripToggle == true) {
+                grip.setPosition(0.35);
             } else {
-                grip.setPosition(0.25);
+                grip.setPosition(-0.1);
             }
         }
     }
 
-    private void initDriveHardwareMap(String rfName, String rbName, String lfName, String lbName, String shootName) {
+    private void initDriveHardwareMap(String rfName, String rbName, String lfName, String lbName, String shootName, String convName, String armName, String intakeName, String gripName) {
         right_front = hardwareMap.dcMotor.get(rfName);
         right_back = hardwareMap.dcMotor.get(rbName);
         left_front = hardwareMap.dcMotor.get(lfName);
@@ -210,6 +240,8 @@ public class ShootingDrivetrain extends LinearOpMode {
         //right_front.setDirection(DcMotorSimple.Direction.REVERSE);
         left_back.setDirection(DcMotorSimple.Direction.REVERSE);
         //right_back.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        //	conveyor.setDirection(DcMotorSimple.Direction.FORWARD);
 
 
         telemetry.addData("Status", "Hardware Map Init Complete");
