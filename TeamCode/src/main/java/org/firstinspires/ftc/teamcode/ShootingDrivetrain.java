@@ -1,14 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.util.Hardware;
-import java.util.Date;
-//import java.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
-import java.util.Calendar;
 
 @TeleOp(name = "Shooting + Arm + Drivetrain")
 public class ShootingDrivetrain extends LinearOpMode {
@@ -18,13 +14,13 @@ public class ShootingDrivetrain extends LinearOpMode {
     Servo grip;
 
     //Hardware Map Names for drive motors and odometry wheels.
-    String rfName = "Right Front Motor", rbName = "Right Back Motor", lfName = "Left Front Motor", lbName = "Left Back Motor", shootName = "Shooter", convName = "Conveyor", armName = "Arm", intakeName = "Intake", gripName = "Grip";
+    String rfName = "Right Front Motor", rbName = "Right Back Motor", lfName = "Left Front Motor", lbName = "Left Back Motor", shootName = "Shooter";
 
 
     @Override
     public void runOpMode() throws InterruptedException {
         //Initialize hardware map values.
-        initDriveHardwareMap(rfName, rbName, lfName, lbName, shootName, convName, armName, intakeName, gripName);
+        initDriveHardwareMap(rfName, rbName, lfName, lbName, shootName);
         arm.setTargetPosition(0);
         arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
@@ -32,7 +28,6 @@ public class ShootingDrivetrain extends LinearOpMode {
         telemetry.update();
 
         double flywheelPower = 0.95;
-        double gripAmount = 0;
         final double movementConstant = 0.8;
         final double rotationConstant = 0.75;
 
@@ -50,12 +45,17 @@ public class ShootingDrivetrain extends LinearOpMode {
         //int horArmPos = -245;
         boolean gripToggle = false;
 
+        double armMoveTime = 1.5;
+        double gripPos[];
+
         waitForStart();
         while (opModeIsActive()) {
 
+          /*  if(gripPos.length<3){
+                gripPos.push(grip.getPosition());
+            }*/
 
             //Movement
-
             double leftFront = 0;
             double leftBack = 0;
             double rightFront = 0;
@@ -102,15 +102,6 @@ public class ShootingDrivetrain extends LinearOpMode {
             right_back.setPower(rightBack / scalar * moveSpeed);
 
             //Flywheel
-
-          /*  if(gamepad2.dpad_up && !dPadUpPressed){
-                flywheelPower += 0.005;
-                dPadUpPressed = true;
-            } else if(!gamepad2.dpad_up){
-                dPadUpPressed = false;
-            }*/
-
-
             if (gamepad2.dpad_up) {
                 if (!dPadUpPressed) {
                     flywheelPower += 0.005;
@@ -119,7 +110,6 @@ public class ShootingDrivetrain extends LinearOpMode {
             } else {
                 dPadUpPressed = false;
             }
-
 
             if (gamepad2.dpad_down) {
                 if (!dPadDownPressed) {
@@ -181,16 +171,15 @@ public class ShootingDrivetrain extends LinearOpMode {
                 arm.setPower(0.15);
                 if (armTargetPosition == vertArmPos) {
                     armTargetPosition = horArmPos;
-                    armMoving = getRuntime();
                 } else {
                     armTargetPosition = vertArmPos;
-                    armMoving = getRuntime();
                 }
+                armMoving = getRuntime();
                 leftBumperPressed = true;
                 arm.setTargetPosition(armTargetPosition);
             }else if(!gamepad2.left_bumper){
                 leftBumperPressed = false;
-                if(getRuntime()-armMoving>2) {
+                if(getRuntime()-armMoving>armMoveTime) {
                     arm.setPower(0);
                 }
             }
@@ -202,15 +191,19 @@ public class ShootingDrivetrain extends LinearOpMode {
                 xPressed = true;
             } else xPressed = false;
 
-            if (gripToggle == true) {
+            if (gripToggle) {
                 grip.setPosition(0.35);
             } else {
                 grip.setPosition(-0.1);
             }
+          /*  if(gripPos[1]==gripPos[0]&&gamepad2.x){
+                grip.setPosition(0);
+                gripPos = []
+            }*/
         }
     }
 
-    private void initDriveHardwareMap(String rfName, String rbName, String lfName, String lbName, String shootName, String convName, String armName, String intakeName, String gripName) {
+    private void initDriveHardwareMap(String rfName, String rbName, String lfName, String lbName, String shootName) {
         right_front = hardwareMap.dcMotor.get(rfName);
         right_back = hardwareMap.dcMotor.get(rbName);
         left_front = hardwareMap.dcMotor.get(lfName);
