@@ -59,7 +59,6 @@ public class AutonomousData {
                 wobbleRotation = 0;
                 break;
             default:
-                int a = 0;
                 break;
         }
     }

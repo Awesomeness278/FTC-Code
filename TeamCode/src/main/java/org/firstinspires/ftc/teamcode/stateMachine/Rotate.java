@@ -8,7 +8,7 @@ public class Rotate extends StateManager {
     @Override
     public void Run(StateMachine machine) {
         OdometryGlobalCoordinatePosition odometry = machine.opMode.odometry;
-        int dir = 0;
+        int dir;
         if(targetDegrees<odometry.returnOrientation()){
             dir = -1;
         }else{

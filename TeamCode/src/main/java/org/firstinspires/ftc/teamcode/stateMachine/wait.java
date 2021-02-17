@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.stateMachine;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
+
 public class wait extends StateManager {
     public wait(){}
     @Override
