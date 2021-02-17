@@ -1,10 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp(name = "Move Grip")
@@ -14,13 +11,14 @@ public class MoveGrip extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        initDriveHardwareMap("Grip");
+        initDriveHardwareMap();
 
         telemetry.addData("Status", "Init Complete");
         telemetry.update();
 
         waitForStart();
         while (opModeIsActive()) {
+            telemetry.addData("Grip position", grip.getPosition());
 
             if(gamepad1.a) {
                 pos+=-0.001;
@@ -34,8 +32,8 @@ public class MoveGrip extends LinearOpMode {
             telemetry.addData("Grip position:",grip.getPosition());
         }
     }
-    private void initDriveHardwareMap(String gripName) {
-        grip = hardwareMap.get(Servo.class, gripName);
+    private void initDriveHardwareMap() {
+        grip = hardwareMap.get(Servo.class, "Grip");
         telemetry.addData("Status", "Hardware Map Init Complete");
         telemetry.update();
     }

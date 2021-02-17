@@ -1,23 +1,15 @@
 package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.Range;
+
 
 @TeleOp
 public class driveOpMode extends LinearOpMode{
     private DcMotor[] motors = new DcMotor[2];
-    private Servo servo;
-    private ColorRangeSensor color;
-    private double servoPower;
     private double[] tgtPowers = new double[4];
     int fix = 0;
-    int fix2 = 0;
-    double leftPower;
-    double rightPower;
     Vector dir;
     @Override
     public void runOpMode(){

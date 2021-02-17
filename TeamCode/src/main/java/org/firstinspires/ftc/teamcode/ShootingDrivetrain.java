@@ -14,41 +14,48 @@ public class ShootingDrivetrain extends LinearOpMode {
     Servo grip;
 
     //Hardware Map Names for drive motors and odometry wheels.
-    String rfName = "Right Front Motor", rbName = "Right Back Motor", lfName = "Left Front Motor", lbName = "Left Back Motor", shootName = "Shooter", convName = "Conveyor", armName = "Arm", intakeName = "Intake", gripName = "Grip";
+    String rfName = "Right Front Motor", rbName = "Right Back Motor", lfName = "Left Front Motor", lbName = "Left Back Motor", shootName = "Shooter";
 
 
     @Override
     public void runOpMode() throws InterruptedException {
         //Initialize hardware map values.
-        initDriveHardwareMap(rfName, rbName, lfName, lbName, shootName, convName, armName, intakeName, gripName);
+        initDriveHardwareMap(rfName, rbName, lfName, lbName, shootName);
         arm.setTargetPosition(0);
         arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         telemetry.addData("Status", "Init Complete");
         telemetry.update();
 
-        double flywheelPower = 0.8;
-        double gripAmount = 0;
+        double flywheelPower = 0.95;
         final double movementConstant = 0.8;
-        final double rotationConstant = 0.5;
+        final double rotationConstant = 0.75;
 
         boolean dPadUpPressed = false;
         boolean dPadDownPressed = false;
         boolean rightBumperPressed = false;
         boolean leftBumperPressed = false;
         boolean xPressed = false;
+        double armMoving = 0;
 
         int flywheelSwitch = 0;
         int armTargetPosition = 0;
-        int vertArmPos = -146;
-        int horArmPos = -283;
+        int vertArmPos = 100;
+        int horArmPos = -100;
+        //int horArmPos = -245;
         boolean gripToggle = false;
+
+        double armMoveTime = 1.5;
+        double gripPos[];
 
         waitForStart();
         while (opModeIsActive()) {
 
-            //Movement
+          /*  if(gripPos.length<3){
+                gripPos.push(grip.getPosition());
+            }*/
 
+            //Movement
             double leftFront = 0;
             double leftBack = 0;
             double rightFront = 0;
@@ -95,14 +102,6 @@ public class ShootingDrivetrain extends LinearOpMode {
             right_back.setPower(rightBack / scalar * moveSpeed);
 
             //Flywheel
-
-          /*  if(gamepad2.dpad_up && !dPadUpPressed){
-                flywheelPower += 0.005;
-                dPadUpPressed = true;
-            } else if(!gamepad2.dpad_up){
-                dPadUpPressed = false;
-            }*/
-
             if (gamepad2.dpad_up) {
                 if (!dPadUpPressed) {
                     flywheelPower += 0.005;
@@ -111,7 +110,6 @@ public class ShootingDrivetrain extends LinearOpMode {
             } else {
                 dPadUpPressed = false;
             }
-
 
             if (gamepad2.dpad_down) {
                 if (!dPadDownPressed) {
@@ -137,34 +135,54 @@ public class ShootingDrivetrain extends LinearOpMode {
             shooter.setPower(-(flywheelSwitch * flywheelPower));
 
             //Intake and Conveyor
-
-            if (gamepad2.a) {
+            if(gamepad2.left_trigger>=0.5){
+                intake.setDirection(DcMotorSimple.Direction.REVERSE);
                 intake.setPower(1);
-            } else {
+            }
+            if(gamepad2.right_trigger>=0.5){
+                conveyor.setDirection(DcMotorSimple.Direction.FORWARD);
+                conveyor.setPower(0.15);
+            }
+            if(gamepad2.a){
+                intake.setDirection(DcMotorSimple.Direction.FORWARD);
+                intake.setPower(1);
+            }else{
                 intake.setPower(0);
             }
             if (gamepad2.b) {
-                conveyor.setPower(0.7);
+                intake.setDirection(DcMotorSimple.Direction.FORWARD);
+                conveyor.setDirection(DcMotorSimple.Direction.REVERSE);
+                conveyor.setPower(1);
+                intake.setPower(1);
             } else {
                 conveyor.setPower(0);
+                intake.setPower(0);
             }
-
             //Arm
-
-            if (gamepad2.left_bumper) {
-                arm.setPower(0.5);
-                if (!leftBumperPressed) {
-                    if (armTargetPosition == vertArmPos) {
-                        armTargetPosition = horArmPos;
-                    } else {
-                        armTargetPosition = vertArmPos;
-                    }
-                }
-                leftBumperPressed = true;
-            } else {
-                leftBumperPressed = false;
+            if(gamepad1.y){
+                armTargetPosition -= 1;
+                arm.setTargetPosition(armTargetPosition);
             }
-            arm.setTargetPosition(armTargetPosition);
+            if(gamepad1.x){
+                armTargetPosition += 1;
+                arm.setTargetPosition(armTargetPosition);
+            }
+            if(gamepad2.left_bumper && !leftBumperPressed){
+                arm.setPower(0.15);
+                if (armTargetPosition == vertArmPos) {
+                    armTargetPosition = horArmPos;
+                } else {
+                    armTargetPosition = vertArmPos;
+                }
+                armMoving = getRuntime();
+                leftBumperPressed = true;
+                arm.setTargetPosition(armTargetPosition);
+            }else if(!gamepad2.left_bumper){
+                leftBumperPressed = false;
+                if(getRuntime()-armMoving>armMoveTime) {
+                    arm.setPower(0);
+                }
+            }
 
             if (gamepad2.x) {
                 if (!xPressed) {
@@ -174,14 +192,18 @@ public class ShootingDrivetrain extends LinearOpMode {
             } else xPressed = false;
 
             if (gripToggle) {
-                grip.setPosition(0);
+                grip.setPosition(0.35);
             } else {
-                grip.setPosition(0.25);
+                grip.setPosition(-0.1);
             }
+          /*  if(gripPos[1]==gripPos[0]&&gamepad2.x){
+                grip.setPosition(0);
+                gripPos = []
+            }*/
         }
     }
 
-    private void initDriveHardwareMap(String rfName, String rbName, String lfName, String lbName, String shootName, String convName, String armName, String intakeName, String gripName) {
+    private void initDriveHardwareMap(String rfName, String rbName, String lfName, String lbName, String shootName) {
         right_front = hardwareMap.dcMotor.get(rfName);
         right_back = hardwareMap.dcMotor.get(rbName);
         left_front = hardwareMap.dcMotor.get(lfName);
@@ -211,6 +233,8 @@ public class ShootingDrivetrain extends LinearOpMode {
         //right_front.setDirection(DcMotorSimple.Direction.REVERSE);
         left_back.setDirection(DcMotorSimple.Direction.REVERSE);
         //right_back.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        //	conveyor.setDirection(DcMotorSimple.Direction.FORWARD);
 
 
         telemetry.addData("Status", "Hardware Map Init Complete");
