@@ -3,7 +3,12 @@ package org.firstinspires.ftc.teamcode.stateMachine;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 public class wait extends StateManager {
-    public wait(){}
+    public wait(double angle, double power){
+        this.angle = angle;
+        this.power = power;
+    }
+    double power;
+    double angle;
     @Override
     public void Run(StateMachine machine) {
         double delay = 2.5;
@@ -21,10 +26,10 @@ public class wait extends StateManager {
             DcMotor left_back = machine.opMode.left_back;
             DcMotor right_front = machine.opMode.right_front;
             DcMotor right_back = machine.opMode.right_back;
-            leftFront += -machine.opMode.odometry.returnOrientation()/5;
-            leftBack += -machine.opMode.odometry.returnOrientation()/5;
-            rightFront += machine.opMode.odometry.returnOrientation()/5;
-            rightBack += machine.opMode.odometry.returnOrientation()/5;
+            leftFront += -(machine.opMode.odometry.returnOrientation()-angle)/5;
+            leftBack += -(machine.opMode.odometry.returnOrientation()-angle)/5;
+            rightFront += (machine.opMode.odometry.returnOrientation()-angle)/5;
+            rightBack += (machine.opMode.odometry.returnOrientation()-angle)/5;
             double scalar = Math.max(Math.max(Math.abs(leftFront), Math.abs(leftBack)), Math.max(Math.abs(rightFront), Math.abs(rightBack)));
             if (scalar < 1) scalar = 1;
             machine.opMode.telemetry.addData("Orientation",machine.opMode.odometry.returnOrientation());
@@ -33,7 +38,7 @@ public class wait extends StateManager {
             left_back.setPower(leftBack / scalar * 0.3);
             right_front.setPower(rightFront / scalar * 0.3);
             right_back.setPower(rightBack / scalar * 0.3);
-            machine.opMode.Shooter.setPower(-1);
+            machine.opMode.Shooter.setPower(-power);
             if(machine.opMode.getRuntime()-currentTime>2){
                 currentTime = machine.opMode.getRuntime();
                 shoot = true;
@@ -61,6 +66,6 @@ public class wait extends StateManager {
     }
     @Override
     public void Exit(StateMachine machine) {
-        machine.runState(States.Move4);
+        machine.runState(States.Rotate4);
     }
 }

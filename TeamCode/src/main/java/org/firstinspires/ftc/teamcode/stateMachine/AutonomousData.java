@@ -9,6 +9,8 @@ public class AutonomousData {
     private double oneRingXPosition = 0;
     private double noRingXPosition = 0;
     private double wobbleRotation = 0;
+    private double shootingXPosition2 = 0;
+    private double shootingXPosition3 = 0;
 
     private AutonomousData(){
     }
@@ -30,15 +32,19 @@ public class AutonomousData {
                 noRingXPosition = -12;
                 fourRingXPosition = -12;
                 wobbleRotation = -30;
+                shootingXPosition2 = 36;
+                shootingXPosition3 = -12;
                 break;
             case 2:
-                shootingXPosition = -8;
+                shootingXPosition = -10;
                 lineXPosition = -12;
                 dodgeRingXPosition = 12;
                 fourRingXPosition = -36;
                 oneRingXPosition = -12;
                 noRingXPosition = -32;
                 wobbleRotation = -30;
+                shootingXPosition2 = 14;
+                shootingXPosition3 = -34;
                 break;
             case 3:
                 shootingXPosition = 10;
@@ -48,6 +54,8 @@ public class AutonomousData {
                 oneRingXPosition = 12;
                 noRingXPosition = 32;
                 wobbleRotation = 0;
+                shootingXPosition2 = 34;
+                shootingXPosition3 = -14;
                 break;
             case 4:
                 dodgeRingXPosition = 8;
@@ -57,6 +65,8 @@ public class AutonomousData {
                 noRingXPosition = 12;
                 fourRingXPosition = 12;
                 wobbleRotation = 0;
+                shootingXPosition2 = 12;
+                shootingXPosition3 = -36;
                 break;
             default:
                 break;
@@ -88,4 +98,8 @@ public class AutonomousData {
     }
 
     public double getWobbleRotation() { return wobbleRotation; }
+
+    public double getShootingXPosition2() { return shootingXPosition2; }
+
+    public double getShootingXPosition3(){ return shootingXPosition3; }
 }
