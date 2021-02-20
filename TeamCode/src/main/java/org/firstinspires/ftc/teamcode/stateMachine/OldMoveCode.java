@@ -11,15 +11,22 @@ public class OldMoveCode extends StateManager {
         this.tx = -tx;
         this.ty = -ty;
         this.exit = exit;
+        if(exit==States.Stop){
+            tx = Double.NaN;
+        }
     }
 
     double speed = 0.5;
+    double COUNTS_PER_INCH;
 
     @Override
     public void Run(StateMachine machine) {
+        if(Double.isNaN(tx)){
+            tx = machine.opMode.odometry.returnXCoordinate()/COUNTS_PER_INCH;
+        }
         while(!ExitCondition(machine)&&machine.opMode.opModeIsActive()){
-            double relativeTargetX = this.tx-machine.opMode.odometry.returnXCoordinate();
-            double relativeTargetY = this.ty-machine.opMode.odometry.returnYCoordinate();
+            double relativeTargetX = this.tx-machine.opMode.odometry.returnXCoordinate()/COUNTS_PER_INCH;
+            double relativeTargetY = this.ty-machine.opMode.odometry.returnYCoordinate()/COUNTS_PER_INCH;
             double orientation = -machine.opMode.odometry.returnOrientation();
             double rotatedX = relativeTargetX*Math.cos(orientation)-relativeTargetY*Math.sin(orientation);
             double rotatedY = relativeTargetX*Math.sin(orientation)+relativeTargetY*Math.cos(orientation);
@@ -45,7 +52,7 @@ public class OldMoveCode extends StateManager {
 
     @Override
     public boolean ExitCondition(StateMachine machine) {
-        return machine.opMode.dist(machine.opMode.odometry.returnXCoordinate(),machine.opMode.odometry.returnYCoordinate(),tx,ty)<2;
+        return machine.opMode.dist(machine.opMode.odometry.returnXCoordinate()/COUNTS_PER_INCH,machine.opMode.odometry.returnYCoordinate()/COUNTS_PER_INCH,tx,ty)<2;
     }
 
     @Override
