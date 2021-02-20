@@ -39,7 +39,7 @@ public class AutonomousData {
                 shootingXPosition = -10;
                 lineXPosition = -12;
                 dodgeRingXPosition = 12;
-                fourRingXPosition = -26;
+                fourRingXPosition = -36;
                 oneRingXPosition = -10;
                 noRingXPosition = -26;
                 wobbleRotation = -30;
@@ -50,7 +50,7 @@ public class AutonomousData {
                 shootingXPosition = 10;
                 lineXPosition = 12;
                 dodgeRingXPosition = -12;
-                fourRingXPosition = 26;
+                fourRingXPosition = 36;
                 oneRingXPosition = 6;
                 noRingXPosition = 26;
                 wobbleRotation = 0;
