@@ -46,14 +46,13 @@ public class ShootingDrivetrain extends LinearOpMode {
         boolean gripToggle = false;
 
         double armMoveTime = 1.5;
-        double gripPos[];
 
         waitForStart();
         while (opModeIsActive()) {
 
-          /*  if(gripPos.length<3){
-                gripPos.push(grip.getPosition());
-            }*/
+         /*  if(gripPos.length<3){
+               gripPos.push(grip.getPosition());
+           }*/
 
             //Movement
             double leftFront = 0;
@@ -196,10 +195,10 @@ public class ShootingDrivetrain extends LinearOpMode {
             } else {
                 grip.setPosition(-0.1);
             }
-          /*  if(gripPos[1]==gripPos[0]&&gamepad2.x){
-                grip.setPosition(0);
-                gripPos = []
-            }*/
+         /*  if(gripPos[1]==gripPos[0]&&gamepad2.x){
+               grip.setPosition(0);
+               gripPos = []
+           }*/
         }
     }
 
@@ -234,7 +233,7 @@ public class ShootingDrivetrain extends LinearOpMode {
         left_back.setDirection(DcMotorSimple.Direction.REVERSE);
         //right_back.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        //	conveyor.setDirection(DcMotorSimple.Direction.FORWARD);
+        // conveyor.setDirection(DcMotorSimple.Direction.FORWARD);
 
 
         telemetry.addData("Status", "Hardware Map Init Complete");

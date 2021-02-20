@@ -16,7 +16,7 @@ public class MoveToWobble extends StateManager {
                 machine.addState(States.Move2, new MoveTest(AutonomousData.getInstance().getOneRingXPosition(), 78, States.Rotate,false));
             }
         } else {
-            machine.addState(States.Move2, new MoveTest(AutonomousData.getInstance().getNoRingXPosition(), 60, States.Rotate,false));
+            machine.addState(States.Move2, new MoveTest(AutonomousData.getInstance().getNoRingXPosition(), 56, States.Rotate,false));
         }
 
         Exit(machine);
