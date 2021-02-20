@@ -46,7 +46,6 @@ public class ShootingDrivetrain extends LinearOpMode {
         boolean gripToggle = false;
 
         double armMoveTime = 1.5;
-        double gripPos[];
 
         waitForStart();
         while (opModeIsActive()) {
