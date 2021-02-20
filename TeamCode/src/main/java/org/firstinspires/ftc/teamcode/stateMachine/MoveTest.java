@@ -2,21 +2,29 @@ package org.firstinspires.ftc.teamcode.stateMachine;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.teamcode.Odometry.Odometry;
+
 public class MoveTest extends StateManager {
     double tx;
     double ty;
     double COUNTS_PER_INCH = 307.699557;
     States exit;
     double sp = 0.6;
-    public MoveTest(double tx, double ty,States exit){
+    public MoveTest(double tx, double ty,States exit,boolean whiteLine){
         this.tx = -tx;
         this.ty = -ty;
         this.exit = exit;
+        if(whiteLine){
+            this.tx = Double.NaN;
+        }
     }
     double startX;
     double startY;
     @Override
     public void Run(StateMachine machine) {
+        if(Double.isNaN(this.tx)){
+            this.tx = machine.opMode.odometry.returnXCoordinate()/COUNTS_PER_INCH;
+        }
         startX = machine.opMode.odometry.returnXCoordinate()/COUNTS_PER_INCH;
         startY = machine.opMode.odometry.returnYCoordinate()/COUNTS_PER_INCH;
         Autonomous opMode = machine.opMode;

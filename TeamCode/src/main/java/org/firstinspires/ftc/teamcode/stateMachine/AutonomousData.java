@@ -39,9 +39,9 @@ public class AutonomousData {
                 shootingXPosition = -10;
                 lineXPosition = -12;
                 dodgeRingXPosition = 12;
-                fourRingXPosition = -36;
-                oneRingXPosition = -12;
-                noRingXPosition = -32;
+                fourRingXPosition = -26;
+                oneRingXPosition = -6;
+                noRingXPosition = -26;
                 wobbleRotation = -30;
                 shootingXPosition2 = 14;
                 shootingXPosition3 = -34;
@@ -50,9 +50,9 @@ public class AutonomousData {
                 shootingXPosition = 10;
                 lineXPosition = 12;
                 dodgeRingXPosition = -12;
-                fourRingXPosition = 36;
-                oneRingXPosition = 12;
-                noRingXPosition = 32;
+                fourRingXPosition = 26;
+                oneRingXPosition = 6;
+                noRingXPosition = 26;
                 wobbleRotation = 0;
                 shootingXPosition2 = 34;
                 shootingXPosition3 = -14;

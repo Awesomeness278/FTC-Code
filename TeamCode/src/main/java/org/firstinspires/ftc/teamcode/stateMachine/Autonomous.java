@@ -20,7 +20,7 @@ public class Autonomous extends LinearOpMode {
     DcMotor left_front;
     DcMotor right_front;
     DcMotor left_back;
-    int position = 0;
+    int position = 3;
     DcMotor right_back;
     DcMotor Shooter;
     DcMotor Conveyor;
@@ -32,11 +32,11 @@ public class Autonomous extends LinearOpMode {
     DcMotor verticalLeft;
     DcMotor verticalRight;
     DcMotor horizontal;
-    int targetShootingSpot = -1;
+    int targetShootingSpot = 0;
     private static final String VUFORIA_KEY =
             "AfweTBj/////AAABmZ1QwFXvX0ltj9QRI7IS1wtULCTBA7CyU8KibbraimizSOgb5iPrsHVE4P/nnAbJuNWXHsqZgW784iI7nfekundyBUv80cdOoe8y/O9125JNbD4fkyufJvrK2RSpv2w9GPY1AtM3fxo70t6r89/WQnpcAHPp244gr0Ua8GL5qUt8XPPE3WcTATty3C/GayFSfe+MTbV8OtB5qN34XhstZYDUgxHcJ+xQLwkYj+FtLTyDc+kRrg+oqLkYA3zNwksq9vWEvTTV0SzsFtU3NbFZtz3P068I25yPHOSqd4bNq36LAcrJchYGidrbJLtRqrEG+4lFD8FWEkpKoWIm4d1DiM0xCcQhiqHH/KQ3fDNP7Xd3";
     VuforiaLocalizer vuforia;
-    int delay = -1;
+    int delay = 0;
     TFObjectDetector tfod;
     static final String TFOD_MODEL_ASSET = "UltimateGoal.tflite";
     static final String LABEL_FIRST_ELEMENT = "Quad";
@@ -59,74 +59,80 @@ public class Autonomous extends LinearOpMode {
         odometry.reverseLeftEncoder();
         Thread positionThread = new Thread(odometry);
         positionThread.start();
-        while(position==0){
-            if(gamepad1.a){
+        while(!gamepad1.right_stick_button) {
+            if (gamepad1.a) {
                 position = 1;
             }
-            if(gamepad1.b){
+            if (gamepad1.b) {
                 position = 2;
             }
-            if(gamepad1.x){
+            if (gamepad1.x) {
                 position = 3;
             }
-            if(gamepad1.y){
+            if (gamepad1.y) {
                 position = 4;
             }
-        }
-        telemetry.addData("Starting Position",position);
-        while(delay==-1){
-            if(gamepad1.left_trigger>0.3){
+            String[] positions = new String[4];
+            positions[0] = "Outer Blue";
+            positions[1] = "Inner Blue";
+            positions[2] = "Inner Red";
+            positions[3] = "Outer Red";
+            telemetry.addData("Starting Position", positions[position-1]);
+            if (gamepad1.left_trigger > 0.3) {
                 delay = 0;
             }
-            if(gamepad1.right_trigger>0.3){
-                delay = Math.min(upDelay,5);
+            if (gamepad1.right_trigger > 0.3) {
+                delay = Math.min(upDelay, 5);
             }
-        }
-        telemetry.addData("Starting Delay",delay);
-        while(targetShootingSpot==-1){
-            if(gamepad1.dpad_left){
-                targetShootingSpot = 1;
-            }
-            if(gamepad1.dpad_up||gamepad1.dpad_down){
-                targetShootingSpot = 0;
-            }
-            if(gamepad1.dpad_right){
+            telemetry.addData("Starting Delay:", Integer.toString(delay).concat("s"));
+            if (gamepad1.dpad_left) {
                 targetShootingSpot = 2;
             }
+            if (gamepad1.dpad_up || gamepad1.dpad_down) {
+                targetShootingSpot = 0;
+            }
+            if (gamepad1.dpad_right) {
+                targetShootingSpot = 1;
+            }
+            String[] shootingPositions = new String[3];
+            shootingPositions[0] = "Center";
+            shootingPositions[1] = "Right";
+            shootingPositions[2] = "Left";
+            telemetry.addData("Target Shooting Spot",shootingPositions[targetShootingSpot]);
+            telemetry.update();
         }
-        telemetry.addData("Target Shooting Spot",targetShootingSpot);
+        telemetry.addData("Settings","Submitted");
         telemetry.update();
         waitForStart();
         resetStartTime();
         AutonomousData.getInstance().SetStartingLocation(position);
-        while(getRuntime()<delay){}
         machine.opMode.Claw.setPosition(0);
-        machine.addState(States.Tensorflow, new Tensorflow());
+        machine.addState(States.Tensorflow, new Tensorflow(delay));
         machine.addState(States.MoveToWobble, new MoveToWobble());
         machine.addState(States.Rotate, new Rotate(AutonomousData.getInstance().getWobbleRotation(),States.DropWobble));
         machine.addState(States.DropWobble, new DropWobble());
         machine.addState(States.Rotate2,new Rotate(0,States.Move3));
         switch(targetShootingSpot) {
             case 0:
-                machine.addState(States.Move3, new MoveTest(AutonomousData.getInstance().getShootingXPosition(), 56, States.Rotate3));
+                machine.addState(States.Move3, new MoveTest(AutonomousData.getInstance().getShootingXPosition(), 56, States.Rotate3,false));
                 machine.addState(States.Rotate3,new Rotate(0,States.Wait));
                 machine.addState(States.Wait, new wait(0,1));
                 machine.addState(States.Rotate4, new Rotate(0,States.Move4));
                 break;
             case 1:
-                machine.addState(States.Move3, new MoveTest(AutonomousData.getInstance().getShootingXPosition2(), 56, States.Wait));
+                machine.addState(States.Move3, new MoveTest(AutonomousData.getInstance().getShootingXPosition2(), 56, States.Wait,false));
                 machine.addState(States.Rotate3,new Rotate(10,States.Wait));
-                machine.addState(States.Wait, new wait(0,0.95));
+                machine.addState(States.Wait, new wait(-15,0.95));
                 machine.addState(States.Rotate4, new Rotate(0,States.Move4));
                 break;
             case 2:
-                machine.addState(States.Move3, new MoveTest(AutonomousData.getInstance().getShootingXPosition3(), 56, States.Wait));
+                machine.addState(States.Move3, new MoveTest(AutonomousData.getInstance().getShootingXPosition3(), 56, States.Wait,false));
                 machine.addState(States.Rotate3,new Rotate(15,States.Wait));
-                machine.addState(States.Wait, new wait(0,0.95));
+                machine.addState(States.Wait, new wait(15,0.95));
                 machine.addState(States.Rotate4, new Rotate(0,States.Move4));
                 break;
         }
-        machine.addState(States.Move4, new MoveTest(AutonomousData.getInstance().getLineXPosition(), 68, States.Stop));
+        machine.addState(States.Move4, new MoveTest(AutonomousData.getInstance().getLineXPosition(), 68, States.Stop, true));
         machine.runState(States.Tensorflow);
 
         stop();
