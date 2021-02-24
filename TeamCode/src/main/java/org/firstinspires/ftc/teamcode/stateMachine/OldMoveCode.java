@@ -38,12 +38,27 @@ public class OldMoveCode extends StateManager {
             DcMotor left_front = opMode.left_front;
             DcMotor right_back = opMode.right_back;
             DcMotor right_front = opMode.right_front;
-            left_back.setPower(speed*(normalizedY-normalizedX));
-            left_front.setPower(speed*(normalizedY+normalizedX));
-            right_back.setPower(speed*(normalizedY+normalizedX));
-            right_front.setPower(speed*(normalizedY-normalizedX));
+            left_back.setPower(speed*getSlowdown(machine)*(normalizedY-normalizedX));
+            left_front.setPower(speed*getSlowdown(machine)*(normalizedY+normalizedX));
+            right_back.setPower(speed*getSlowdown(machine)*(normalizedY+normalizedX));
+            right_front.setPower(speed*getSlowdown(machine)*(normalizedY-normalizedX));
         }
         Exit(machine);
+    }
+
+    public double getSlowdown(StateMachine machine){
+        double max = 1;
+        double min = 0.2/speed;
+        double startDist = 10;
+        if(getDist(machine)>startDist){
+            return 1;
+        }else{
+            return (min+((max-min)*getDist(machine)/startDist))/max;
+        }
+    }
+
+    public double getDist(StateMachine machine){
+        return machine.opMode.dist(machine.opMode.odometry.returnXCoordinate()/COUNTS_PER_INCH,machine.opMode.odometry.returnYCoordinate()/COUNTS_PER_INCH,tx,ty);
     }
 
     States exit;
