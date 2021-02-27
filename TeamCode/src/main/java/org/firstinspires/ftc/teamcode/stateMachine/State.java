@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.stateMachine;
 
 public class State extends StateManager {
+    public State(){};
     @Override
     public void Run(StateMachine machine) {
         while(!ExitCondition(machine)&&!machine.opMode.opModeIsActive()){
