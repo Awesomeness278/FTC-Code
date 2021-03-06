@@ -27,7 +27,7 @@ public class ShootingDrivetrain extends LinearOpMode {
         telemetry.addData("Status", "Init Complete");
         telemetry.update();
 
-        double flywheelPower = 0.95;
+        double flywheelPower = 0.97;
         final double movementConstant = 0.8;
         final double rotationConstant = 0.75;
 
@@ -151,7 +151,7 @@ public class ShootingDrivetrain extends LinearOpMode {
             if (gamepad2.b) {
                 intake.setDirection(DcMotorSimple.Direction.FORWARD);
                 conveyor.setDirection(DcMotorSimple.Direction.REVERSE);
-                conveyor.setPower(1);
+                conveyor.setPower(0.9);
                 intake.setPower(1);
             } else {
                 conveyor.setPower(0);

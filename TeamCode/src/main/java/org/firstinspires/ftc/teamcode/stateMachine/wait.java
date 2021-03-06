@@ -12,7 +12,7 @@ public class wait extends StateManager {
     @Override
     public void Run(StateMachine machine) {
         double delay = 2.5;
-        double time = 0.15;
+        double time = 0.1;
         int rings = 4;
         boolean updated = false;
         boolean shoot = false;

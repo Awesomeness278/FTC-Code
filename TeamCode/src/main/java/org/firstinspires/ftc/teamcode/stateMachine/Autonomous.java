@@ -84,7 +84,7 @@ public class Autonomous extends LinearOpMode {
             if (gamepad1.right_trigger > 0.3) {
                 delay = Math.min(upDelay, 5);
             }
-            telemetry.addData("Starting Delay:", Integer.toString(delay).concat("s"));
+            telemetry.addData("Starting Delay", Integer.toString(delay).concat("s"));
             if (gamepad1.dpad_left) {
                 targetShootingSpot = 2;
             }
@@ -116,19 +116,19 @@ public class Autonomous extends LinearOpMode {
             case 0:
                 machine.addState(States.Move3, new MoveTest(AutonomousData.getInstance().getShootingXPosition(), 48, States.Rotate3));
                 machine.addState(States.Rotate3,new Rotate(0,States.Wait));
-                machine.addState(States.Wait, new wait(0,0.94));
+                machine.addState(States.Wait, new wait(AutonomousData.getInstance().getShootingRotation(),0.95));
                 machine.addState(States.Rotate4, new Rotate(0,States.Move4));
                 break;
             case 1:
                 machine.addState(States.Move3, new MoveTest(AutonomousData.getInstance().getShootingXPosition2(), 48, States.Wait));
                 machine.addState(States.Rotate3,new Rotate(10,States.Wait));
-                machine.addState(States.Wait, new wait(-15,0.95));
+                machine.addState(States.Wait, new wait(AutonomousData.getInstance().getShootingRotation2(),0.95));
                 machine.addState(States.Rotate4, new Rotate(0,States.Move4));
                 break;
             case 2:
                 machine.addState(States.Move3, new MoveTest(AutonomousData.getInstance().getShootingXPosition3(), 48, States.Wait));
                 machine.addState(States.Rotate3,new Rotate(15,States.Wait));
-                machine.addState(States.Wait, new wait(15,0.95));
+                machine.addState(States.Wait, new wait(AutonomousData.getInstance().getShootingRotation3(),0.95));
                 machine.addState(States.Rotate4, new Rotate(0,States.Move4));
                 break;
         }
