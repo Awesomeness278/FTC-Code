@@ -34,7 +34,7 @@ public class ShootingDrivetrain extends LinearOpMode {
         boolean dPadUpPressed = false;
         boolean dPadDownPressed = false;
         boolean rightBumperPressed = false;
-        boolean leftBumperPressed = false;
+        boolean armPressed = false;
         boolean xPressed = false;
         double armMoving = 0;
 
@@ -151,7 +151,7 @@ public class ShootingDrivetrain extends LinearOpMode {
             if (gamepad2.b) {
                 intake.setDirection(DcMotorSimple.Direction.FORWARD);
                 conveyor.setDirection(DcMotorSimple.Direction.REVERSE);
-                conveyor.setPower(0.9);
+                conveyor.setPower(0.7);
                 intake.setPower(1);
             } else {
                 conveyor.setPower(0);
@@ -166,18 +166,20 @@ public class ShootingDrivetrain extends LinearOpMode {
                 armTargetPosition += 1;
                 arm.setTargetPosition(armTargetPosition);
             }
-            if(gamepad2.left_bumper && !leftBumperPressed){
+            if(gamepad2.dpad_left && !armPressed){
                 arm.setPower(0.15);
-                if (armTargetPosition == vertArmPos) {
-                    armTargetPosition = horArmPos;
-                } else {
-                    armTargetPosition = vertArmPos;
-                }
+                armTargetPosition = horArmPos;
                 armMoving = getRuntime();
-                leftBumperPressed = true;
+                armPressed = true;
                 arm.setTargetPosition(armTargetPosition);
-            }else if(!gamepad2.left_bumper){
-                leftBumperPressed = false;
+            }else if(gamepad2.dpad_right && !armPressed) {
+                arm.setPower(0.15);
+                armTargetPosition = vertArmPos;
+                armMoving = getRuntime();
+                armPressed = true;
+                arm.setTargetPosition(armTargetPosition);
+            }else if(!gamepad2.dpad_left && !gamepad2.dpad_right){
+                armPressed = false;
                 if(getRuntime()-armMoving>armMoveTime) {
                     arm.setPower(0);
                 }

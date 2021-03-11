@@ -4,7 +4,7 @@ public class State extends StateManager {
     public State(){}
     @Override
     public void Run(StateMachine machine) {
-        while(!ExitCondition(machine)&&!machine.opMode.opModeIsActive()){
+        while(!ExitCondition(machine)&&machine.opMode.opModeIsActive()){
 
         }
         Exit(machine);

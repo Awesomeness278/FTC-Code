@@ -106,5 +106,6 @@ repositories {
     flatDir {
         dirs rootProject.file('libs')
     }
+    maven { url = 'https://maven.brott.dev/' }
 }
 apply from: 'build.release.gradle'
