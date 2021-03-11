@@ -40,7 +40,7 @@ public class NewMoveCode extends StateManager {
     }
 
     @Override
-    public boolean ExitCondition(StateMachine machine) { return machine.opMode.dist(tx,ty,machine.opMode.odometry.returnXCoordinate()/machine.opMode.COUNTS_PER_INCH,machine.opMode.odometry.returnYCoordinate()/machine.opMode.COUNTS_PER_INCH)<3; }
+    public boolean ExitCondition(StateMachine machine) { return machine.opMode.dist(tx,ty,machine.opMode.odometry.returnXCoordinate()/machine.opMode.COUNTS_PER_INCH,machine.opMode.odometry.returnYCoordinate()/machine.opMode.COUNTS_PER_INCH)<4; }
 
     @Override
     public void Exit(StateMachine machine) {

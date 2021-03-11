@@ -21,5 +21,4 @@ repositories {
 dependencies {
     annotationProcessor files('lib/OpModeAnnotationProcessor.jar')
     implementation 'org.jetbrains:annotations-java5:15.0'
-    implementation 'com.acmerobotics.roadrunner:core:0.5.3'
 }
