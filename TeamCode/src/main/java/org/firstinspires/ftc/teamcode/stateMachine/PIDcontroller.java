@@ -18,11 +18,13 @@ public class PIDcontroller {
         this.motor = motor;
     }
 
-    public void run(double targetSpeed){
+    public double run(double targetSpeed){
         if(Double.isNaN(error)){
             setup();
+            return 0;
+        }else {
+            return moveMotor(targetSpeed);
         }
-        moveMotor(targetSpeed);
     }
 
     public void setup(){
@@ -31,7 +33,7 @@ public class PIDcontroller {
         lastError = 0;
     }
 
-    void moveMotor(double targetSpeed){
+    double moveMotor(double targetSpeed){
         error = calcSpeed()-targetSpeed;
         double changInError = lastError - error;
         integral += changInError * PIDTimer.time();
@@ -39,9 +41,9 @@ public class PIDcontroller {
         double P = coefficients.p * error;
         double I = coefficients.i * integral;
         double D = coefficients.d * derivative;
-        motor.setPower(P+I+D);
         error = lastError;
         PIDTimer.reset();
+        return P+I+D;
     }
 
     double calcSpeed(){

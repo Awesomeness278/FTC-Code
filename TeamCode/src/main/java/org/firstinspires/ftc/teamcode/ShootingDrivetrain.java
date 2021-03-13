@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.stateMachine.PIDcontroller;
+
 @TeleOp(name = "Shooting + Arm + Drivetrain")
 public class ShootingDrivetrain extends LinearOpMode {
     double moveSpeed = 1;
@@ -15,7 +17,7 @@ public class ShootingDrivetrain extends LinearOpMode {
 
     //Hardware Map Names for drive motors and odometry wheels.
     String rfName = "Right Front Motor", rbName = "Right Back Motor", lfName = "Left Front Motor", lbName = "Left Back Motor", shootName = "Shooter";
-
+    PIDcontroller pid;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -124,6 +126,7 @@ public class ShootingDrivetrain extends LinearOpMode {
             telemetry.addData("x is pressed: ", xPressed);
             telemetry.addData("Grip toggle: ", gripToggle);
             telemetry.update();
+            double PIDPower = pid.run(flywheelPower);
             if (gamepad2.right_bumper) {
                 if (!rightBumperPressed) {
                     flywheelSwitch = (flywheelSwitch + 1) % 2;
@@ -132,7 +135,7 @@ public class ShootingDrivetrain extends LinearOpMode {
             } else {
                 rightBumperPressed = false;
             }
-            shooter.setPower(-(flywheelSwitch * flywheelPower));
+            shooter.setPower(-(flywheelSwitch * PIDPower));
 
             //Intake and Conveyor
             if(gamepad2.left_trigger>=0.5){
@@ -174,7 +177,7 @@ public class ShootingDrivetrain extends LinearOpMode {
                 armPressed = true;
                 arm.setTargetPosition(armTargetPosition);
             }else if(gamepad2.dpad_right && !armPressed) {
-                arm.setPower(0.15);
+                arm.setPower(0.08);
                 armTargetPosition = vertArmPos;
                 armMoving = getRuntime();
                 armPressed = true;
@@ -238,6 +241,8 @@ public class ShootingDrivetrain extends LinearOpMode {
 
         // conveyor.setDirection(DcMotorSimple.Direction.FORWARD);
 
+        pid = new PIDcontroller(shooter);
+        pid.setup();
 
         telemetry.addData("Status", "Hardware Map Init Complete");
         telemetry.update();
