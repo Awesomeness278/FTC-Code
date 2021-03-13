@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.stateMachine;
 
+import com.qualcomm.robotcore.hardware.PIDCoefficients;
+
 public class NewMoveCode extends StateManager {
     public NewMoveCode(double tx,double ty,States exit){
         this.ty = -ty;
@@ -11,7 +13,7 @@ public class NewMoveCode extends StateManager {
     }
     double tx;
     double ty;
-    double sp = 0.75;
+    double sp = 0.6;
     States exit;
     @Override
     public void Run(StateMachine machine) {
@@ -25,16 +27,16 @@ public class NewMoveCode extends StateManager {
             double max = Math.max(Math.abs(tvx), Math.abs(tvy));
             double nx = tvx/max;//Normalizes the target vector.
             double ny = tvy/max;
-            double rx = nx*Math.cos(Math.toRadians(-machine.opMode.odometry.returnOrientation())) - ny*Math.sin(Math.toRadians(-machine.opMode.odometry.returnOrientation()));
-            double ry = nx*Math.sin(Math.toRadians(-machine.opMode.odometry.returnOrientation())) + ny*Math.cos(Math.toRadians(-machine.opMode.odometry.returnOrientation()));
+            double rx = nx*Math.cos(-Math.toRadians(machine.opMode.odometry.returnOrientation())) - ny*Math.sin(-Math.toRadians(machine.opMode.odometry.returnOrientation()));
+            double ry = nx*Math.sin(-Math.toRadians(machine.opMode.odometry.returnOrientation())) + ny*Math.cos(-Math.toRadians(machine.opMode.odometry.returnOrientation()));
             double leftFront = rx+ry;
-            double leftBack = rx-ry;
-            double rightFront = rx-ry;
+            double leftBack = ry-rx;
+            double rightFront = ry-rx;
             double rightBack = rx+ry;
-            opMode.left_front.setPower(leftFront*sp);
-            opMode.left_back.setPower(leftBack*sp);
-            opMode.right_front.setPower(rightFront*sp);
-            opMode.right_back.setPower(rightBack*sp);
+            opMode.left_front.setPower(-leftFront*sp);
+            opMode.left_back.setPower(-leftBack*sp);
+            opMode.right_back.setPower(-rightBack*sp);
+            opMode.right_front.setPower(-rightFront*sp);
         }
         Exit(machine);
     }
@@ -44,6 +46,10 @@ public class NewMoveCode extends StateManager {
 
     @Override
     public void Exit(StateMachine machine) {
-        machine.runState(exit);
+        if(exit.stateNum==States.Stop.stateNum){
+            machine.opMode.stop();
+        }else {
+            machine.runState(exit);
+        }
     }
 }

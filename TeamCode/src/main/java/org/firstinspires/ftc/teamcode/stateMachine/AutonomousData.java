@@ -67,7 +67,7 @@ public class AutonomousData {
                 shootingXPosition3 = -9;
                 shootingRotation = 1;
                 shootingRotation2 = -15;
-                shootingRotation3 = 8;
+                shootingRotation3 = 11;
                 break;
             case 4:
                 dodgeRingXPosition = 8;
@@ -77,7 +77,7 @@ public class AutonomousData {
                 noRingXPosition = 6;
                 fourRingXPosition = 6;
                 wobbleRotation = 7;
-                shootingXPosition2 = 18;
+                shootingXPosition2 = 15;
                 shootingXPosition3 = -34;
                 shootingRotation = 3;
                 shootingRotation2 = -15;
