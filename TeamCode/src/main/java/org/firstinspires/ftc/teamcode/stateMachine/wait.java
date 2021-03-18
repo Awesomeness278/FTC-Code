@@ -11,7 +11,7 @@ public class wait extends StateManager {
     double angle;
     @Override
     public void Run(StateMachine machine) {
-        double delay = 2.5;
+        double delay = 3;
         double time = 0.1;
         int rings = 4;
         boolean updated = false;
@@ -33,6 +33,8 @@ public class wait extends StateManager {
             double scalar = Math.max(Math.max(Math.abs(leftFront), Math.abs(leftBack)), Math.max(Math.abs(rightFront), Math.abs(rightBack)));
             if (scalar < 1) scalar = 1;
             machine.opMode.telemetry.addData("Orientation",machine.opMode.odometry.returnOrientation());
+            machine.opMode.telemetry.addData("X",machine.opMode.odometry.returnXCoordinate()/machine.opMode.COUNTS_PER_INCH);
+            machine.opMode.telemetry.addData("Y",machine.opMode.odometry.returnYCoordinate()/machine.opMode.COUNTS_PER_INCH);
             machine.opMode.telemetry.update();
             left_front.setPower(leftFront / scalar * 0.3);
             left_back.setPower(leftBack / scalar * 0.3);

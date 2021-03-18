@@ -4,16 +4,22 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
+import java.util.concurrent.TimeUnit;
+
 public class PIDcontroller {
     DcMotor motor;
     double integral = 0;
-    PIDCoefficients coefficients = new PIDCoefficients(0,0,0);
-    ElapsedTime PIDTimer = new ElapsedTime();
+    PIDCoefficients coefficients = new PIDCoefficients(0.00001,0.00000001,0.00001);
+    public ElapsedTime PIDTimer = new ElapsedTime();
     double prevPos;
     double newPos;
     double lastError;
     double error = Double.NaN;
 
+    /**@param motor The motor you want to control via PID.
+     */
     public PIDcontroller(DcMotor motor){
         this.motor = motor;
     }
@@ -34,14 +40,14 @@ public class PIDcontroller {
     }
 
     double moveMotor(double targetSpeed){
-        error = calcSpeed()-targetSpeed;
-        double changInError = lastError - error;
-        integral += changInError * PIDTimer.time();
-        double derivative = changInError/PIDTimer.time();
+        error = targetSpeed-calcSpeed();
+        double changeInError = lastError - error;
+        integral += changeInError * PIDTimer.time();
+        double derivative = changeInError/PIDTimer.time();
         double P = coefficients.p * error;
         double I = coefficients.i * integral;
         double D = coefficients.d * derivative;
-        error = lastError;
+        lastError = error;
         PIDTimer.reset();
         return P+I+D;
     }
@@ -49,7 +55,8 @@ public class PIDcontroller {
     double calcSpeed(){
         prevPos = newPos;
         newPos = motor.getCurrentPosition();
-        double speed = (newPos-prevPos)/PIDTimer.time();
+        double speed = (newPos-prevPos)/PIDTimer.time(TimeUnit.MILLISECONDS);
+        speed*=10;
         return speed;
     }
 }

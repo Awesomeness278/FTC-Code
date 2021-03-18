@@ -115,27 +115,23 @@ public class Autonomous extends LinearOpMode {
         machine.addState(States.Rotate2,new Rotate(0,States.Move3));
         switch(targetShootingSpot) {
             case 0:
-                machine.addState(States.Move3, new MoveTest(AutonomousData.getInstance().getShootingXPosition(), 48, States.Rotate3));
-                machine.addState(States.Rotate3,new Rotate(0,States.Wait));
-                machine.addState(States.Wait, new wait(AutonomousData.getInstance().getShootingRotation(),0.98));
+                machine.addState(States.Move3, new MoveTest(AutonomousData.getInstance().getShootingXPosition(), 44, States.Wait));
+                machine.addState(States.Wait, new wait(AutonomousData.getInstance().getShootingRotation(),0.95));
                 machine.addState(States.Rotate4, new Rotate(0,States.Move4));
                 break;
             case 1:
-                machine.addState(States.Move3, new MoveTest(AutonomousData.getInstance().getShootingXPosition2(), 48, States.Wait));
-                machine.addState(States.Rotate3,new Rotate(10,States.Wait));
-                machine.addState(States.Wait, new wait(AutonomousData.getInstance().getShootingRotation2(),0.98));
+                machine.addState(States.Move3, new MoveTest(AutonomousData.getInstance().getShootingXPosition2(), 44, States.Wait));
+                machine.addState(States.Wait, new wait(AutonomousData.getInstance().getShootingRotation2(),0.95));
                 machine.addState(States.Rotate4, new Rotate(0,States.Move4));
                 break;
             case 2:
-                machine.addState(States.Move3, new MoveTest(AutonomousData.getInstance().getShootingXPosition3(), 48, States.Wait));
-                machine.addState(States.Rotate3,new Rotate(15,States.Wait));
-                machine.addState(States.Wait, new wait(AutonomousData.getInstance().getShootingRotation3(),0.98));
+                machine.addState(States.Move3, new MoveTest(AutonomousData.getInstance().getShootingXPosition3(), 44, States.Wait));
+                machine.addState(States.Wait, new wait(AutonomousData.getInstance().getShootingRotation3(),0.95));
                 machine.addState(States.Rotate4, new Rotate(0,States.Move4));
                 break;
         }
         machine.addState(States.Move4, new MoveTest(AutonomousData.getInstance().getLineXPosition(), 68, States.Stop));
         machine.runState(States.Tensorflow);
-
         stop();
     }
 
@@ -213,6 +209,7 @@ public class Autonomous extends LinearOpMode {
         Claw = hardwareMap.get(Servo.class,"Grip");
         Arm.setTargetPosition(0);
         Arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        Arm.setDirection(DcMotorSimple.Direction.REVERSE);
         //Conveyor.setTargetPosition(0);
         //Conveyor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }

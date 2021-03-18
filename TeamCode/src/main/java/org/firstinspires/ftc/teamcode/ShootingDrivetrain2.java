@@ -8,8 +8,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.stateMachine.PIDcontroller;
 
-@TeleOp(name = "Shooting + Arm + Drivetrain")
-public class ShootingDrivetrain extends LinearOpMode {
+@TeleOp(name = "Shooting + Arm + Drivetrain - the second")
+public class ShootingDrivetrain2 extends LinearOpMode {
     double moveSpeed = 1;
     //Drive motors
     DcMotor right_front, right_back, left_front, left_back, shooter, conveyor, arm, intake;
@@ -30,7 +30,7 @@ public class ShootingDrivetrain extends LinearOpMode {
         telemetry.update();
 
         double flywheelPower = 1;
-        double convPower = 0.5;
+        double convPower = 1;
         final double movementConstant = 0.8;
         final double rotationConstant = 0.75;
 
@@ -122,12 +122,18 @@ public class ShootingDrivetrain extends LinearOpMode {
                 dPadDownPressed = false;
             }
             telemetry.addData("Flywheel Power: ", flywheelPower);
+            double PIDPower = 0;
+            if(flywheelSwitch==1) {
+                PIDPower = pid.run(flywheelPower);
+            }
+            telemetry.addData("Suggested Change In Flywheel Power",PIDPower);
+            telemetry.addData("Total Flywheel Power",flywheelPower+PIDPower);
             telemetry.addData("Arm Position", arm.getCurrentPosition());
             telemetry.addData("x is pressed: ", xPressed);
             telemetry.addData("Grip toggle: ", gripToggle);
             telemetry.update();
-            double PIDPower = pid.run(flywheelPower);
             if (gamepad2.right_bumper) {
+                pid.PIDTimer.reset();
                 if (!rightBumperPressed) {
                     flywheelSwitch = (flywheelSwitch + 1) % 2;
                 }
@@ -135,7 +141,7 @@ public class ShootingDrivetrain extends LinearOpMode {
             } else {
                 rightBumperPressed = false;
             }
-            shooter.setPower(-(flywheelSwitch * flywheelPower));
+            shooter.setPower(-(flywheelSwitch * (PIDPower+flywheelPower)));
 
             //Intake and Conveyor
             if(gamepad2.left_trigger>=0.5){
@@ -228,6 +234,7 @@ public class ShootingDrivetrain extends LinearOpMode {
         right_back.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         left_front.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         left_back.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        shooter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         right_front.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         right_back.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

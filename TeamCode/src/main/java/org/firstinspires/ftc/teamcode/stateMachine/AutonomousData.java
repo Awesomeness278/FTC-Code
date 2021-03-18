@@ -30,11 +30,11 @@ public class AutonomousData {
             case 1:
                 dodgeRingXPosition = -8;
                 lineXPosition  = 12;
-                shootingXPosition = 7;
+                shootingXPosition = 12;
                 oneRingXPosition = 20;
                 noRingXPosition = -12;
                 fourRingXPosition = -14;
-                wobbleRotation = -32;
+                wobbleRotation = -35;
                 shootingXPosition2 = 36;
                 shootingXPosition3 = -12;
                 shootingRotation = -2;
@@ -55,33 +55,33 @@ public class AutonomousData {
                 shootingRotation2 = -15;
                 shootingRotation3 = 15;
                 break;
-            case 3:
-                shootingXPosition = 6;
-                lineXPosition = 12;
-                dodgeRingXPosition = -12;
-                fourRingXPosition = 34;
-                oneRingXPosition = 3;
-                noRingXPosition = 22;
-                wobbleRotation = 5;
-                shootingXPosition2 = 34;
-                shootingXPosition3 = -9;
-                shootingRotation = 1;
-                shootingRotation2 = -15;
-                shootingRotation3 = 11;
+            case 3://Inner Red
+                shootingXPosition = 6;//Center
+                lineXPosition = 12;//Obsolete
+                dodgeRingXPosition = -12;//X position robot goes to to dodge the ring stack
+                fourRingXPosition = 34;//The X position of the four ring spot
+                oneRingXPosition = 5;//The X position of the one ring spot
+                noRingXPosition = 22;//The X position of the no ring spot
+                wobbleRotation = 5;//The rotation the robot does before dropping the wobble(in degrees)
+                shootingXPosition2 = 34;//The right shooting position
+                shootingXPosition3 = -9;//The left shooting position
+                shootingRotation = 1;//The center shooting rotation
+                shootingRotation2 = -15;//The right shooting rotation
+                shootingRotation3 = 5;//The left shooting rotation
                 break;
             case 4:
                 dodgeRingXPosition = 8;
                 lineXPosition  = -12;
-                shootingXPosition = -14;
-                oneRingXPosition = -21;
+                shootingXPosition = -16;
+                oneRingXPosition = -25;
                 noRingXPosition = 6;
-                fourRingXPosition = 6;
+                fourRingXPosition = 0;
                 wobbleRotation = 7;
                 shootingXPosition2 = 15;
                 shootingXPosition3 = -34;
-                shootingRotation = 3;
+                shootingRotation = 1;
                 shootingRotation2 = -15;
-                shootingRotation3 = 15;
+                shootingRotation3 = 5;
                 break;
             default:
                 break;

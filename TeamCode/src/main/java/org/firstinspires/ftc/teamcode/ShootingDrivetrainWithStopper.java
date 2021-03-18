@@ -1,24 +1,25 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.HardwareDevice;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.stateMachine.PIDcontroller;
-
-@TeleOp(name = "Shooting + Arm + Drivetrain")
-public class ShootingDrivetrain extends LinearOpMode {
+@Disabled
+@TeleOp(name = "Shooting + Arm + Drivetrain + Stopper")
+public class ShootingDrivetrainWithStopper extends LinearOpMode {
     double moveSpeed = 1;
     //Drive motors
     DcMotor right_front, right_back, left_front, left_back, shooter, conveyor, arm, intake;
     Servo grip;
+    Servo blocker;
 
     //Hardware Map Names for drive motors and odometry wheels.
     String rfName = "Right Front Motor", rbName = "Right Back Motor", lfName = "Left Front Motor", lbName = "Left Back Motor", shootName = "Shooter";
-    PIDcontroller pid;
-
     @Override
     public void runOpMode() throws InterruptedException {
         //Initialize hardware map values.
@@ -39,6 +40,8 @@ public class ShootingDrivetrain extends LinearOpMode {
         boolean rightBumperPressed = false;
         boolean armPressed = false;
         boolean xPressed = false;
+        boolean blockerToggle = true;
+        boolean blockerPressed = false;
         double armMoving = 0;
 
         int flywheelSwitch = 0;
@@ -49,7 +52,7 @@ public class ShootingDrivetrain extends LinearOpMode {
         boolean gripToggle = false;
 
         double armMoveTime = 1.5;
-
+        blocker = hardwareMap.get(Servo.class,"Blocker");
         waitForStart();
         while (opModeIsActive()) {
 
@@ -102,7 +105,18 @@ public class ShootingDrivetrain extends LinearOpMode {
             left_back.setPower(leftBack / scalar * moveSpeed);
             right_front.setPower(rightFront / scalar * moveSpeed);
             right_back.setPower(rightBack / scalar * moveSpeed);
-
+            //Blocker
+            if(gamepad2.y&&!blockerPressed){
+                blockerPressed = true;
+                blockerToggle = !blockerToggle;
+            }else if(gamepad2.y){
+                blockerPressed = false;
+            }
+            if(blockerToggle){
+                blocker.setPosition(0);
+            }else{
+                blocker.setPosition(1);
+            }
             //Flywheel
             if (gamepad2.dpad_up) {
                 if (!dPadUpPressed) {
@@ -126,7 +140,6 @@ public class ShootingDrivetrain extends LinearOpMode {
             telemetry.addData("x is pressed: ", xPressed);
             telemetry.addData("Grip toggle: ", gripToggle);
             telemetry.update();
-            double PIDPower = pid.run(flywheelPower);
             if (gamepad2.right_bumper) {
                 if (!rightBumperPressed) {
                     flywheelSwitch = (flywheelSwitch + 1) % 2;
@@ -240,9 +253,6 @@ public class ShootingDrivetrain extends LinearOpMode {
         //right_back.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // conveyor.setDirection(DcMotorSimple.Direction.FORWARD);
-
-        pid = new PIDcontroller(shooter);
-        pid.setup();
 
         telemetry.addData("Status", "Hardware Map Init Complete");
         telemetry.update();
