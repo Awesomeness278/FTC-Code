@@ -50,10 +50,10 @@ public class MoveTest extends StateManager {
             double radius = 1 / Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
             x = x * -radius;
             y = y * -radius;
-            leftFront += (y + x)-opMode.odometry.returnOrientation()/10;
-            leftBack += (y - x)-opMode.odometry.returnOrientation()/10;
-            rightFront += (y - x)+opMode.odometry.returnOrientation()/10;
-            rightBack += (y + x)+opMode.odometry.returnOrientation()/10;
+            leftFront += (y + x)-opMode.odometry.returnOrientation()/20;
+            leftBack += (y - x)-opMode.odometry.returnOrientation()/20;
+            rightFront += (y - x)+opMode.odometry.returnOrientation()/20;
+            rightBack += (y + x)+opMode.odometry.returnOrientation()/20;
             double scalar = Math.max(Math.max(Math.abs(leftFront), Math.abs(leftBack)), Math.max(Math.abs(rightFront), Math.abs(rightBack)));
             if (scalar < 1) scalar = 1;
             left_front.setPower(leftFront / scalar * sp);

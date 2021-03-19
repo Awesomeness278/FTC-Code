@@ -42,6 +42,8 @@ public class Rotate extends StateManager {
         left_front.setPower(0);
         right_back.setPower(0);
         right_front.setPower(0);
+        double startWait = machine.opMode.getRuntime();
+        while(machine.opMode.getRuntime()-startWait<0.5){}
         Exit(machine);
     }
 

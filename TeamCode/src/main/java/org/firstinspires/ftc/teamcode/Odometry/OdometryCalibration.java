@@ -9,6 +9,10 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.ReadWriteFile;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 
 import java.io.File;
@@ -46,7 +50,7 @@ public class OdometryCalibration extends LinearOpMode {
     File horizontalTickOffsetFile = AppUtil.getInstance().getSettingsFile("horizontalTickOffset.txt");
 
     @Override
-    public void runOpMode() throws InterruptedException {
+    public void runOpMode() {
         //Initialize hardware map values. PLEASE UPDATE THESE VALUES TO MATCH YOUR CONFIGURATION
         initHardwareMap(rfName, rbName, lfName, lbName, verticalLeftEncoderName, verticalRightEncoderName, horizontalEncoderName);
 
@@ -72,12 +76,22 @@ public class OdometryCalibration extends LinearOpMode {
         waitForStart();
 
         //Begin calibration (if robot is unable to pivot at these speeds, please adjust the constant at the top of the code
-        while(!gamepad1.a && opModeIsActive()){
+        while(-imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).secondAngle < 90 && opModeIsActive()){
+            Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
             right_front.setPower(-PIVOT_SPEED);
             right_back.setPower(-PIVOT_SPEED);
             left_front.setPower(PIVOT_SPEED);
             left_back.setPower(PIVOT_SPEED);
-            telemetry.addData("IMU Angle", getYAngle());
+            if(getZAngle(angles) < 60) {
+                setPowerAll(-PIVOT_SPEED, -PIVOT_SPEED, PIVOT_SPEED, PIVOT_SPEED);
+            }else{
+                setPowerAll(-PIVOT_SPEED/2, -PIVOT_SPEED/2, PIVOT_SPEED/2, PIVOT_SPEED/2);
+            }
+
+
+            telemetry.addData("First IMU Angle", angles.firstAngle);
+            telemetry.addData("Second IMU Angle", angles.secondAngle);
+            telemetry.addData("Third IMU Angle", angles.thirdAngle);
             telemetry.update();
         }
 
@@ -85,11 +99,13 @@ public class OdometryCalibration extends LinearOpMode {
         setPowerAll(0, 0, 0, 0);
         timer.reset();
         while(timer.milliseconds() < 1000 && opModeIsActive()){
-            telemetry.addData("IMU Angle", getYAngle());
+            Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
+            telemetry.addData("IMU Angle", getZAngle(angles));
             telemetry.update();
         }
-
+        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
         //Record IMU and encoder values to calculate the constants for the global position algorithm
+        double angle = getZAngle(angles);
 
         /*
         Encoder Difference is calculated by the formula (leftEncoder - rightEncoder)
@@ -97,10 +113,12 @@ public class OdometryCalibration extends LinearOpMode {
         THIS MAY NEED TO BE CHANGED FOR EACH ROBOT
        */
         double encoderDifference = Math.abs(verticalLeft.getCurrentPosition()) + (Math.abs(verticalRight.getCurrentPosition()));
-        double verticalEncoderTickOffsetPerDegree = encoderDifference/90;
-        double wheelBaseSeparation = (180*verticalEncoderTickOffsetPerDegree)/(Math.PI*COUNTS_PER_INCH);
 
-        horizontalTickOffset = horizontal.getCurrentPosition()/Math.toRadians(-getYAngle());
+        double verticalEncoderTickOffsetPerDegree = encoderDifference/angle;
+
+        double wheelBaseSeparation = (2*90*verticalEncoderTickOffsetPerDegree)/(Math.PI*COUNTS_PER_INCH);
+
+        horizontalTickOffset = horizontal.getCurrentPosition()/Math.toRadians(getZAngle(angles));
 
         //Write the constants to text files
         ReadWriteFile.writeFile(wheelBaseSeparationFile, String.valueOf(wheelBaseSeparation));
@@ -111,9 +129,9 @@ public class OdometryCalibration extends LinearOpMode {
             //Display calculated constants
             telemetry.addData("Wheel Base Separation", wheelBaseSeparation);
             telemetry.addData("Horizontal Encoder Offset", horizontalTickOffset);
-
+            angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
             //Display raw values
-            telemetry.addData("IMU Angle", -getYAngle());
+            telemetry.addData("IMU Angle", getZAngle(angles));
             telemetry.addData("Vertical Left Position", -verticalLeft.getCurrentPosition());
             telemetry.addData("Vertical Right Position", verticalRight.getCurrentPosition());
             telemetry.addData("Horizontal Position", horizontal.getCurrentPosition());
@@ -158,8 +176,9 @@ public class OdometryCalibration extends LinearOpMode {
         left_front.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         left_back.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        right_front.setDirection(DcMotorSimple.Direction.REVERSE);
-        right_back.setDirection(DcMotorSimple.Direction.REVERSE);
+        left_front.setDirection(DcMotorSimple.Direction.REVERSE);
+        left_back.setDirection(DcMotorSimple.Direction.REVERSE);
+
 
         telemetry.addData("Status", "Hardware Map Init Complete");
         telemetry.update();
@@ -170,8 +189,8 @@ public class OdometryCalibration extends LinearOpMode {
      * Gets the orientation of the robot using the REV IMU
      * @return the angle of the robot
      */
-    private double getYAngle(){
-        return (-imu.getAngularOrientation().thirdAngle);
+    private double getZAngle(Orientation angles){
+        return -angles.secondAngle;
     }
 
     /**
