@@ -6,6 +6,10 @@ public class MoveToWobble extends StateManager {
     }
     @Override
     public void Run(StateMachine machine) {
+        machine.opMode.telemetry.addData("Orientation",machine.opMode.odometry.returnOrientation());
+        machine.opMode.telemetry.addData("X",machine.opMode.odometry.returnXCoordinate()/machine.opMode.COUNTS_PER_INCH);
+        machine.opMode.telemetry.addData("Y",machine.opMode.odometry.returnYCoordinate()/machine.opMode.COUNTS_PER_INCH);
+        machine.opMode.telemetry.update();
         Autonomous opMode = machine.opMode;
 
         machine.addState(States.Move1, new MoveTest(AutonomousData.getInstance().getDodgeRingXPosition(), 36, States.Move2));

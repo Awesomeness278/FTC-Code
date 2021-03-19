@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.stateMachine;
 
-import com.qualcomm.robotcore.hardware.PIDCoefficients;
-
 public class NewMoveCode extends StateManager {
     public NewMoveCode(double tx,double ty,States exit){
         this.ty = -ty;
@@ -13,7 +11,7 @@ public class NewMoveCode extends StateManager {
     }
     double tx;
     double ty;
-    double sp = 0.6;
+    double sp = 0.4;
     States exit;
     @Override
     public void Run(StateMachine machine) {

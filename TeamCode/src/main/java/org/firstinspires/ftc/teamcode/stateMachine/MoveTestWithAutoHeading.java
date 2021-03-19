@@ -1,17 +1,14 @@
 package org.firstinspires.ftc.teamcode.stateMachine;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.PIDCoefficients;
 
-import org.firstinspires.ftc.teamcode.Odometry.Odometry;
-
-public class MoveTest extends StateManager {
+public class MoveTestWithAutoHeading extends StateManager {
     double tx;
     double ty;
     double COUNTS_PER_INCH = 307.699557;
     States exit;
-    double sp = 0.6;
-    public MoveTest(double tx, double ty, States exit){
+    double speed = 0.6;
+    public MoveTestWithAutoHeading(double tx, double ty, States exit){
         this.tx = -tx;
         this.ty = -ty;
         this.exit = exit;
@@ -23,11 +20,11 @@ public class MoveTest extends StateManager {
     double startY;
     @Override
     public void Run(StateMachine machine) {
-        if(Double.isNaN(this.tx)){
-            this.tx = machine.opMode.odometry.returnXCoordinate()/COUNTS_PER_INCH;
+        if (Double.isNaN(this.tx)) {
+            this.tx = machine.opMode.odometry.returnXCoordinate() / COUNTS_PER_INCH;
         }
-        startX = machine.opMode.odometry.returnXCoordinate()/COUNTS_PER_INCH;
-        startY = machine.opMode.odometry.returnYCoordinate()/COUNTS_PER_INCH;
+        startX = machine.opMode.odometry.returnXCoordinate() / COUNTS_PER_INCH;
+        startY = machine.opMode.odometry.returnYCoordinate() / COUNTS_PER_INCH;
         Autonomous opMode = machine.opMode;
         DcMotor left_back = opMode.left_back;
         DcMotor left_front = opMode.left_front;
@@ -39,27 +36,38 @@ public class MoveTest extends StateManager {
         double rightFront = 0;
         double rightBack = 0;
 
-        while(ExitCondition(machine)&&opMode.opModeIsActive()) {
+        while (ExitCondition(machine) && opMode.opModeIsActive()) {
             double x = opMode.odometry.returnXCoordinate() / COUNTS_PER_INCH - tx;
             double y = opMode.odometry.returnYCoordinate() / COUNTS_PER_INCH - ty;
-            opMode.telemetry.addData("Orientation",opMode.odometry.returnOrientation());
-            opMode.telemetry.addData("Runtime",opMode.getRuntime());
-            opMode.telemetry.addData("X",opMode.odometry.returnXCoordinate()/COUNTS_PER_INCH);
-            opMode.telemetry.addData("Y",opMode.odometry.returnYCoordinate()/COUNTS_PER_INCH);
-            opMode.telemetry.update();
+            opMode.telemetry.addData("Orientation", opMode.odometry.returnOrientation());
+            opMode.telemetry.addData("Runtime", opMode.getRuntime());
+            opMode.telemetry.addData("X", opMode.odometry.returnXCoordinate() / COUNTS_PER_INCH);
+            opMode.telemetry.addData("Y", opMode.odometry.returnYCoordinate() / COUNTS_PER_INCH);
             double radius = 1 / Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
             x = x * -radius;
             y = y * -radius;
-            leftFront += (y + x)-opMode.odometry.returnOrientation()/10;
-            leftBack += (y - x)-opMode.odometry.returnOrientation()/10;
-            rightFront += (y - x)+opMode.odometry.returnOrientation()/10;
-            rightBack += (y + x)+opMode.odometry.returnOrientation()/10;
+            double heading = (y > 0 ? Math.atan(x / y) : Math.atan(x / y) + Math.PI);
+            double headingDegrees = Math.toDegrees(heading);
+            opMode.telemetry.addData("Heading",headingDegrees);
+            opMode.telemetry.update();
+            double sp = Math.abs(headingDegrees % 360 - opMode.odometry.returnOrientation() % 360);
+            if (sp > 180) {
+                sp -= 360;
+                sp = Math.abs(sp);
+            }
+            sp /= 180;
+            sp = Math.pow(sp, 0.4);
+            sp = Math.min(1 - sp,0.1);
+            leftFront += (headingDegrees - opMode.odometry.returnOrientation())/10;
+            leftBack += (headingDegrees - opMode.odometry.returnOrientation())/10;
+            rightFront += (headingDegrees - opMode.odometry.returnOrientation())/10;
+            rightBack += (headingDegrees - opMode.odometry.returnOrientation())/10;
             double scalar = Math.max(Math.max(Math.abs(leftFront), Math.abs(leftBack)), Math.max(Math.abs(rightFront), Math.abs(rightBack)));
             if (scalar < 1) scalar = 1;
-            left_front.setPower(leftFront / scalar * sp);
-            left_back.setPower(leftBack / scalar * sp);
-            right_front.setPower(rightFront / scalar * sp);
-            right_back.setPower(rightBack / scalar * sp);
+            left_front.setPower(sp + leftFront / scalar * speed);
+            left_back.setPower(sp + leftBack / scalar * speed);
+            right_front.setPower(sp + rightFront / scalar * speed);
+            right_back.setPower(sp + rightBack / scalar * speed);
         }
         left_back.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         left_front.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -69,16 +77,11 @@ public class MoveTest extends StateManager {
         left_front.setPower(0);
         right_back.setPower(0);
         right_front.setPower(0);
-        if(!opMode.opModeIsActive()){
+        if (!opMode.opModeIsActive()) {
             opMode.stop();
-        }else {
+        } else {
             Exit(machine);
         }
-    }
-
-    public void slowFactor(){
-        double x = 0;
-        double y = 0;
     }
 
     @Override

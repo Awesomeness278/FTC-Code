@@ -11,6 +11,10 @@ public class Tensorflow extends StateManager {
     int delay;
     @Override
     public void Run(StateMachine machine) {
+        machine.opMode.telemetry.addData("Orientation",machine.opMode.odometry.returnOrientation());
+        machine.opMode.telemetry.addData("X",machine.opMode.odometry.returnXCoordinate()/machine.opMode.COUNTS_PER_INCH);
+        machine.opMode.telemetry.addData("Y",machine.opMode.odometry.returnYCoordinate()/machine.opMode.COUNTS_PER_INCH);
+        machine.opMode.telemetry.update();
         Autonomous opMode = machine.opMode;
         if(!opMode.tfod.getRecognitions().isEmpty()) {
             List<Recognition> recognitions = opMode.tfod.getRecognitions();
