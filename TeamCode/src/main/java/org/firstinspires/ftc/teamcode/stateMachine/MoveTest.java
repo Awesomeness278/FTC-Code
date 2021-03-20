@@ -26,6 +26,13 @@ public class MoveTest extends StateManager {
         if(Double.isNaN(this.tx)){
             this.tx = machine.opMode.odometry.returnXCoordinate()/COUNTS_PER_INCH;
         }
+        if(machine.opMode.recognition.getLabel().equals("Quad")){
+            if(machine.opMode.position<=2){
+                this.tx+=3;
+            }else{
+                this.ty-=3;
+            }
+        }
         startX = machine.opMode.odometry.returnXCoordinate()/COUNTS_PER_INCH;
         startY = machine.opMode.odometry.returnYCoordinate()/COUNTS_PER_INCH;
         Autonomous opMode = machine.opMode;
