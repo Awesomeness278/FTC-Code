@@ -4,13 +4,20 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.stateMachine.PIDcontroller;
+
+import java.util.concurrent.TimeUnit;
 
 @TeleOp(name = "Shooting + Arm + Drivetrain - the second")
 public class ShootingDrivetrain2 extends LinearOpMode {
     double moveSpeed = 1;
+    double pPos = 0;
+    double pos = 0;
+    ElapsedTime time = new ElapsedTime();
     //Drive motors
     DcMotor right_front, right_back, left_front, left_back, shooter, conveyor, arm, intake;
     Servo grip;
@@ -30,7 +37,7 @@ public class ShootingDrivetrain2 extends LinearOpMode {
         telemetry.update();
 
         double flywheelPower = 1;
-        double convPower = 1;
+        double convPower = 0.7;
         final double movementConstant = 0.8;
         final double rotationConstant = 0.75;
 
@@ -52,10 +59,6 @@ public class ShootingDrivetrain2 extends LinearOpMode {
 
         waitForStart();
         while (opModeIsActive()) {
-
-         /*  if(gripPos.length<3){
-               gripPos.push(grip.getPosition());
-           }*/
 
             //Movement
             double leftFront = 0;
@@ -126,6 +129,12 @@ public class ShootingDrivetrain2 extends LinearOpMode {
             if(flywheelSwitch==1) {
                 PIDPower = pid.run(flywheelPower);
             }
+            pPos = Math.abs(pos);
+            pos = Math.abs(shooter.getCurrentPosition());
+            double rpm = (pos-pPos)/time.time(TimeUnit.MILLISECONDS);
+            time.reset();
+            rpm = rpm/2.6;
+            telemetry.addData("Rotations per minute:",rpm);
             telemetry.addData("Suggested Change In Flywheel Power",PIDPower);
             telemetry.addData("Total Flywheel Power",flywheelPower+PIDPower);
             telemetry.addData("Arm Position", arm.getCurrentPosition());
@@ -207,10 +216,6 @@ public class ShootingDrivetrain2 extends LinearOpMode {
             } else {
                 grip.setPosition(-0.1);
             }
-         /*  if(gripPos[1]==gripPos[0]&&gamepad2.x){
-               grip.setPosition(0);
-               gripPos = []
-           }*/
         }
     }
 
@@ -242,13 +247,9 @@ public class ShootingDrivetrain2 extends LinearOpMode {
         left_back.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         left_front.setDirection(DcMotorSimple.Direction.REVERSE);
-        //right_front.setDirection(DcMotorSimple.Direction.REVERSE);
         left_back.setDirection(DcMotorSimple.Direction.REVERSE);
-        //right_back.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        // conveyor.setDirection(DcMotorSimple.Direction.FORWARD);
-
-        pid = new PIDcontroller(shooter);
+        pid = new PIDcontroller(shooter, new PIDCoefficients(0.002,0.00002,0.002));
         pid.setup();
 
         telemetry.addData("Status", "Hardware Map Init Complete");

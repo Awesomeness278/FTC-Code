@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
 public class PIDcontroller {
     DcMotor motor;
     double integral = 0;
-    PIDCoefficients coefficients = new PIDCoefficients(0.00001,0.00000001,0.00001);
+    PIDCoefficients coefficients;
     public ElapsedTime PIDTimer = new ElapsedTime();
     double prevPos;
     double newPos;
@@ -20,8 +20,9 @@ public class PIDcontroller {
 
     /**@param motor The motor you want to control via PID.
      */
-    public PIDcontroller(DcMotor motor){
+    public PIDcontroller(DcMotor motor, PIDCoefficients pid){
         this.motor = motor;
+        coefficients = pid;
     }
 
     public double run(double targetSpeed){
@@ -56,7 +57,7 @@ public class PIDcontroller {
         prevPos = newPos;
         newPos = motor.getCurrentPosition();
         double speed = (newPos-prevPos)/PIDTimer.time(TimeUnit.MILLISECONDS);
-        speed*=10;
+        speed/=2.6;
         return speed;
     }
 }

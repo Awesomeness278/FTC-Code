@@ -60,7 +60,7 @@ public class wait extends StateManager {
             }
         }
         machine.opMode.Shooter.setPower(0);
-        Exit(machine);
+        machine.opMode.stop();
     }
     @Override
     public boolean ExitCondition(StateMachine machine) {

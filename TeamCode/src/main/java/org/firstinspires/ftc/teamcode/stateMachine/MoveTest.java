@@ -26,11 +26,13 @@ public class MoveTest extends StateManager {
         if(Double.isNaN(this.tx)){
             this.tx = machine.opMode.odometry.returnXCoordinate()/COUNTS_PER_INCH;
         }
-        if(machine.opMode.recognition.getLabel().equals("Quad")){
-            if(machine.opMode.position<=2){
-                this.tx+=3;
-            }else{
-                this.ty-=3;
+        if(machine.opMode.recognition!=null) {
+            if (machine.opMode.recognition.getLabel().equals("Quad")) {
+                if (machine.opMode.position <= 2) {
+                    this.tx += 3;
+                } else {
+                    this.ty -= 3;
+                }
             }
         }
         startX = machine.opMode.odometry.returnXCoordinate()/COUNTS_PER_INCH;
@@ -63,10 +65,10 @@ public class MoveTest extends StateManager {
             rightBack += (y + x)+opMode.odometry.returnOrientation()/20;
             double scalar = Math.max(Math.max(Math.abs(leftFront), Math.abs(leftBack)), Math.max(Math.abs(rightFront), Math.abs(rightBack)));
             if (scalar < 1) scalar = 1;
-            left_front.setPower(leftFront / scalar * sp);
-            left_back.setPower(leftBack / scalar * sp);
-            right_front.setPower(rightFront / scalar * sp);
-            right_back.setPower(rightBack / scalar * sp);
+            left_front.setPower(leftFront / scalar * slowFactor(machine,0.25));
+            left_back.setPower(leftBack / scalar * slowFactor(machine,0.25));
+            right_front.setPower(rightFront / scalar * slowFactor(machine,0.25));
+            right_back.setPower(rightBack / scalar * slowFactor(machine,0.25));
         }
         left_back.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         left_front.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -83,9 +85,18 @@ public class MoveTest extends StateManager {
         }
     }
 
-    public void slowFactor(){
-        double x = 0;
-        double y = 0;
+    public double slowFactor(StateMachine machine, double minSpeed){
+        double maxSpeed = sp;
+        Autonomous opMode = machine.opMode;
+        double speed = sp;
+        double distance = machine.opMode.dist(opMode.odometry.returnXCoordinate()/opMode.COUNTS_PER_INCH,opMode.odometry.returnYCoordinate()/opMode.COUNTS_PER_INCH,tx,ty);
+        if(distance<12){
+            double percentage = 1-distance/12;
+            speed = maxSpeed-minSpeed;
+            speed*=percentage;
+            speed+=minSpeed;
+        }
+        return speed;
     }
 
     @Override

@@ -39,7 +39,7 @@ public class AutonomousData {
                 shootingXPosition3 = -12;
                 shootingRotation = -2;
                 shootingRotation2 = -15;
-                shootingRotation3 = 12;
+                shootingRotation3 = 3;
                 break;
             case 2:
                 shootingXPosition = -12;

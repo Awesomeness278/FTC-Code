@@ -54,6 +54,7 @@ public class Autonomous extends LinearOpMode {
         }
         assert tfod != null;
         tfod.setZoom(1.3,16.0/9.0);
+        //add this later: tfod.setClippingMargins();
         initDriveHardwareMap(rfName, rbName, lfName, lbName, verticalLeftEncoderName, verticalRightEncoderName, horizontalEncoderName);
         odometry = new OdometryGlobalCoordinatePosition(verticalLeft, verticalRight, horizontal, COUNTS_PER_INCH, 75);
         odometry.reverseRightEncoder();
@@ -108,6 +109,7 @@ public class Autonomous extends LinearOpMode {
         resetStartTime();
         AutonomousData.getInstance().SetStartingLocation(position);
         machine.opMode.Claw.setPosition(0);
+
         machine.addState(States.Tensorflow, new Tensorflow(delay));
         machine.addState(States.MoveToWobble, new MoveToWobble());
         machine.addState(States.Rotate, new Rotate(AutonomousData.getInstance().getWobbleRotation(),States.DropWobble));
@@ -116,17 +118,17 @@ public class Autonomous extends LinearOpMode {
         switch(targetShootingSpot) {
             case 0:
                 machine.addState(States.Move3, new MoveTest(AutonomousData.getInstance().getShootingXPosition(), 44, States.Wait));
-                machine.addState(States.Wait, new wait(AutonomousData.getInstance().getShootingRotation(),0.95));
+                machine.addState(States.Wait, new wait(AutonomousData.getInstance().getShootingRotation(),0.91));
                 machine.addState(States.Rotate4, new Rotate(0,States.Move4));
                 break;
             case 1:
                 machine.addState(States.Move3, new MoveTest(AutonomousData.getInstance().getShootingXPosition2(), 44, States.Wait));
-                machine.addState(States.Wait, new wait(AutonomousData.getInstance().getShootingRotation2(),0.95));
+                machine.addState(States.Wait, new wait(AutonomousData.getInstance().getShootingRotation2(),0.91));
                 machine.addState(States.Rotate4, new Rotate(0,States.Move4));
                 break;
             case 2:
                 machine.addState(States.Move3, new MoveTest(AutonomousData.getInstance().getShootingXPosition3(), 44, States.Wait));
-                machine.addState(States.Wait, new wait(AutonomousData.getInstance().getShootingRotation3(),0.95));
+                machine.addState(States.Wait, new wait(AutonomousData.getInstance().getShootingRotation3(),0.91));
                 machine.addState(States.Rotate4, new Rotate(0,States.Move4));
                 break;
         }
