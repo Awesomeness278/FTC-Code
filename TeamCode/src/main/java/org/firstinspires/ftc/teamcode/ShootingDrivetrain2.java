@@ -27,7 +27,7 @@ public class ShootingDrivetrain2 extends LinearOpMode {
     PIDcontroller pid;
 
     @Override
-    public void runOpMode() throws InterruptedException {
+    public void runOpMode() {
         //Initialize hardware map values.
         initDriveHardwareMap(rfName, rbName, lfName, lbName, shootName);
         arm.setTargetPosition(0);
