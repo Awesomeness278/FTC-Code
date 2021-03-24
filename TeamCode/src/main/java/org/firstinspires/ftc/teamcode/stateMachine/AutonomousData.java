@@ -68,18 +68,18 @@ public class AutonomousData {
                 shootingXPosition = 6;//Center
                 lineXPosition = 12;//Obsolete
                 dodgeRingXPosition = -12;//X position robot goes to to dodge the ring stack
-                fourRingXPosition = 46;//The X position of the four ring spot
-                oneRingXPosition = 17;//The X position of the one ring spot
-                noRingXPosition = 34;//The X position of the no ring spot
-                wobblePathX0 = 58;
-                wobblePathX1 = 41;
-                wobblePathX4 = 70;
+                fourRingXPosition = 28;//The X position of the four ring spot
+                oneRingXPosition = -1;//The X position of the one ring spot
+                noRingXPosition = 16;//The X position of the no ring spot
+                wobblePathX0 = 10;
+                wobblePathX1 = -19;
+                wobblePathX4 = -2;
                 wobbleRotation = 90;//The rotation the robot does before dropping the wobble(in degrees)
                 shootingXPosition2 = 34;//The right shooting position
                 shootingXPosition3 = -9;//The left shooting position
                 shootingRotation = 1;//The center shooting rotation
                 shootingRotation2 = -15;//The right shooting rotation
-                shootingRotation3 = 5;//The left shooting rotation
+                shootingRotation3 = 6;//The left shooting rotation
                 break;
             case 4://Outer Red
                 dodgeRingXPosition = 8;
@@ -88,9 +88,9 @@ public class AutonomousData {
                 oneRingXPosition = -13;
                 noRingXPosition = 18;
                 fourRingXPosition = 12;
-                wobblePathX0 = 42;
-                wobblePathX1 = 11;
-                wobblePathX4 = 36;
+                wobblePathX0 = 18;
+                wobblePathX1 = -13;
+                wobblePathX4 = 12;
                 wobbleRotation = 90;
                 shootingXPosition2 = 10;
                 shootingXPosition3 = -34;

@@ -107,15 +107,6 @@ public class Autonomous extends LinearOpMode {
         telemetry.update();
         waitForStart();
         resetStartTime();
-        if(position == 1){
-            odometry.SetOrigin(48,72,COUNTS_PER_INCH);
-        }else if(position == 2){
-            odometry.SetOrigin(24,72,COUNTS_PER_INCH);
-        }else if(position == 3){
-            odometry.SetOrigin(-24,72,COUNTS_PER_INCH);
-        }else if(position == 4){
-            odometry.SetOrigin(-48,72,COUNTS_PER_INCH);
-        }
         AutonomousData.getInstance().SetStartingLocation(position);
         machine.opMode.Claw.setPosition(0);
 
@@ -127,17 +118,17 @@ public class Autonomous extends LinearOpMode {
         machine.addState(States.Rotate2,new Rotate(0,States.Stop));
         switch(targetShootingSpot) {
             case 0:
-                machine.addState(States.Move3, new MoveTest(AutonomousData.getInstance().getShootingXPosition(), 44, States.Wait));
+                machine.addState(States.Move3, new MoveTest(AutonomousData.getInstance().getShootingXPosition(), 36, States.Wait));
                 machine.addState(States.Wait, new wait(AutonomousData.getInstance().getShootingRotation(),0.91));
                 machine.addState(States.Rotate4, new Rotate(0,States.MoveToWobble));
                 break;
             case 1:
-                machine.addState(States.Move3, new MoveTest(AutonomousData.getInstance().getShootingXPosition2(), 44, States.Wait));
+                machine.addState(States.Move3, new MoveTest(AutonomousData.getInstance().getShootingXPosition2(), 36, States.Wait));
                 machine.addState(States.Wait, new wait(AutonomousData.getInstance().getShootingRotation2(),0.91));
                 machine.addState(States.Rotate4, new Rotate(0,States.MoveToWobble));
                 break;
             case 2:
-                machine.addState(States.Move3, new MoveTest(AutonomousData.getInstance().getShootingXPosition3(), 44, States.Wait));
+                machine.addState(States.Move3, new MoveTest(AutonomousData.getInstance().getShootingXPosition3(), 36, States.Wait));
                 machine.addState(States.Wait, new wait(AutonomousData.getInstance().getShootingRotation3(),0.91));
                 machine.addState(States.Rotate4, new Rotate(0,States.MoveToWobble));
                 break;

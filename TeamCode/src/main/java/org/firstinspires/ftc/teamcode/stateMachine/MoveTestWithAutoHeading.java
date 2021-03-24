@@ -39,17 +39,12 @@ public class MoveTestWithAutoHeading extends StateManager {
         while (ExitCondition(machine) && opMode.opModeIsActive()) {
             double x = opMode.odometry.returnXCoordinate() / COUNTS_PER_INCH - tx;
             double y = opMode.odometry.returnYCoordinate() / COUNTS_PER_INCH - ty;
-            opMode.telemetry.addData("Orientation", opMode.odometry.returnOrientation());
-            opMode.telemetry.addData("Runtime", opMode.getRuntime());
-            opMode.telemetry.addData("X", opMode.odometry.returnXCoordinate() / COUNTS_PER_INCH);
-            opMode.telemetry.addData("Y", opMode.odometry.returnYCoordinate() / COUNTS_PER_INCH);
+            machine.updater.addTelemetry();
             double radius = 1 / Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
             x = x * -radius;
             y = y * -radius;
             double heading = (y > 0 ? Math.atan(x / y) : Math.atan(x / y) + Math.PI);
             double headingDegrees = Math.toDegrees(heading);
-            opMode.telemetry.addData("Heading",headingDegrees);
-            opMode.telemetry.update();
             double sp = Math.abs(headingDegrees % 360 - opMode.odometry.returnOrientation() % 360);
             if (sp > 180) {
                 sp -= 360;

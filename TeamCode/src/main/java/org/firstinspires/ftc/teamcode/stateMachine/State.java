@@ -5,7 +5,7 @@ public class State extends StateManager {
     @Override
     public void Run(StateMachine machine) {
         while(!ExitCondition(machine)&&machine.opMode.opModeIsActive()){
-
+            machine.updater.addTelemetry();
         }
         Exit(machine);
     }

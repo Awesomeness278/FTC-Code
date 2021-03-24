@@ -35,6 +35,7 @@ public class NewMoveCode extends StateManager {
             opMode.left_back.setPower(-leftBack*sp);
             opMode.right_back.setPower(-rightBack*sp);
             opMode.right_front.setPower(-rightFront*sp);
+            machine.updater.addTelemetry();
         }
         Exit(machine);
     }

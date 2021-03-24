@@ -5,8 +5,10 @@ import java.util.ArrayList;
 public class StateMachine {
     ArrayList<StateManager> states = new ArrayList<>();
     Autonomous opMode;
+    telemetryUpdater updater;
     public StateMachine(Autonomous opMode){
         this.opMode = opMode;
+        updater = new telemetryUpdater(opMode);
         for(int i = 0; i < 20; i++){
             states.add(new State());
         }

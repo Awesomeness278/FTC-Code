@@ -6,24 +6,20 @@ public class MoveToWobble extends StateManager {
     }
     @Override
     public void Run(StateMachine machine) {
-        machine.opMode.telemetry.addData("Orientation",machine.opMode.odometry.returnOrientation());
-        machine.opMode.telemetry.addData("X",machine.opMode.odometry.returnXCoordinate()/machine.opMode.COUNTS_PER_INCH);
-        machine.opMode.telemetry.addData("Y",machine.opMode.odometry.returnYCoordinate()/machine.opMode.COUNTS_PER_INCH);
-        machine.opMode.telemetry.update();
+        machine.updater.addTelemetry();
         Autonomous opMode = machine.opMode;
 
         if (opMode.recognition != null) {
             if (opMode.recognition.getLabel().equals("Quad")) {
-//                machine.addState(States.Move2, new MoveTest(AutonomousData.getInstance().getLineXPosition(), 68, States.Stop));
-                machine.addState(States.Move5,new MoveTest(AutonomousData.getInstance().getWobblePathX4(),98,States.Move2));
-                machine.addState(States.Move2,new MoveTest(AutonomousData.getInstance().getFourRingXPosition(),98,States.Rotate));
+                machine.addState(States.Move5,new MoveTest(AutonomousData.getInstance().getWobblePathX4(),116,States.Move2));
+                machine.addState(States.Move2,new MoveTest(AutonomousData.getInstance().getFourRingXPosition(),122,States.Rotate));
             } else if (opMode.recognition.getLabel().equals("Single")) {
-                machine.addState(States.Move5,new MoveTest(AutonomousData.getInstance().getWobblePathX1(),98,States.Move2));
-                machine.addState(States.Move2, new MoveTest(AutonomousData.getInstance().getOneRingXPosition(), 78, States.Rotate));
+                machine.addState(States.Move5,new MoveTest(AutonomousData.getInstance().getWobblePathX1(),96,States.Move2));
+                machine.addState(States.Move2, new MoveTest(AutonomousData.getInstance().getOneRingXPosition(), 102, States.Rotate));
             }
         } else {
-            machine.addState(States.Move5,new MoveTest(AutonomousData.getInstance().getWobblePathX0(),98,States.Move2));
-            machine.addState(States.Move2, new MoveTest(AutonomousData.getInstance().getNoRingXPosition(), 56, States.Rotate));
+            machine.addState(States.Move5,new MoveTest(AutonomousData.getInstance().getWobblePathX0(),74,States.Move2));
+            machine.addState(States.Move2, new MoveTest(AutonomousData.getInstance().getNoRingXPosition(), 80, States.Rotate));
         }
 
         Exit(machine);
@@ -36,6 +32,6 @@ public class MoveToWobble extends StateManager {
 
     @Override
     public void Exit(StateMachine machine) {
-        machine.runState(States.Move2);
+        machine.runState(States.Move5);
     }
 }
