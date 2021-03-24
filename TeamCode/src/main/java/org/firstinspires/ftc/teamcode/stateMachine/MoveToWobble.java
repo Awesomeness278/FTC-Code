@@ -15,14 +15,14 @@ public class MoveToWobble extends StateManager {
         if (opMode.recognition != null) {
             if (opMode.recognition.getLabel().equals("Quad")) {
 //                machine.addState(States.Move2, new MoveTest(AutonomousData.getInstance().getLineXPosition(), 68, States.Stop));
-                machine.addState(States.Move1,new MoveTest(AutonomousData.getInstance().getDodgeRingXPosition(),36,States.Move2));
+                machine.addState(States.Move5,new MoveTest(AutonomousData.getInstance().getWobblePathX4(),98,States.Move2));
                 machine.addState(States.Move2,new MoveTest(AutonomousData.getInstance().getFourRingXPosition(),98,States.Rotate));
             } else if (opMode.recognition.getLabel().equals("Single")) {
-                machine.addState(States.Move1, new MoveTest(AutonomousData.getInstance().getDodgeRingXPosition(), 36, States.Move2));
+                machine.addState(States.Move5,new MoveTest(AutonomousData.getInstance().getWobblePathX1(),98,States.Move2));
                 machine.addState(States.Move2, new MoveTest(AutonomousData.getInstance().getOneRingXPosition(), 78, States.Rotate));
             }
         } else {
-            machine.addState(States.Move1, new MoveTest(AutonomousData.getInstance().getDodgeRingXPosition(), 36, States.Move2));
+            machine.addState(States.Move5,new MoveTest(AutonomousData.getInstance().getWobblePathX0(),98,States.Move2));
             machine.addState(States.Move2, new MoveTest(AutonomousData.getInstance().getNoRingXPosition(), 56, States.Rotate));
         }
 
@@ -36,6 +36,6 @@ public class MoveToWobble extends StateManager {
 
     @Override
     public void Exit(StateMachine machine) {
-        machine.runState(States.Move1);
+        machine.runState(States.Move2);
     }
 }

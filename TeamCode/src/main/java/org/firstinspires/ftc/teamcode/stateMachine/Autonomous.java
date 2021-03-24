@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.stateMachine;
 
-import com.qualcomm.hardware.lynx.commands.core.LynxSetMotorPIDControlLoopCoefficientsCommand;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -27,6 +26,7 @@ public class Autonomous extends LinearOpMode {
     DcMotor Conveyor;
     DcMotor Arm;
     Servo Claw;
+    Servo parker;
     String rfName = "Right Front Motor", rbName = "Right Back Motor", lfName = "Left Front Motor", lbName = "Left Back Motor";
     String verticalLeftEncoderName = rbName, verticalRightEncoderName = lfName, horizontalEncoderName = rfName;
     OdometryGlobalCoordinatePosition odometry;
@@ -107,6 +107,15 @@ public class Autonomous extends LinearOpMode {
         telemetry.update();
         waitForStart();
         resetStartTime();
+        if(position == 1){
+            odometry.SetOrigin(48,72,COUNTS_PER_INCH);
+        }else if(position == 2){
+            odometry.SetOrigin(24,72,COUNTS_PER_INCH);
+        }else if(position == 3){
+            odometry.SetOrigin(-24,72,COUNTS_PER_INCH);
+        }else if(position == 4){
+            odometry.SetOrigin(-48,72,COUNTS_PER_INCH);
+        }
         AutonomousData.getInstance().SetStartingLocation(position);
         machine.opMode.Claw.setPosition(0);
 
@@ -114,24 +123,26 @@ public class Autonomous extends LinearOpMode {
         machine.addState(States.MoveToWobble, new MoveToWobble());
         machine.addState(States.Rotate, new Rotate(AutonomousData.getInstance().getWobbleRotation(),States.DropWobble));
         machine.addState(States.DropWobble, new DropWobble());
-        machine.addState(States.Rotate2,new Rotate(0,States.Move3));
+        machine.addState(States.Move1,new MoveTest(AutonomousData.getInstance().getDodgeRingXPosition(),36,States.Move3));
+        machine.addState(States.Rotate2,new Rotate(0,States.Stop));
         switch(targetShootingSpot) {
             case 0:
                 machine.addState(States.Move3, new MoveTest(AutonomousData.getInstance().getShootingXPosition(), 44, States.Wait));
                 machine.addState(States.Wait, new wait(AutonomousData.getInstance().getShootingRotation(),0.91));
-                machine.addState(States.Rotate4, new Rotate(0,States.Move4));
+                machine.addState(States.Rotate4, new Rotate(0,States.MoveToWobble));
                 break;
             case 1:
                 machine.addState(States.Move3, new MoveTest(AutonomousData.getInstance().getShootingXPosition2(), 44, States.Wait));
                 machine.addState(States.Wait, new wait(AutonomousData.getInstance().getShootingRotation2(),0.91));
-                machine.addState(States.Rotate4, new Rotate(0,States.Move4));
+                machine.addState(States.Rotate4, new Rotate(0,States.MoveToWobble));
                 break;
             case 2:
                 machine.addState(States.Move3, new MoveTest(AutonomousData.getInstance().getShootingXPosition3(), 44, States.Wait));
                 machine.addState(States.Wait, new wait(AutonomousData.getInstance().getShootingRotation3(),0.91));
-                machine.addState(States.Rotate4, new Rotate(0,States.Move4));
+                machine.addState(States.Rotate4, new Rotate(0,States.MoveToWobble));
                 break;
         }
+        machine.addState(States.Stop, new Stop());
         machine.addState(States.Move4, new MoveTest(AutonomousData.getInstance().getLineXPosition(), 68, States.Stop));
         machine.runState(States.Tensorflow);
         stop();
@@ -209,6 +220,8 @@ public class Autonomous extends LinearOpMode {
         Shooter = hardwareMap.get(DcMotor.class,"Shooter");
         Arm = hardwareMap.get(DcMotor.class,"Arm");
         Claw = hardwareMap.get(Servo.class,"Grip");
+        parker = hardwareMap.get(Servo.class,"Parker");
+        parker.getController().getServoPosition(parker.getPortNumber());
         Arm.setTargetPosition(0);
         Arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         Arm.setDirection(DcMotorSimple.Direction.REVERSE);

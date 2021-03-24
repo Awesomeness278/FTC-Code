@@ -22,6 +22,8 @@ public class OdometryGlobalCoordinatePosition implements Runnable{
     //Algorithm constants
     private double robotEncoderWheelDistance;
     private double horizontalEncoderTickPerDegreeOffset;
+    private double absoluteXPosition;
+    private double absoluteYPosition;
 
     //Sleep time interval (milliseconds) for the position update thread
     private int sleepTime;
@@ -73,12 +75,12 @@ public class OdometryGlobalCoordinatePosition implements Runnable{
         double horizontalChange = rawHorizontalChange - (changeInRobotOrientation*horizontalEncoderTickPerDegreeOffset);
 
         double p = ((rightChange + leftChange) / 2);
-        double n = horizontalChange;
 
         //Calculate and update the position values
-        robotGlobalXCoordinatePosition = robotGlobalXCoordinatePosition + (p*Math.sin(robotOrientationRadians) + n*Math.cos(robotOrientationRadians));
-        robotGlobalYCoordinatePosition = robotGlobalYCoordinatePosition + (p*Math.cos(robotOrientationRadians) - n*Math.sin(robotOrientationRadians));
-
+        robotGlobalXCoordinatePosition = robotGlobalXCoordinatePosition + (p*Math.sin(robotOrientationRadians) + horizontalChange *Math.cos(robotOrientationRadians));
+        robotGlobalYCoordinatePosition = robotGlobalYCoordinatePosition + (p*Math.cos(robotOrientationRadians) - horizontalChange *Math.sin(robotOrientationRadians));
+        absoluteXPosition+=(p*Math.sin(robotOrientationRadians) + horizontalChange *Math.cos(robotOrientationRadians));
+        absoluteYPosition+=(p*Math.cos(robotOrientationRadians) - horizontalChange *Math.sin(robotOrientationRadians));
         previousVerticalLeftEncoderWheelPosition = verticalLeftEncoderWheelPosition;
         previousVerticalRightEncoderWheelPosition = verticalRightEncoderWheelPosition;
         prevNormalEncoderWheelPosition = normalEncoderWheelPosition;
@@ -101,6 +103,27 @@ public class OdometryGlobalCoordinatePosition implements Runnable{
      * @return global orientation, in degrees
      */
     public double returnOrientation(){ return Math.toDegrees(robotOrientationRadians) % 360; }
+
+    public void setXCoordinate(double X,double TPI){
+        robotGlobalXCoordinatePosition = X*TPI;
+    }
+
+    public void setYCoordinate(double Y,double TPI){
+        robotGlobalYCoordinatePosition = Y*TPI;
+    }
+
+    public void SetOrigin(double X, double Y, double TPI){
+        absoluteXPosition = -X*TPI;
+        absoluteYPosition = -Y*TPI;
+    }
+
+    public double getAbsoluteXPosition() {
+        return absoluteXPosition;
+    }
+
+    public double getAbsoluteYPosition(){
+        return absoluteYPosition;
+    }
 
     /**
      * Stops the position update thread

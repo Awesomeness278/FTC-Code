@@ -7,7 +7,7 @@ public class StateMachine {
     Autonomous opMode;
     public StateMachine(Autonomous opMode){
         this.opMode = opMode;
-        for(int i = 0; i < 15; i++){
+        for(int i = 0; i < 20; i++){
             states.add(new State());
         }
     }
