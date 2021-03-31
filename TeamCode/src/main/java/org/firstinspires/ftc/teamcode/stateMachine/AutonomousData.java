@@ -3,12 +3,13 @@ package org.firstinspires.ftc.teamcode.stateMachine;
 public class AutonomousData {
     private static AutonomousData instance;
     private double shootingXPosition = 0;
-    private double lineXPosition = 0;
     private double dodgeRingXPosition = 0;
     private double fourRingXPosition = 0;
     private double oneRingXPosition = 0;
     private double noRingXPosition = 0;
-    private double wobbleRotation = 0;
+    private double wobbleRotation0 = 0;
+    private double wobbleRotation1 = 0;
+    private double wobbleRotation4 = 0;
     private double shootingXPosition2 = 0;
     private double shootingXPosition3 = 0;
     private double shootingRotation = 0;
@@ -17,6 +18,13 @@ public class AutonomousData {
     private double wobblePathX0 = 0;
     private double wobblePathX1 = 0;
     private double wobblePathX4 = 0;
+    private double lineYPosition0 = 0;
+    private double lineYPosition1 = 0;
+    private double lineYPosition4 = 0;
+    private double waitYPosition = 0;
+    private double wobbleYPosition0 = 0;
+    private double wobbleYPosition1 = 0;
+    private double wobbleYPosition4 = 0;
 
     private AutonomousData(){
     }
@@ -31,30 +39,39 @@ public class AutonomousData {
     public void SetStartingLocation(int location){
         switch(location){
             case 1://Outer Blue
-                dodgeRingXPosition = -8;
-                lineXPosition  = 12;
-                shootingXPosition = 12;
-                oneRingXPosition = 32;
+                dodgeRingXPosition = 0;
+                shootingXPosition = 0;
+                oneRingXPosition = 4;
                 noRingXPosition = 0;
-                wobblePathX0 = 44;
-                wobblePathX4 = 44;
-                wobblePathX1 = 68;
-                fourRingXPosition = -2;
-                wobbleRotation = -90;
-                shootingXPosition2 = 36;
-                shootingXPosition3 = -12;
-                shootingRotation = -2;
-                shootingRotation2 = -15;
-                shootingRotation3 = 3;
+                fourRingXPosition = 0;
+                wobblePathX0 = 0;
+                wobblePathX1 = 0;
+                wobblePathX4 = 1;
+                wobbleRotation0 = -45;
+                wobbleRotation1 = 90;
+                wobbleRotation4 = -45;
+                shootingXPosition2 = 0;
+                shootingXPosition3 = 0;
+                shootingRotation = 0;
+                shootingRotation2 = 0;
+                shootingRotation3 = 9;
+                lineYPosition0 = 55;
+                lineYPosition1 = 72;
+                lineYPosition4 = 72;
+                waitYPosition = 50;
+                wobbleYPosition0 = 60;
+                wobbleYPosition1 = 104;
+                wobbleYPosition4 = 104;
                 break;
             case 2://Inner Blue
                 shootingXPosition = -12;
-                lineXPosition = -12;
                 dodgeRingXPosition = 12;
                 fourRingXPosition = -26;
                 oneRingXPosition = 0;
                 noRingXPosition = -15;
-                wobbleRotation = -90;
+                wobbleRotation0 = -90;
+                wobbleRotation1 = -90;
+                wobbleRotation4 = -90;
                 wobblePathX0 = 9;
                 wobblePathX4 = -2;
                 wobblePathX1 = 24;
@@ -63,40 +80,63 @@ public class AutonomousData {
                 shootingRotation = -2;
                 shootingRotation2 = -15;
                 shootingRotation3 = 15;
+                lineYPosition0 = 0;
+                lineYPosition1 = 0;
+                lineYPosition4 = 0;
+                waitYPosition = 0;
+                wobbleYPosition0 = 0;
+                wobbleYPosition1 = 0;
+                wobbleYPosition4 = 0;
                 break;
             case 3://Inner Red
-                shootingXPosition = 6;//Center
-                lineXPosition = 12;//Obsolete
-                dodgeRingXPosition = -12;//X position robot goes to to dodge the ring stack
-                fourRingXPosition = 28;//The X position of the four ring spot
-                oneRingXPosition = -1;//The X position of the one ring spot
-                noRingXPosition = 16;//The X position of the no ring spot
-                wobblePathX0 = 10;
-                wobblePathX1 = -19;
-                wobblePathX4 = -2;
-                wobbleRotation = 90;//The rotation the robot does before dropping the wobble(in degrees)
-                shootingXPosition2 = 34;//The right shooting position
-                shootingXPosition3 = -9;//The left shooting position
-                shootingRotation = 1;//The center shooting rotation
-                shootingRotation2 = -15;//The right shooting rotation
-                shootingRotation3 = 6;//The left shooting rotation
+                shootingXPosition = 0;//Center
+                dodgeRingXPosition = 0;//X position robot goes to to dodge the ring stack
+                fourRingXPosition = 0;//The X position of the four ring spot
+                oneRingXPosition = 0;//The X position of the one ring spot
+                noRingXPosition = 48;//The X position of the no ring spot
+                wobblePathX0 = 0;
+                wobblePathX1 = 0;
+                wobblePathX4 = 0;
+                wobbleRotation0 = 180;//The rotation the robot does before dropping the wobble(in degrees)
+                wobbleRotation1 = 0;
+                wobbleRotation4 = 0;
+                shootingXPosition2 = 0;//The right shooting position
+                shootingXPosition3 = 0;//The left shooting position
+                shootingRotation = 0;//The center shooting rotation
+                shootingRotation2 = 0;//The right shooting rotation
+                shootingRotation3 = 8;//The left shooting rotation
+                lineYPosition0 = 88;
+                lineYPosition1 = 0;
+                lineYPosition4 = 0;
+                waitYPosition = Double.NaN;
+                wobbleYPosition0 = 85;
+                wobbleYPosition1 = 0;
+                wobbleYPosition4 = 0;
                 break;
             case 4://Outer Red
-                dodgeRingXPosition = 8;
-                lineXPosition  = -12;
-                shootingXPosition = -16;
-                oneRingXPosition = -13;
-                noRingXPosition = 18;
-                fourRingXPosition = 12;
-                wobblePathX0 = 18;
-                wobblePathX1 = -13;
-                wobblePathX4 = 12;
-                wobbleRotation = 90;
-                shootingXPosition2 = 10;
-                shootingXPosition3 = -34;
+                dodgeRingXPosition = 0;
+                shootingXPosition = 0;
+                oneRingXPosition = -4;
+                noRingXPosition = 0;
+                fourRingXPosition = 0;
+                wobblePathX0 = 0;
+                wobblePathX1 = 0;
+                wobblePathX4 = -1;
+                wobbleRotation0 = 0;
+                wobbleRotation1 = -90;
+                wobbleRotation4 = 0;
+                shootingXPosition2 = 0;
+                shootingXPosition3 = 0;
                 shootingRotation = 1;
-                shootingRotation2 = -15;
+                shootingRotation2 = -17;
                 shootingRotation3 = 5;
+                lineYPosition0 = 55;
+                lineYPosition1 = 72;
+                lineYPosition4 = 72;
+                waitYPosition = 50;
+                wobbleYPosition0 = 60;
+                wobbleYPosition1 = 84;
+                wobbleYPosition4 = 104;
                 break;
             default:
                 break;
@@ -105,10 +145,6 @@ public class AutonomousData {
 
     public double getShootingXPosition(){
         return shootingXPosition;
-    }
-
-    public double getLineXPosition(){
-        return lineXPosition;
     }
 
     public double getDodgeRingXPosition(){
@@ -127,7 +163,11 @@ public class AutonomousData {
         return noRingXPosition;
     }
 
-    public double getWobbleRotation() { return wobbleRotation; }
+    public double getWobbleRotation0() { return wobbleRotation0; }
+
+    public double getWobbleRotation1() { return wobbleRotation1; }
+
+    public double getWobbleRotation4() { return wobbleRotation4; }
 
     public double getShootingXPosition2() { return shootingXPosition2; }
 
@@ -144,4 +184,18 @@ public class AutonomousData {
     public double getWobblePathX1() { return wobblePathX1; }
 
     public double getWobblePathX4() { return wobblePathX4; }
+
+    public double getLineYPosition0() { return lineYPosition0; }
+
+    public double getLineYPosition1() { return lineYPosition1; }
+
+    public double getLineYPosition4() { return lineYPosition4; }
+
+    public double getWaitYPosition() { return waitYPosition; }
+
+    public double getWobbleYPosition0() { return wobbleYPosition0; }
+
+    public double getWobbleYPosition1() { return wobbleYPosition1; }
+
+    public double getWobbleYPosition4() { return wobbleYPosition4; }
 }

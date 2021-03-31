@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.stateMachine;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -22,7 +23,7 @@ public class Autonomous extends LinearOpMode {
     DcMotor left_back;
     int position = 3;
     DcMotor right_back;
-    DcMotor Shooter;
+    DcMotorEx Shooter;
     DcMotor Conveyor;
     DcMotor Arm;
     Servo Claw;
@@ -53,8 +54,8 @@ public class Autonomous extends LinearOpMode {
             tfod.activate();
         }
         assert tfod != null;
-        tfod.setZoom(1.3,16.0/9.0);
-        //add this later: tfod.setClippingMargins();
+        tfod.setClippingMargins(100,100,100,100);
+        tfod.setZoom(3,16.0/9.0);
         initDriveHardwareMap(rfName, rbName, lfName, lbName, verticalLeftEncoderName, verticalRightEncoderName, horizontalEncoderName);
         odometry = new OdometryGlobalCoordinatePosition(verticalLeft, verticalRight, horizontal, COUNTS_PER_INCH, 75);
         odometry.reverseRightEncoder();
@@ -112,29 +113,27 @@ public class Autonomous extends LinearOpMode {
 
         machine.addState(States.Tensorflow, new Tensorflow(delay));
         machine.addState(States.MoveToWobble, new MoveToWobble());
-        machine.addState(States.Rotate, new Rotate(AutonomousData.getInstance().getWobbleRotation(),States.DropWobble));
         machine.addState(States.DropWobble, new DropWobble());
-        machine.addState(States.Move1,new MoveTest(AutonomousData.getInstance().getDodgeRingXPosition(),36,States.Move3));
-        machine.addState(States.Rotate2,new Rotate(0,States.Stop));
+        machine.addState(States.DodgeRings,new MoveTest(AutonomousData.getInstance().getDodgeRingXPosition(),36,States.Move3));
+        machine.addState(States.Park, new Park());
         switch(targetShootingSpot) {
             case 0:
-                machine.addState(States.Move3, new MoveTest(AutonomousData.getInstance().getShootingXPosition(), 36, States.Wait));
-                machine.addState(States.Wait, new wait(AutonomousData.getInstance().getShootingRotation(),0.91));
+                machine.addState(States.Move3, new MoveTest(AutonomousData.getInstance().getShootingXPosition(), 34, States.Shoot));
+                machine.addState(States.Shoot, new Shoot(AutonomousData.getInstance().getShootingRotation(),0.91));
                 machine.addState(States.Rotate4, new Rotate(0,States.MoveToWobble));
                 break;
             case 1:
-                machine.addState(States.Move3, new MoveTest(AutonomousData.getInstance().getShootingXPosition2(), 36, States.Wait));
-                machine.addState(States.Wait, new wait(AutonomousData.getInstance().getShootingRotation2(),0.91));
+                machine.addState(States.Move3, new MoveTest(AutonomousData.getInstance().getShootingXPosition2(), 34, States.Shoot));
+                machine.addState(States.Shoot, new Shoot(AutonomousData.getInstance().getShootingRotation2(),0.91));
                 machine.addState(States.Rotate4, new Rotate(0,States.MoveToWobble));
                 break;
             case 2:
-                machine.addState(States.Move3, new MoveTest(AutonomousData.getInstance().getShootingXPosition3(), 36, States.Wait));
-                machine.addState(States.Wait, new wait(AutonomousData.getInstance().getShootingRotation3(),0.91));
+                machine.addState(States.Move3, new MoveTest(AutonomousData.getInstance().getShootingXPosition3(), 34, States.Shoot));
+                machine.addState(States.Shoot, new Shoot(AutonomousData.getInstance().getShootingRotation3(),0.91));
                 machine.addState(States.Rotate4, new Rotate(0,States.MoveToWobble));
                 break;
         }
         machine.addState(States.Stop, new Stop());
-        machine.addState(States.Move4, new MoveTest(AutonomousData.getInstance().getLineXPosition(), 68, States.Stop));
         machine.runState(States.Tensorflow);
         stop();
     }
@@ -208,7 +207,7 @@ public class Autonomous extends LinearOpMode {
         telemetry.addData("Status", "Hardware Map Init Complete");
         telemetry.update();
         Conveyor = hardwareMap.get(DcMotor.class,"Conveyor");
-        Shooter = hardwareMap.get(DcMotor.class,"Shooter");
+        Shooter = hardwareMap.get(DcMotorEx.class,"Shooter");
         Arm = hardwareMap.get(DcMotor.class,"Arm");
         Claw = hardwareMap.get(Servo.class,"Grip");
         parker = hardwareMap.get(Servo.class,"Parker");

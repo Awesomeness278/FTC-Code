@@ -15,17 +15,11 @@ public class MoveTest extends StateManager {
         this.tx = -tx;
         this.ty = -ty;
         this.exit = exit;
-        if(exit==States.Stop){
-            this.tx = Double.NaN;
-        }
     }
     double startX;
     double startY;
     @Override
     public void Run(StateMachine machine) {
-        if(Double.isNaN(this.tx)){
-            this.tx = machine.opMode.odometry.returnXCoordinate()/COUNTS_PER_INCH;
-        }
         if(machine.opMode.recognition!=null) {
             if (machine.opMode.recognition.getLabel().equals("Quad")) {
                 if (machine.opMode.position <= 2) {

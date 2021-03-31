@@ -1,9 +1,12 @@
 package org.firstinspires.ftc.teamcode.stateMachine;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 
-public class wait extends StateManager {
-    public wait(double angle, double power){
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+
+public class Shoot extends StateManager {
+    public Shoot(double angle, double power){
         this.angle = angle;
         this.power = power;
     }
@@ -12,7 +15,7 @@ public class wait extends StateManager {
     @Override
     public void Run(StateMachine machine) {
         double delay = 3;
-        double time = 0.1;
+        double time = 0.12;
         int rings = 4;
         boolean updated = false;
         boolean shoot = false;
@@ -37,7 +40,8 @@ public class wait extends StateManager {
             left_back.setPower(leftBack / scalar * 0.3);
             right_front.setPower(rightFront / scalar * 0.3);
             right_back.setPower(rightBack / scalar * 0.3);
-            machine.opMode.Shooter.setPower(-power);
+            //machine.opMode.Shooter.setPower(-power);
+            machine.opMode.Shooter.setVelocity(-360, AngleUnit.DEGREES);
             if(machine.opMode.getRuntime()-currentTime>2.5){
                 currentTime = machine.opMode.getRuntime();
                 shoot = true;
@@ -56,7 +60,8 @@ public class wait extends StateManager {
                 }
             }
         }
-        machine.opMode.Shooter.setPower(0);
+        //machine.opMode.Shooter.setPower(0);
+        machine.opMode.Shooter.setVelocity(0);
         Exit(machine);
     }
     @Override

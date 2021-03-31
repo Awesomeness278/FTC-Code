@@ -4,7 +4,9 @@ public class Park extends StateManager {
     public Park(){}
     @Override
     public void Run(StateMachine machine) {
-        machine.opMode.parker.setPosition(1);
+        machine.opMode.parker.setPosition(0.3);
+        double startWait = machine.opMode.getRuntime();
+        while(machine.opMode.getRuntime()-startWait<1){}
         machine.opMode.stop();
     }
 

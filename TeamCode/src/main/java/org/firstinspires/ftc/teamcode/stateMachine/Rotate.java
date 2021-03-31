@@ -18,7 +18,7 @@ public class Rotate extends StateManager {
         DcMotor left_back = machine.opMode.left_back;
         DcMotor right_front = machine.opMode.right_front;
         DcMotor right_back = machine.opMode.right_back;
-        while(Math.abs(targetDegrees)-dir*odometry.returnOrientation()>0){
+        while(Math.abs(targetDegrees)-dir*odometry.returnOrientation()>0 && machine.opMode.opModeIsActive()){
             machine.updater.addTelemetry();
             double leftFront = 0;
             double rightFront = 0;
@@ -40,10 +40,12 @@ public class Rotate extends StateManager {
         right_back.setPower(0);
         right_front.setPower(0);
         double startWait = machine.opMode.getRuntime();
-        while(machine.opMode.getRuntime()-startWait<0.5){
+        while(machine.opMode.getRuntime()-startWait<0.5 && machine.opMode.opModeIsActive()){
             machine.updater.addTelemetry();
         }
-        Exit(machine);
+        if(machine.opMode.opModeIsActive()){
+            Exit(machine);
+        }
     }
 
     States state;

@@ -24,7 +24,9 @@ public class DropWobble extends StateManager {
         }
         machine.opMode.Claw.setPosition(0);
         machine.opMode.Arm.setPower(0);
-        Exit(machine);
+        if(machine.opMode.opModeIsActive()){
+            Exit(machine);
+        }
     }
 
     @Override
@@ -34,6 +36,6 @@ public class DropWobble extends StateManager {
 
     @Override
     public void Exit(StateMachine machine) {
-        machine.runState(States.Rotate2);
+        machine.runState(States.StraightenAfterWobble);
     }
 }
