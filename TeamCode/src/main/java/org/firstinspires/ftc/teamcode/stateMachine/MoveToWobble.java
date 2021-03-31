@@ -26,7 +26,7 @@ public class MoveToWobble extends StateManager {
         } else {
             if(Double.isNaN(AutonomousData.getInstance().getWaitYPosition())){
                 machine.addState(States.WobblePathMove,new MoveTest(AutonomousData.getInstance().getWobblePathX0(),AutonomousData.getInstance().getWobbleYPosition0(),States.MoveToWobblePosition));
-                machine.addState(States.MoveToWobblePosition, new MoveTest(AutonomousData.getInstance().getNoRingXPosition(), AutonomousData.getInstance().getWobbleYPosition0(), States.Stop));
+                machine.addState(States.MoveToWobblePosition, new MoveTest(AutonomousData.getInstance().getNoRingXPosition(), AutonomousData.getInstance().getWobbleYPosition0(), States.RotateToWobble));
                 machine.addState(States.RotateToWobble, new Rotate(AutonomousData.getInstance().getWobbleRotation0(),States.DropWobble));
                 machine.addState(States.StraightenAfterWobble,new Park());
             }else {

@@ -93,8 +93,8 @@ public class AutonomousData {
                 dodgeRingXPosition = 0;//X position robot goes to to dodge the ring stack
                 fourRingXPosition = 0;//The X position of the four ring spot
                 oneRingXPosition = 0;//The X position of the one ring spot
-                noRingXPosition = 48;//The X position of the no ring spot
-                wobblePathX0 = 0;
+                noRingXPosition = 40;//The X position of the no ring spot
+                wobblePathX0 = -24;
                 wobblePathX1 = 0;
                 wobblePathX4 = 0;
                 wobbleRotation0 = 180;//The rotation the robot does before dropping the wobble(in degrees)

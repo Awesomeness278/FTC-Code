@@ -80,8 +80,8 @@ public class MoveTest extends StateManager {
         Autonomous opMode = machine.opMode;
         double speed = sp;
         double distance = machine.opMode.dist(opMode.odometry.returnXCoordinate()/opMode.COUNTS_PER_INCH,opMode.odometry.returnYCoordinate()/opMode.COUNTS_PER_INCH,tx,ty);
-        if(distance<12){
-            double percentage = 1-distance/12;
+        if(distance<24){
+            double percentage = distance/12;
             speed = maxSpeed-minSpeed;
             speed*=percentage;
             speed+=minSpeed;
