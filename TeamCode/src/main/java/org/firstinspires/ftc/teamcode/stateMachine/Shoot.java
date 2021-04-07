@@ -18,7 +18,7 @@ public class Shoot extends StateManager {
         double time = 0.12;
         int maxRings = 4;
         int rings = maxRings;
-        int[] ticks = {100,200,300,400};
+        int[] ticks = {100-machine.opMode.Conveyor.getCurrentPosition(),200-machine.opMode.Conveyor.getCurrentPosition(),300-machine.opMode.Conveyor.getCurrentPosition(),400-machine.opMode.Conveyor.getCurrentPosition()};
         boolean updated = false;
         boolean shoot = false;
         double currentTime = machine.opMode.getRuntime();
