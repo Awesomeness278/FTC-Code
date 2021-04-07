@@ -12,11 +12,12 @@ public class Shoot extends StateManager {
     }
     double power;
     double angle;
+    int rings = 4;
+    double[] ticks = {100.0,200.0,300.0,400.0};
     @Override
     public void Run(StateMachine machine) {
         double delay = 3;
         double time = 0.12;
-        int rings = 4;
         boolean updated = false;
         boolean shoot = false;
         double currentTime = machine.opMode.getRuntime();
@@ -41,19 +42,19 @@ public class Shoot extends StateManager {
             right_front.setPower(rightFront / scalar * 0.3);
             right_back.setPower(rightBack / scalar * 0.3);
             //machine.opMode.Shooter.setPower(-power);
-            machine.opMode.Shooter.setVelocity(-340, AngleUnit.DEGREES);
+            machine.opMode.Shooter.setVelocity(-310, AngleUnit.DEGREES);
             if(machine.opMode.getRuntime()-currentTime>2.5){
                 currentTime = machine.opMode.getRuntime();
                 shoot = true;
             }
             if ((machine.opMode.getRuntime()-currentTime) - time < (machine.opMode.getRuntime()-currentTime) - (machine.opMode.getRuntime()-currentTime) % (time+delay) && shoot) {
-                machine.opMode.Conveyor.setPower(-1);
+                machine.opMode.Conveyor.setVelocity(-320,AngleUnit.DEGREES);
                 if(!updated){
                     rings--;
                     updated=true;
                 }
             } else {
-                machine.opMode.Conveyor.setPower(0);
+                machine.opMode.Conveyor.setVelocity(0,AngleUnit.DEGREES);
                 updated = false;
                 if(rings == 0){
                     break;

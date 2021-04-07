@@ -11,7 +11,11 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
+import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 import org.firstinspires.ftc.teamcode.Odometry.OdometryGlobalCoordinatePosition;
+
+import java.io.File;
+import java.util.ArrayList;
 
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous
 public class Autonomous extends LinearOpMode {
@@ -22,10 +26,13 @@ public class Autonomous extends LinearOpMode {
     DcMotor right_front;
     DcMotor left_back;
     int position = 3;
+    boolean triggerPressed = false;
     DcMotor right_back;
     DcMotorEx Shooter;
-    DcMotor Conveyor;
+    DcMotorEx Conveyor;
     DcMotor Arm;
+    ArrayList<Double> velocities = new ArrayList<>();
+    File velocityData = AppUtil.getInstance().getSettingsFile("vel.txt");
     Servo Claw;
     Servo parker;
     String rfName = "Right Front Motor", rbName = "Right Back Motor", lfName = "Left Front Motor", lbName = "Left Back Motor";
@@ -81,11 +88,16 @@ public class Autonomous extends LinearOpMode {
             positions[2] = "Inner Red";
             positions[3] = "Outer Red";
             telemetry.addData("Starting Position", positions[position-1]);
-            if (gamepad1.left_trigger > 0.3) {
-                delay = 0;
+            if (gamepad1.left_trigger > 0.3 && !triggerPressed) {
+                delay--;
+                triggerPressed = true;
             }
-            if (gamepad1.right_trigger > 0.3) {
-                delay = Math.min(upDelay, 5);
+            if (gamepad1.right_trigger > 0.3 && !triggerPressed) {
+                delay++;
+                triggerPressed = true;
+            }
+            if(gamepad1.left_trigger<=0.3&&gamepad1.right_trigger<=0.3){
+                triggerPressed = false;
             }
             telemetry.addData("Starting Delay", Integer.toString(delay).concat("s"));
             if (gamepad1.dpad_left) {
@@ -114,7 +126,6 @@ public class Autonomous extends LinearOpMode {
         machine.addState(States.Tensorflow, new Tensorflow(delay));
         machine.addState(States.MoveToWobble, new MoveToWobble());
         machine.addState(States.DropWobble, new DropWobble());
-        machine.addState(States.DodgeRings,new MoveTest(AutonomousData.getInstance().getDodgeRingXPosition(),36,States.Move3));
         machine.addState(States.Park, new Park());
         switch(targetShootingSpot) {
             case 0:
@@ -206,7 +217,7 @@ public class Autonomous extends LinearOpMode {
 
         telemetry.addData("Status", "Hardware Map Init Complete");
         telemetry.update();
-        Conveyor = hardwareMap.get(DcMotor.class,"Conveyor");
+        Conveyor = hardwareMap.get(DcMotorEx.class,"Conveyor");
         Shooter = hardwareMap.get(DcMotorEx.class,"Shooter");
         Arm = hardwareMap.get(DcMotor.class,"Arm");
         Claw = hardwareMap.get(Servo.class,"Grip");

@@ -55,10 +55,10 @@ public class MoveTest extends StateManager {
             rightBack += (y + x)+opMode.odometry.returnOrientation()/20;
             double scalar = Math.max(Math.max(Math.abs(leftFront), Math.abs(leftBack)), Math.max(Math.abs(rightFront), Math.abs(rightBack)));
             if (scalar < 1) scalar = 1;
-            left_front.setPower(leftFront / scalar * slowFactor(machine,0.25));
-            left_back.setPower(leftBack / scalar * slowFactor(machine,0.25));
-            right_front.setPower(rightFront / scalar * slowFactor(machine,0.25));
-            right_back.setPower(rightBack / scalar * slowFactor(machine,0.25));
+            left_front.setPower(leftFront / scalar * slowFactor(machine,0.45));
+            left_back.setPower(leftBack / scalar * slowFactor(machine,0.45));
+            right_front.setPower(rightFront / scalar * slowFactor(machine,0.45));
+            right_back.setPower(rightBack / scalar * slowFactor(machine,0.45));
         }
         left_back.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         left_front.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -79,9 +79,10 @@ public class MoveTest extends StateManager {
         double maxSpeed = sp;
         Autonomous opMode = machine.opMode;
         double speed = sp;
+        double slowdownDist = 24;
         double distance = machine.opMode.dist(opMode.odometry.returnXCoordinate()/opMode.COUNTS_PER_INCH,opMode.odometry.returnYCoordinate()/opMode.COUNTS_PER_INCH,tx,ty);
-        if(distance<24){
-            double percentage = distance/12;
+        if(distance<slowdownDist){
+            double percentage = distance/slowdownDist;
             speed = maxSpeed-minSpeed;
             speed*=percentage;
             speed+=minSpeed;
@@ -97,10 +98,6 @@ public class MoveTest extends StateManager {
 
     @Override
     public void Exit(StateMachine machine) {
-        if(exit.stateNum==States.Stop.stateNum) {
-            machine.opMode.stop();
-        }else{
-            machine.runState(exit);
-        }
+         machine.runState(exit);
     }
 }
