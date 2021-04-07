@@ -29,7 +29,7 @@ public class Autonomous extends LinearOpMode {
     boolean triggerPressed = false;
     DcMotor right_back;
     DcMotorEx Shooter;
-    DcMotorEx Conveyor;
+    DcMotor Conveyor;
     DcMotor Arm;
     ArrayList<Double> velocities = new ArrayList<>();
     File velocityData = AppUtil.getInstance().getSettingsFile("vel.txt");
@@ -217,7 +217,7 @@ public class Autonomous extends LinearOpMode {
 
         telemetry.addData("Status", "Hardware Map Init Complete");
         telemetry.update();
-        Conveyor = hardwareMap.get(DcMotorEx.class,"Conveyor");
+        Conveyor = hardwareMap.get(DcMotor.class,"Conveyor");
         Shooter = hardwareMap.get(DcMotorEx.class,"Shooter");
         Arm = hardwareMap.get(DcMotor.class,"Arm");
         Claw = hardwareMap.get(Servo.class,"Grip");
@@ -226,6 +226,8 @@ public class Autonomous extends LinearOpMode {
         Arm.setTargetPosition(0);
         Arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         Arm.setDirection(DcMotorSimple.Direction.REVERSE);
+        Conveyor.setTargetPosition(0);
+        Conveyor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         //Conveyor.setTargetPosition(0);
         //Conveyor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }

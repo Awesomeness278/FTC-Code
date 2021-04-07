@@ -11,6 +11,7 @@ public class Stop extends StateManager {
             machine.opMode.telemetry.addData("Data", "Saved");
             machine.opMode.telemetry.update();
             machine.opMode.stop();
+            machine.opMode.Conveyor.setTargetPosition(0);
         }
     }
 
