@@ -312,8 +312,7 @@ public class Autonomous extends LinearOpMode {
         Arm.setTargetPosition(0);
         Arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         Arm.setDirection(DcMotorSimple.Direction.REVERSE);
-        Conveyor.setTargetPosition(Conveyor.getCurrentPosition());
-        Conveyor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        Conveyor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         //Conveyor.setTargetPosition(0);
         //Conveyor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
