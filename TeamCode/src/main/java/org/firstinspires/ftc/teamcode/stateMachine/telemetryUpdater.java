@@ -22,6 +22,8 @@ public class telemetryUpdater {
         opMode.telemetry.addData("Runtime",opMode.getRuntime());
         opMode.telemetry.addData("PIDF Coefficients",opMode.Shooter.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER));
         opMode.telemetry.addData("Shooter Velocity",opMode.Shooter.getVelocity(AngleUnit.DEGREES));
+        opMode.telemetry.addData("Conveyor Position",opMode.Conveyor.getCurrentPosition());
+        opMode.telemetry.addData("Conveyor Target Position",opMode.Conveyor.getTargetPosition());
         if(count%20==0) {
             opMode.velocities.add(opMode.Shooter.getVelocity());
         }

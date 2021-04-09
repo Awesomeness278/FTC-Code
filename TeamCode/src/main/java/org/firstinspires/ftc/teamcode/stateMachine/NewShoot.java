@@ -5,18 +5,20 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
-public class Shoot extends StateManager {
-    public Shoot(double angle, double power){
+public class NewShoot extends StateManager {
+    public NewShoot(double angle, double power){
         this.angle = angle;
         this.power = power;
     }
     double power;
     double angle;
-    int rings = 4;
     @Override
     public void Run(StateMachine machine) {
         double delay = 3;
         double time = 0.12;
+        int maxRings = 4;
+        int rings = maxRings;
+        int[] ticks = new int[]{-100 + machine.opMode.Conveyor.getCurrentPosition(), -200 + machine.opMode.Conveyor.getCurrentPosition(), -300 + machine.opMode.Conveyor.getCurrentPosition(), 400 - machine.opMode.Conveyor.getCurrentPosition()};
         boolean updated = false;
         boolean shoot = false;
         double currentTime = machine.opMode.getRuntime();
@@ -35,26 +37,30 @@ public class Shoot extends StateManager {
             rightBack += (machine.opMode.odometry.returnOrientation()-angle)/5;
             double scalar = Math.max(Math.max(Math.abs(leftFront), Math.abs(leftBack)), Math.max(Math.abs(rightFront), Math.abs(rightBack)));
             if (scalar < 1) scalar = 1;
+            machine.opMode.telemetry.addData("Current Target Position",ticks[maxRings-rings]);
+            machine.opMode.telemetry.addData("Shoot",shoot);
+            machine.opMode.telemetry.addData("Rings left to shoot",rings);
+            machine.opMode.telemetry.addData("Shooter Velocity is less than -300",machine.opMode.Shooter.getVelocity(AngleUnit.DEGREES)<-300);
+            machine.opMode.telemetry.addData("Distance between target position and conveyor position is greater than 5",Math.abs(machine.opMode.Conveyor.getCurrentPosition()-ticks[maxRings-rings])>5);
             machine.updater.addTelemetry();
             left_front.setPower(leftFront / scalar * 0.3);
             left_back.setPower(leftBack / scalar * 0.3);
             right_front.setPower(rightFront / scalar * 0.3);
             right_back.setPower(rightBack / scalar * 0.3);
-            //machine.opMode.Shooter.setPower(-power);
             machine.opMode.Shooter.setVelocity(-310, AngleUnit.DEGREES);
             if(machine.opMode.getRuntime()-currentTime>2.5){
                 currentTime = machine.opMode.getRuntime();
                 shoot = true;
             }
-            if ((machine.opMode.getRuntime()-currentTime) - time < (machine.opMode.getRuntime()-currentTime) - (machine.opMode.getRuntime()-currentTime) % (time+delay) && shoot) {
-                machine.opMode.Conveyor.setPower(-1);
+            if (machine.opMode.Shooter.getVelocity(AngleUnit.DEGREES)<-300 && Math.abs(machine.opMode.Conveyor.getCurrentPosition()-ticks[maxRings-rings])>5&&shoot){
+                int targetTicks = ticks[maxRings-rings];
+                machine.opMode.Conveyor.setTargetPosition(-targetTicks);
+                updated = false;
+            } else {
                 if(!updated){
                     rings--;
                     updated=true;
                 }
-            } else {
-                machine.opMode.Conveyor.setPower(0);
-                updated = false;
                 if(rings == 0){
                     break;
                 }
