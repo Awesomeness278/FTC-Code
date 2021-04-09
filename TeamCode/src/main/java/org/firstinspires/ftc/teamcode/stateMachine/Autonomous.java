@@ -45,13 +45,20 @@ public class Autonomous extends LinearOpMode {
     private static final String VUFORIA_KEY =
             "AfweTBj/////AAABmZ1QwFXvX0ltj9QRI7IS1wtULCTBA7CyU8KibbraimizSOgb5iPrsHVE4P/nnAbJuNWXHsqZgW784iI7nfekundyBUv80cdOoe8y/O9125JNbD4fkyufJvrK2RSpv2w9GPY1AtM3fxo70t6r89/WQnpcAHPp244gr0Ua8GL5qUt8XPPE3WcTATty3C/GayFSfe+MTbV8OtB5qN34XhstZYDUgxHcJ+xQLwkYj+FtLTyDc+kRrg+oqLkYA3zNwksq9vWEvTTV0SzsFtU3NbFZtz3P068I25yPHOSqd4bNq36LAcrJchYGidrbJLtRqrEG+4lFD8FWEkpKoWIm4d1DiM0xCcQhiqHH/KQ3fDNP7Xd3";
     VuforiaLocalizer vuforia;
-    int delay = 0;
+    int delay0Rings = 0;
+    int delay1Rings = 0;
+    int delay4Rings = 0;
     TFObjectDetector tfod;
     static final String TFOD_MODEL_ASSET = "UltimateGoal.tflite";
     static final String LABEL_FIRST_ELEMENT = "Quad";
     static final String LABEL_SECOND_ELEMENT = "Single";
     double COUNTS_PER_INCH = 307.699557;
     int upDelay = 5;
+
+    boolean rightBumperPressed = false;
+    boolean leftBumperPressed = false;
+    //0 = Kraken, 1 = LaserTech, 2 = Manual
+    int teamSelection = 0;
     Recognition recognition;
     @Override
     public void runOpMode() {
@@ -69,7 +76,44 @@ public class Autonomous extends LinearOpMode {
         odometry.reverseLeftEncoder();
         Thread positionThread = new Thread(odometry);
         positionThread.start();
+
         while(!gamepad1.right_stick_button) {
+
+            if(gamepad1.right_bumper&&!rightBumperPressed){
+                if(teamSelection!=2) {
+                    teamSelection++;
+                }else{
+                    teamSelection = 0;
+                }
+                rightBumperPressed = true;
+            }else if(!gamepad1.right_bumper){
+                rightBumperPressed = false;
+            }
+
+            if(gamepad1.left_bumper&&!leftBumperPressed){
+                if(teamSelection!=0) {
+                    teamSelection--;
+                }else{
+                    teamSelection = 2;
+                }
+                leftBumperPressed = true;
+            }else if(!gamepad1.left_bumper){
+                leftBumperPressed = false;
+            }
+
+            if(teamSelection == 0){
+                //Kraken settings
+                delay0Rings = 0;
+                delay1Rings = 2;
+                delay4Rings = 4;
+            }else if(teamSelection == 1){
+                //LaserTech settings
+                delay0Rings = 1;
+                delay1Rings = 3;
+                delay4Rings = 5;
+            }
+            telemetry.addData("Team Selection",teamSelection);
+
             if (gamepad1.a) {
                 position = 1;
             }
@@ -88,18 +132,21 @@ public class Autonomous extends LinearOpMode {
             positions[2] = "Inner Red";
             positions[3] = "Outer Red";
             telemetry.addData("Starting Position", positions[position-1]);
-            if (gamepad1.left_trigger > 0.3 && !triggerPressed) {
-                delay--;
-                triggerPressed = true;
+
+            if(teamSelection==2) {
+                if (gamepad1.left_trigger > 0.3 && !triggerPressed) {
+                    delay0Rings--;
+                    triggerPressed = true;
+                }
+                if (gamepad1.right_trigger > 0.3 && !triggerPressed) {
+                    delay0Rings++;
+                    triggerPressed = true;
+                }
             }
-            if (gamepad1.right_trigger > 0.3 && !triggerPressed) {
-                delay++;
-                triggerPressed = true;
-            }
-            if(gamepad1.left_trigger<=0.3&&gamepad1.right_trigger<=0.3){
-                triggerPressed = false;
-            }
-            telemetry.addData("Starting Delay", Integer.toString(delay).concat("s"));
+                if (gamepad1.left_trigger <= 0.3 && gamepad1.right_trigger <= 0.3) {
+                    triggerPressed = false;
+                }
+            telemetry.addData("Starting Delay", Integer.toString(delay0Rings).concat("s"));
             if (gamepad1.dpad_left) {
                 targetShootingSpot = 2;
             }
@@ -123,7 +170,7 @@ public class Autonomous extends LinearOpMode {
         AutonomousData.getInstance().SetStartingLocation(position);
         machine.opMode.Claw.setPosition(0);
 
-        machine.addState(States.Tensorflow, new Tensorflow(delay));
+        machine.addState(States.Tensorflow, new Tensorflow(delay0Rings));
         machine.addState(States.MoveToWobble, new MoveToWobble());
         machine.addState(States.DropWobble, new DropWobble());
         machine.addState(States.Park, new Park());

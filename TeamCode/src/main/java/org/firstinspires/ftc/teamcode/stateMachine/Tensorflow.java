@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.stateMachine;
 
+import com.google.gson.internal.$Gson$Preconditions;
+
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 
 import java.util.List;
@@ -18,6 +20,15 @@ public class Tensorflow extends StateManager {
             Recognition recognition = recognitions.get(0);
             opMode.recognition = recognition;
         }
+
+        if(opMode.recognition == null){
+            delay = opMode.delay0Rings;
+        }else if(opMode.recognition.getLabel().equals("Single")){
+            delay = opMode.delay1Rings;
+        }else if(opMode.recognition.getLabel().equals("Quad")){
+            delay = opMode.delay4Rings;
+        }
+
         while(machine.opMode.getRuntime()<delay){
             machine.updater.addTelemetry();
         }
