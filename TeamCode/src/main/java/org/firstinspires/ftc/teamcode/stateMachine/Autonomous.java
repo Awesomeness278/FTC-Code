@@ -161,7 +161,7 @@ public class Autonomous extends LinearOpMode {
 
             if(teamSelection==2) {
 
-                if(gamepad1.left_stick_y < -0.5&&!leftStickMoved){
+                if(gamepad1.left_stick_y > 0.5&&!leftStickMoved){
                     if(selectedDelay!=5) {
                         selectedDelay++;
                     }else{
@@ -172,7 +172,7 @@ public class Autonomous extends LinearOpMode {
                     leftStickMoved = false;
                 }
 
-                if(gamepad1.left_stick_y > 0.5&&!leftStickMoved){
+                if(gamepad1.left_stick_y < -0.5&&!leftStickMoved){
                     if(selectedDelay!=0) {
                         selectedDelay--;
                     }else{
@@ -183,7 +183,7 @@ public class Autonomous extends LinearOpMode {
                     leftStickMoved = false;
                 }
 
-                if (gamepad1.right_trigger > 0.3 && !triggerPressed) {
+                if (gamepad1.left_trigger > 0.3 && !triggerPressed) {
                     delay0RingsRed -= selectedDelay==0?1:0;
                     delay1RingsRed -= selectedDelay==1?1:0;
                     delay4RingsRed -= selectedDelay==2?1:0;
@@ -192,7 +192,7 @@ public class Autonomous extends LinearOpMode {
                     delay4RingsBlue -= selectedDelay==5?1:0;
                     triggerPressed = true;
                 }
-                if (gamepad1.left_trigger > 0.3 && !triggerPressed) {
+                if (gamepad1.right_trigger > 0.3 && !triggerPressed) {
                     delay0RingsRed += selectedDelay==0?1:0;
                     delay1RingsRed += selectedDelay==1?1:0;
                     delay4RingsRed += selectedDelay==2?1:0;
