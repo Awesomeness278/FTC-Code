@@ -1,3 +1,4 @@
+
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -11,7 +12,7 @@ public class ShootingDrivetrain extends LinearOpMode {
     double moveSpeed = 1;
     //Drive motors
     DcMotor right_front, right_back, left_front, left_back, shooter, conveyor, arm, intake;
-    Servo grip;
+    Servo grip, blocker;
 
     //Hardware Map Names for drive motors and odometry wheels.
     String rfName = "Right Front Motor", rbName = "Right Back Motor", lfName = "Left Front Motor", lbName = "Left Back Motor", shootName = "Shooter";
@@ -30,13 +31,16 @@ public class ShootingDrivetrain extends LinearOpMode {
         double convPower = 0.5;
         final double movementConstant = 0.8;
         final double rotationConstant = 0.75;
+        double blockerTargetPosition = 0.5;
 
+        boolean blockerDown = true;
         boolean dPadUpPressed = false;
         boolean dPadDownPressed = false;
         boolean rightBumperPressed = false;
         boolean armPressed = false;
         boolean xPressed = false;
         double armMoving = 0;
+        boolean yPressed = false;
 
         int flywheelSwitch = 0;
         int armTargetPosition = 0;
@@ -185,6 +189,19 @@ public class ShootingDrivetrain extends LinearOpMode {
                 }
             }
 
+            if(gamepad2.y && !yPressed){
+                if(blockerDown) {
+                    blocker.setPosition(blockerTargetPosition);
+                    blockerDown = false;
+                }else{
+                    blocker.setPosition(0);
+                    blockerDown = true;
+                }
+                yPressed = true;
+            }else if(!gamepad2.y){
+                yPressed = false;
+            }
+
             if (gamepad2.x) {
                 if (!xPressed) {
                     gripToggle = !gripToggle;
@@ -214,6 +231,7 @@ public class ShootingDrivetrain extends LinearOpMode {
         arm = hardwareMap.dcMotor.get("Arm");
         intake = hardwareMap.dcMotor.get("Intake");
         grip = hardwareMap.get(Servo.class, "Grip");
+        blocker = hardwareMap.get(Servo.class, "Blocker");
 
         right_front.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         right_back.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
