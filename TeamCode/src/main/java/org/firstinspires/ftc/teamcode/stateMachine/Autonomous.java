@@ -45,9 +45,12 @@ public class Autonomous extends LinearOpMode {
     private static final String VUFORIA_KEY =
             "AfweTBj/////AAABmZ1QwFXvX0ltj9QRI7IS1wtULCTBA7CyU8KibbraimizSOgb5iPrsHVE4P/nnAbJuNWXHsqZgW784iI7nfekundyBUv80cdOoe8y/O9125JNbD4fkyufJvrK2RSpv2w9GPY1AtM3fxo70t6r89/WQnpcAHPp244gr0Ua8GL5qUt8XPPE3WcTATty3C/GayFSfe+MTbV8OtB5qN34XhstZYDUgxHcJ+xQLwkYj+FtLTyDc+kRrg+oqLkYA3zNwksq9vWEvTTV0SzsFtU3NbFZtz3P068I25yPHOSqd4bNq36LAcrJchYGidrbJLtRqrEG+4lFD8FWEkpKoWIm4d1DiM0xCcQhiqHH/KQ3fDNP7Xd3";
     VuforiaLocalizer vuforia;
-    int delay0Rings = 0;
-    int delay1Rings = 0;
-    int delay4Rings = 0;
+    int delay0RingsRed = 0;
+    int delay1RingsRed = 0;
+    int delay4RingsRed = 0;
+    int delay0RingsBlue = 0;
+    int delay1RingsBlue = 0;
+    int delay4RingsBlue = 0;
     TFObjectDetector tfod;
     static final String TFOD_MODEL_ASSET = "UltimateGoal.tflite";
     static final String LABEL_FIRST_ELEMENT = "Quad";
@@ -82,6 +85,14 @@ public class Autonomous extends LinearOpMode {
             if(gamepad1.right_bumper&&!rightBumperPressed){
                 if(teamSelection!=2) {
                     teamSelection++;
+                    if(teamSelection == 2){
+                        delay0RingsRed = 0;
+                        delay1RingsRed = 0;
+                        delay4RingsRed = 0;
+                        delay0RingsBlue = 0;
+                        delay1RingsBlue = 0;
+                        delay4RingsBlue = 0;
+                    }
                 }else{
                     teamSelection = 0;
                 }
@@ -95,6 +106,13 @@ public class Autonomous extends LinearOpMode {
                     teamSelection--;
                 }else{
                     teamSelection = 2;
+                    delay0RingsRed = 0;
+                    delay1RingsRed = 0;
+                    delay4RingsRed = 0;
+                    delay0RingsBlue = 0;
+                    delay1RingsBlue = 0;
+                    delay4RingsBlue = 0;
+
                 }
                 leftBumperPressed = true;
             }else if(!gamepad1.left_bumper){
@@ -103,14 +121,20 @@ public class Autonomous extends LinearOpMode {
 
             if(teamSelection == 0){
                 //Kraken settings
-                delay0Rings = 0;
-                delay1Rings = 2;
-                delay4Rings = 4;
+                delay0RingsRed = 6;
+                delay1RingsRed = 5;
+                delay4RingsRed = 5;
+                delay0RingsBlue = 6;
+                delay1RingsBlue = 3;
+                delay4RingsBlue = 2;
             }else if(teamSelection == 1){
                 //LaserTech settings
-                delay0Rings = 1;
-                delay1Rings = 3;
-                delay4Rings = 5;
+                delay0RingsRed = 3;
+                delay1RingsRed = 0;
+                delay4RingsRed = 0;
+                delay0RingsBlue = 3;
+                delay1RingsBlue = 0;
+                delay4RingsBlue = 0;
             }
             telemetry.addData("Team Selection",teamSelection);
 
@@ -135,18 +159,33 @@ public class Autonomous extends LinearOpMode {
 
             if(teamSelection==2) {
                 if (gamepad1.left_trigger > 0.3 && !triggerPressed) {
-                    delay0Rings--;
+                    delay0RingsRed--;
+                    delay1RingsRed--;
+                    delay4RingsRed--;
+                    delay0RingsBlue--;
+                    delay1RingsBlue--;
+                    delay4RingsBlue--;
                     triggerPressed = true;
                 }
                 if (gamepad1.right_trigger > 0.3 && !triggerPressed) {
-                    delay0Rings++;
+                    delay0RingsRed++;
+                    delay1RingsRed++;
+                    delay4RingsRed++;
+                    delay0RingsBlue++;
+                    delay1RingsBlue++;
+                    delay4RingsBlue++;
                     triggerPressed = true;
                 }
             }
                 if (gamepad1.left_trigger <= 0.3 && gamepad1.right_trigger <= 0.3) {
                     triggerPressed = false;
                 }
-            telemetry.addData("Starting Delay", Integer.toString(delay0Rings).concat("s"));
+            telemetry.addData("0 Red Delay", Integer.toString(delay0RingsRed).concat("s"));
+            telemetry.addData("1 Red Delay", Integer.toString(delay1RingsRed).concat("s"));
+            telemetry.addData("4 Red Delay", Integer.toString(delay4RingsRed).concat("s"));
+            telemetry.addData("0 Blue Delay", Integer.toString(delay0RingsBlue).concat("s"));
+            telemetry.addData("1 Blue Delay", Integer.toString(delay1RingsBlue).concat("s"));
+            telemetry.addData("4 Blue Delay", Integer.toString(delay4RingsBlue).concat("s"));
             if (gamepad1.dpad_left) {
                 targetShootingSpot = 2;
             }
@@ -170,7 +209,7 @@ public class Autonomous extends LinearOpMode {
         AutonomousData.getInstance().SetStartingLocation(position);
         machine.opMode.Claw.setPosition(0);
 
-        machine.addState(States.Tensorflow, new Tensorflow(delay0Rings));
+        machine.addState(States.Tensorflow, new Tensorflow());
         machine.addState(States.MoveToWobble, new MoveToWobble());
         machine.addState(States.DropWobble, new DropWobble());
         machine.addState(States.Park, new Park());
