@@ -51,12 +51,14 @@ public class Autonomous extends LinearOpMode {
     int delay0RingsBlue = 0;
     int delay1RingsBlue = 0;
     int delay4RingsBlue = 0;
+    boolean leftStickMoved = false;
     TFObjectDetector tfod;
     static final String TFOD_MODEL_ASSET = "UltimateGoal.tflite";
     static final String LABEL_FIRST_ELEMENT = "Quad";
     static final String LABEL_SECOND_ELEMENT = "Single";
     double COUNTS_PER_INCH = 307.699557;
     int upDelay = 5;
+    int selectedDelay = 0;
 
     boolean rightBumperPressed = false;
     boolean leftBumperPressed = false;
@@ -158,34 +160,81 @@ public class Autonomous extends LinearOpMode {
             telemetry.addData("Starting Position", positions[position-1]);
 
             if(teamSelection==2) {
-                if (gamepad1.left_trigger > 0.3 && !triggerPressed) {
-                    delay0RingsRed--;
-                    delay1RingsRed--;
-                    delay4RingsRed--;
-                    delay0RingsBlue--;
-                    delay1RingsBlue--;
-                    delay4RingsBlue--;
+
+                if(gamepad1.left_stick_y < -0.5&&!leftStickMoved){
+                    if(selectedDelay!=5) {
+                        selectedDelay++;
+                    }else{
+                        selectedDelay = 0;
+                    }
+                    leftStickMoved = true;
+                }else if(Math.abs(gamepad1.left_stick_y)<0.5){
+                    leftStickMoved = false;
+                }
+
+                if(gamepad1.left_stick_y > 0.5&&!leftStickMoved){
+                    if(selectedDelay!=0) {
+                        selectedDelay--;
+                    }else{
+                        selectedDelay = 5;
+                    }
+                    leftStickMoved = true;
+                }else if(Math.abs(gamepad1.left_stick_y)<0.5){
+                    leftStickMoved = false;
+                }
+
+                if (gamepad1.right_trigger > 0.3 && !triggerPressed) {
+                    delay0RingsRed -= selectedDelay==0?1:0;
+                    delay1RingsRed -= selectedDelay==1?1:0;
+                    delay4RingsRed -= selectedDelay==2?1:0;
+                    delay0RingsBlue -= selectedDelay==3?1:0;
+                    delay1RingsBlue -= selectedDelay==4?1:0;
+                    delay4RingsBlue -= selectedDelay==5?1:0;
                     triggerPressed = true;
                 }
-                if (gamepad1.right_trigger > 0.3 && !triggerPressed) {
-                    delay0RingsRed++;
-                    delay1RingsRed++;
-                    delay4RingsRed++;
-                    delay0RingsBlue++;
-                    delay1RingsBlue++;
-                    delay4RingsBlue++;
+                if (gamepad1.left_trigger > 0.3 && !triggerPressed) {
+                    delay0RingsRed += selectedDelay==0?1:0;
+                    delay1RingsRed += selectedDelay==1?1:0;
+                    delay4RingsRed += selectedDelay==2?1:0;
+                    delay0RingsBlue += selectedDelay==3?1:0;
+                    delay1RingsBlue += selectedDelay==4?1:0;
+                    delay4RingsBlue += selectedDelay==5?1:0;
                     triggerPressed = true;
                 }
             }
                 if (gamepad1.left_trigger <= 0.3 && gamepad1.right_trigger <= 0.3) {
                     triggerPressed = false;
                 }
-            telemetry.addData("0 Red Delay", Integer.toString(delay0RingsRed).concat("s"));
-            telemetry.addData("1 Red Delay", Integer.toString(delay1RingsRed).concat("s"));
-            telemetry.addData("4 Red Delay", Integer.toString(delay4RingsRed).concat("s"));
-            telemetry.addData("0 Blue Delay", Integer.toString(delay0RingsBlue).concat("s"));
-            telemetry.addData("1 Blue Delay", Integer.toString(delay1RingsBlue).concat("s"));
-            telemetry.addData("4 Blue Delay", Integer.toString(delay4RingsBlue).concat("s"));
+                if(selectedDelay == 0) {
+                    telemetry.addData("<0 Red Delay>", Integer.toString(delay0RingsRed).concat("s"));
+                }else{
+                    telemetry.addData("0 Red Delay", Integer.toString(delay0RingsRed).concat("s"));
+                }
+                if(selectedDelay == 1) {
+                   telemetry.addData("<1 Red Delay>", Integer.toString(delay1RingsRed).concat("s"));
+                }else{
+                    telemetry.addData("1 Red Delay", Integer.toString(delay1RingsRed).concat("s"));
+                }
+                if(selectedDelay == 2) {
+                    telemetry.addData("<4 Red Delay>", Integer.toString(delay4RingsRed).concat("s"));
+                }else{
+                    telemetry.addData("4 Red Delay", Integer.toString(delay4RingsRed).concat("s"));
+                }
+                if(selectedDelay == 3) {
+                    telemetry.addData("<0 Blue Delay>", Integer.toString(delay0RingsBlue).concat("s"));
+                }else{
+                telemetry.addData("0 Blue Delay", Integer.toString(delay0RingsBlue).concat("s"));
+                }
+                if(selectedDelay == 4) {
+                    telemetry.addData("<1 Blue Delay>", Integer.toString(delay1RingsBlue).concat("s"));
+                }else{
+                    telemetry.addData("1 Blue Delay", Integer.toString(delay1RingsBlue).concat("s"));
+                }
+                if(selectedDelay == 5) {
+                    telemetry.addData("<4 Blue Delay>", Integer.toString(delay4RingsBlue).concat("s"));
+                }else{
+                    telemetry.addData("4 Blue Delay", Integer.toString(delay4RingsBlue).concat("s"));
+                }
             if (gamepad1.dpad_left) {
                 targetShootingSpot = 2;
             }
