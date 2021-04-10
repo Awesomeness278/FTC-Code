@@ -141,12 +141,13 @@ public class ShootingDrivetrain2 extends LinearOpMode {
             telemetry.addData("Parker Position", parker.getController().getServoPosition(2));
             telemetry.addData("Selected Coefficient",coefficientNames[selectedCoefficient]);
             try {
-                telemetry.addData("Selected Coefficient Value",PIDFCoefficients.class.getField(coefficientNames[selectedCoefficient]).getDouble(coefficients));
+                String a = Double.toString(PIDFCoefficients.class.getField(coefficientNames[selectedCoefficient]).getDouble(coefficients));
+                telemetry.addData("Selected Coefficient Value",/*a.substring(0,a.indexOf('.')+2)*/a);
             }catch(NoSuchFieldException | IllegalAccessException ignored){}
             telemetry.update();
             if(gamepad2.left_stick_y<-0.5&&leftThumbstickDown){
                 try {
-                    PIDFCoefficients.class.getField(coefficientNames[selectedCoefficient]).setDouble(coefficients,PIDFCoefficients.class.getField(coefficientNames[selectedCoefficient]).getDouble(coefficients)-0.05);
+                    PIDFCoefficients.class.getField(coefficientNames[selectedCoefficient]).setDouble(coefficients,PIDFCoefficients.class.getField(coefficientNames[selectedCoefficient]).getDouble(coefficients)-0.25);
                 }catch(NoSuchFieldException | IllegalAccessException ignored){}
                 leftThumbstickDown = false;
             }else if(gamepad2.left_stick_y>-0.5){
@@ -155,7 +156,7 @@ public class ShootingDrivetrain2 extends LinearOpMode {
             if(gamepad2.left_stick_y>0.5&&leftThumbstickUp){
                 leftThumbstickUp = false;
                 try {
-                    PIDFCoefficients.class.getField(coefficientNames[selectedCoefficient]).setDouble(coefficients,PIDFCoefficients.class.getField(coefficientNames[selectedCoefficient]).getDouble(coefficients)+0.05);
+                    PIDFCoefficients.class.getField(coefficientNames[selectedCoefficient]).setDouble(coefficients,PIDFCoefficients.class.getField(coefficientNames[selectedCoefficient]).getDouble(coefficients)+0.25);
                 }catch(NoSuchFieldException | IllegalAccessException ignored){}
             }else if(gamepad2.left_stick_y<0.5){
                 leftThumbstickUp = true;
@@ -331,6 +332,5 @@ public class ShootingDrivetrain2 extends LinearOpMode {
 
         telemetry.addData("Status", "Hardware Map Init Complete");
         telemetry.update();
-        coefficients = new PIDFCoefficients(shooter.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER));
     }
 }
