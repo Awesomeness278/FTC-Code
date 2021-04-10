@@ -1,33 +1,29 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.PIDCoefficients;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.stateMachine.PIDcontroller;
+import java.nio.channels.Pipe;
 
-import java.util.concurrent.TimeUnit;
-
-@TeleOp(name = "Shooting + Arm + Drivetrain - the second")
+@TeleOp(name = "PID testing")
 public class ShootingDrivetrain2 extends LinearOpMode {
     double moveSpeed = 1;
-    double pPos = 0;
-    double pos = 0;
-    ElapsedTime time = new ElapsedTime();
     //Drive motors
-    DcMotor right_front, right_back, left_front, left_back, shooter, conveyor, arm, intake;
-    Servo grip;
-
+    DcMotor right_front, right_back, left_front, left_back, conveyor, arm, intake;
+    DcMotorEx shooter;
+    Servo grip, blocker, straightener, parker;
+    PIDFCoefficients coefficients = new PIDFCoefficients(0,0,0,0);
     //Hardware Map Names for drive motors and odometry wheels.
     String rfName = "Right Front Motor", rbName = "Right Back Motor", lfName = "Left Front Motor", lbName = "Left Back Motor", shootName = "Shooter";
-    PIDcontroller pid;
 
     @Override
-    public void runOpMode() {
+    public void runOpMode() throws InterruptedException {
         //Initialize hardware map values.
         initDriveHardwareMap(rfName, rbName, lfName, lbName, shootName);
         arm.setTargetPosition(0);
@@ -36,17 +32,30 @@ public class ShootingDrivetrain2 extends LinearOpMode {
         telemetry.addData("Status", "Init Complete");
         telemetry.update();
 
-        double flywheelPower = 1;
+        double flywheelPower = 0.95;
         double convPower = 0.7;
         final double movementConstant = 0.8;
         final double rotationConstant = 0.75;
+        double blockerDownPosition = 0.4;
+        double blockerUpPosition = 0.7;
+        double parkerPos = 0;
+        double parkerUpPos = 0.95;
+        double parkerDownPos = 0.3;
+        double veloc = -360;
 
+
+        boolean blockerDown = false;
         boolean dPadUpPressed = false;
         boolean dPadDownPressed = false;
         boolean rightBumperPressed = false;
         boolean armPressed = false;
         boolean xPressed = false;
         double armMoving = 0;
+        boolean yPressed = false;
+        boolean aPressed = false;
+        boolean leftThumbstickUp = false, leftThumbstickDown = false, leftThumbstsickLeft = false, leftThumbstickRight = false;
+        int selectedCoefficient = 0;
+        String[] coefficientNames = new String[]{"p","i","d","f"};
 
         int flywheelSwitch = 0;
         int armTargetPosition = 0;
@@ -59,6 +68,10 @@ public class ShootingDrivetrain2 extends LinearOpMode {
 
         waitForStart();
         while (opModeIsActive()) {
+            shooter.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, coefficients);
+         /*  if(gripPos.length<3){
+               gripPos.push(grip.getPosition());
+           }*/
 
             //Movement
             double leftFront = 0;
@@ -94,6 +107,7 @@ public class ShootingDrivetrain2 extends LinearOpMode {
             rightFront*=movementConstant;
             leftBack*=movementConstant;
             rightBack*=movementConstant;
+
             leftFront += (-gamepad1.left_stick_y + gamepad1.left_stick_x)*movementConstant - gamepad1.right_stick_x*-rotationConstant;
             leftBack += (-gamepad1.left_stick_y - gamepad1.left_stick_x)*movementConstant - gamepad1.right_stick_x*-rotationConstant;
             rightFront += (-gamepad1.left_stick_y - gamepad1.left_stick_x)*movementConstant + gamepad1.right_stick_x*-rotationConstant;
@@ -108,7 +122,7 @@ public class ShootingDrivetrain2 extends LinearOpMode {
             //Flywheel
             if (gamepad2.dpad_up) {
                 if (!dPadUpPressed) {
-                    flywheelPower += 0.005;
+                    veloc += 5;
                 }
                 dPadUpPressed = true;
             } else {
@@ -117,31 +131,37 @@ public class ShootingDrivetrain2 extends LinearOpMode {
 
             if (gamepad2.dpad_down) {
                 if (!dPadDownPressed) {
-                    flywheelPower -= 0.005;
+                    veloc -= 5;
                 }
                 dPadDownPressed = true;
             } else {
                 dPadDownPressed = false;
             }
-            telemetry.addData("Flywheel Power: ", flywheelPower);
-            double PIDPower = 0;
-            if(flywheelSwitch==1) {
-                PIDPower = pid.run(flywheelPower);
-            }
-            pPos = Math.abs(pos);
-            pos = Math.abs(shooter.getCurrentPosition());
-            double rpm = (pos-pPos)/time.time(TimeUnit.MILLISECONDS);
-            time.reset();
-            rpm = rpm/2.6;
-            telemetry.addData("Rotations per minute:",rpm);
-            telemetry.addData("Suggested Change In Flywheel Power",PIDPower);
-            telemetry.addData("Total Flywheel Power",flywheelPower+PIDPower);
+            telemetry.addData("Flywheel Power: ", veloc);
             telemetry.addData("Arm Position", arm.getCurrentPosition());
-            telemetry.addData("x is pressed: ", xPressed);
-            telemetry.addData("Grip toggle: ", gripToggle);
+            telemetry.addData("Parker Position", parker.getController().getServoPosition(2));
+            telemetry.addData("Selected Coefficient",coefficientNames[selectedCoefficient]);
+            try {
+                telemetry.addData("Selected Coefficient Value",PIDFCoefficients.class.getField(coefficientNames[selectedCoefficient]).getDouble(coefficients));
+            }catch(NoSuchFieldException | IllegalAccessException ignored){}
             telemetry.update();
+            if(gamepad2.left_stick_y<-0.5&&leftThumbstickDown){
+                try {
+                    PIDFCoefficients.class.getField(coefficientNames[selectedCoefficient]).setDouble(coefficients,PIDFCoefficients.class.getField(coefficientNames[selectedCoefficient]).getDouble(coefficients)-0.05);
+                }catch(NoSuchFieldException | IllegalAccessException ignored){}
+                leftThumbstickDown = false;
+            }else if(gamepad2.left_stick_y>-0.5){
+                leftThumbstickDown = true;
+            }
+            if(gamepad2.left_stick_y>0.5&&leftThumbstickUp){
+                leftThumbstickUp = false;
+                try {
+                    PIDFCoefficients.class.getField(coefficientNames[selectedCoefficient]).setDouble(coefficients,PIDFCoefficients.class.getField(coefficientNames[selectedCoefficient]).getDouble(coefficients)+0.05);
+                }catch(NoSuchFieldException | IllegalAccessException ignored){}
+            }else if(gamepad2.left_stick_y<0.5){
+                leftThumbstickUp = true;
+            }
             if (gamepad2.right_bumper) {
-                pid.PIDTimer.reset();
                 if (!rightBumperPressed) {
                     flywheelSwitch = (flywheelSwitch + 1) % 2;
                 }
@@ -149,7 +169,12 @@ public class ShootingDrivetrain2 extends LinearOpMode {
             } else {
                 rightBumperPressed = false;
             }
-            shooter.setPower(-(flywheelSwitch * (PIDPower+flywheelPower)));
+            if(flywheelSwitch==1){
+                shooter.setVelocity(veloc,AngleUnit.DEGREES);
+            }
+            else if(flywheelSwitch==0){
+                shooter.setVelocity(0,AngleUnit.DEGREES);
+            }
 
             //Intake and Conveyor
             if(gamepad2.left_trigger>=0.5){
@@ -203,6 +228,19 @@ public class ShootingDrivetrain2 extends LinearOpMode {
                 }
             }
 
+            if(gamepad2.y && !yPressed){
+                if(blockerDown) {
+                    blocker.setPosition(blockerDownPosition);
+                    blockerDown = false;
+                }else{
+                    blocker.setPosition(blockerUpPosition);
+                    blockerDown = true;
+                }
+                yPressed = true;
+            }else if(!gamepad2.y){
+                yPressed = false;
+            }
+
             if (gamepad2.x) {
                 if (!xPressed) {
                     gripToggle = !gripToggle;
@@ -215,6 +253,28 @@ public class ShootingDrivetrain2 extends LinearOpMode {
             } else {
                 grip.setPosition(-0.1);
             }
+         /*  if(gripPos[1]==gripPos[0]&&gamepad2.x){
+               grip.setPosition(0);
+               gripPos = []
+           }*/
+            if(Math.abs(gamepad2.right_stick_y)>0.1){
+                straightener.setPosition((gamepad2.right_stick_y+1)/2);
+            }else{
+                straightener.setPosition(0.5);
+            }
+
+            if(gamepad1.a&&!aPressed){
+                if(parkerPos==0){
+                    parker.setPosition(parkerUpPos);
+                    parkerPos = 1;
+                }else if(parkerPos==1){
+                    parker.setPosition(parkerDownPos);
+                    parkerPos = 0;
+                }
+                aPressed = true;
+            }else if(!gamepad1.a){
+                aPressed = false;
+            }
         }
     }
 
@@ -223,11 +283,14 @@ public class ShootingDrivetrain2 extends LinearOpMode {
         right_back = hardwareMap.dcMotor.get(rbName);
         left_front = hardwareMap.dcMotor.get(lfName);
         left_back = hardwareMap.dcMotor.get(lbName);
-        shooter = hardwareMap.dcMotor.get(shootName);
+        shooter = hardwareMap.get(DcMotorEx.class,shootName);
         conveyor = hardwareMap.dcMotor.get("Conveyor");
         arm = hardwareMap.dcMotor.get("Arm");
         intake = hardwareMap.dcMotor.get("Intake");
         grip = hardwareMap.get(Servo.class, "Grip");
+        blocker = hardwareMap.get(Servo.class, "Blocker");
+        straightener = hardwareMap.get(Servo.class, "Straightener");
+        parker = hardwareMap.get(Servo.class, "Parker");
 
         right_front.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         right_back.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -238,7 +301,6 @@ public class ShootingDrivetrain2 extends LinearOpMode {
         right_back.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         left_front.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         left_back.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        shooter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         right_front.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         right_back.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -246,10 +308,11 @@ public class ShootingDrivetrain2 extends LinearOpMode {
         left_back.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         left_front.setDirection(DcMotorSimple.Direction.REVERSE);
+        //right_front.setDirection(DcMotorSimple.Direction.REVERSE);
         left_back.setDirection(DcMotorSimple.Direction.REVERSE);
+        //right_back.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        pid = new PIDcontroller(shooter, new PIDCoefficients(0.002,0.00002,0.002));
-        pid.setup();
+        // conveyor.setDirection(DcMotorSimple.Direction.FORWARD);
 
         telemetry.addData("Status", "Hardware Map Init Complete");
         telemetry.update();
