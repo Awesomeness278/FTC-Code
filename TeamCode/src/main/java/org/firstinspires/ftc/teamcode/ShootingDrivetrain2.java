@@ -20,7 +20,7 @@ public class ShootingDrivetrain2 extends LinearOpMode {
     Servo grip, blocker, straightener, parker;
     //Hardware Map Names for drive motors and odometry wheels.
     String rfName = "Right Front Motor", rbName = "Right Back Motor", lfName = "Left Front Motor", lbName = "Left Back Motor", shootName = "Shooter";
-    PIDFCoefficients coefficients = new PIDFCoefficients(60,0,0,0);
+    PIDFCoefficients coefficients = new PIDFCoefficients(1.17025,0.117025,0,11.7025);
 
     @Override
     public void runOpMode() throws InterruptedException {
