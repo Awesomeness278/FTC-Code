@@ -62,8 +62,9 @@ public class Autonomous extends LinearOpMode {
 
     boolean rightBumperPressed = false;
     boolean leftBumperPressed = false;
-    //0 = Kraken, 1 = LaserTech, 2 = Manual
+    //0 = Manual, 1 = Kraken, 2 = LaserTech
     int teamSelection = 0;
+    int teamSelectionMax = 2;
     Recognition recognition;
     @Override
     public void runOpMode() {
@@ -85,9 +86,9 @@ public class Autonomous extends LinearOpMode {
         while(!gamepad1.right_stick_button) {
 
             if(gamepad1.right_bumper&&!rightBumperPressed){
-                if(teamSelection!=2) {
+                if(teamSelection!=teamSelectionMax) {
                     teamSelection++;
-                    if(teamSelection == 2){
+                    if(teamSelection == 0){
                         delay0RingsRed = 0;
                         delay1RingsRed = 0;
                         delay4RingsRed = 0;
@@ -107,7 +108,7 @@ public class Autonomous extends LinearOpMode {
                 if(teamSelection!=0) {
                     teamSelection--;
                 }else{
-                    teamSelection = 2;
+                    teamSelection = teamSelectionMax;
                     delay0RingsRed = 0;
                     delay1RingsRed = 0;
                     delay4RingsRed = 0;
@@ -121,7 +122,7 @@ public class Autonomous extends LinearOpMode {
                 leftBumperPressed = false;
             }
 
-            if(teamSelection == 0){
+            if(teamSelection == 1){
                 //Kraken settings
                 delay0RingsRed = 6;
                 delay1RingsRed = 5;
@@ -129,7 +130,7 @@ public class Autonomous extends LinearOpMode {
                 delay0RingsBlue = 6;
                 delay1RingsBlue = 3;
                 delay4RingsBlue = 2;
-            }else if(teamSelection == 1){
+            }else if(teamSelection == 2){
                 //LaserTech settings
                 delay0RingsRed = 3;
                 delay1RingsRed = 0;
@@ -159,7 +160,7 @@ public class Autonomous extends LinearOpMode {
             positions[3] = "Outer Red";
             telemetry.addData("Starting Position", positions[position-1]);
 
-            if(teamSelection==2) {
+            if(teamSelection==0) {
 
                 if(gamepad1.left_stick_y > 0.5&&!leftStickMoved){
                     if(selectedDelay!=5) {
