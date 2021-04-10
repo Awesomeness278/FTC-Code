@@ -16,6 +16,8 @@ import org.firstinspires.ftc.teamcode.Odometry.OdometryGlobalCoordinatePosition;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous
 public class Autonomous extends LinearOpMode {
@@ -56,15 +58,19 @@ public class Autonomous extends LinearOpMode {
     static final String TFOD_MODEL_ASSET = "UltimateGoal.tflite";
     static final String LABEL_FIRST_ELEMENT = "Quad";
     static final String LABEL_SECOND_ELEMENT = "Single";
+    static final String TEAMNAME_MANUAL = "Manual";
+    static final String TEAMNAME_KRAKEN = "Kraken";
+    static final String TEAMNAME_LASERTECH = "Laser Tech";
     double COUNTS_PER_INCH = 307.699557;
     int upDelay = 5;
-    int selectedDelay = 0;
+    int selectedItem = 0;
 
-    boolean rightBumperPressed = false;
-    boolean leftBumperPressed = false;
+    boolean DpadRightPressed = false;
+    boolean DpadLeftPressed = false;
     //0 = Manual, 1 = Kraken, 2 = LaserTech
     int teamSelection = 0;
     int teamSelectionMax = 2;
+    List<String> teamNames = Arrays.asList(TEAMNAME_MANUAL, TEAMNAME_KRAKEN, TEAMNAME_LASERTECH);
     Recognition recognition;
     @Override
     public void runOpMode() {
@@ -85,88 +91,53 @@ public class Autonomous extends LinearOpMode {
 
         while(!gamepad1.right_stick_button) {
 
-            if(gamepad1.right_bumper&&!rightBumperPressed){
+            if(gamepad1.dpad_right&&!DpadRightPressed){
                 if(teamSelection!=teamSelectionMax) {
                     teamSelection++;
-                    if(teamSelection == 0){
-                        delay0RingsRed = 0;
-                        delay1RingsRed = 0;
-                        delay4RingsRed = 0;
-                        delay0RingsBlue = 0;
-                        delay1RingsBlue = 0;
-                        delay4RingsBlue = 0;
-                    }
                 }else{
                     teamSelection = 0;
                 }
-                rightBumperPressed = true;
-            }else if(!gamepad1.right_bumper){
-                rightBumperPressed = false;
+                DpadRightPressed = true;
+                if(teamSelection == 0) {
+                    changeTeam(TEAMNAME_MANUAL);
+                }else if(teamSelection == 1){
+                    changeTeam(TEAMNAME_KRAKEN);
+                }else if(teamSelection == 2){
+                    changeTeam(TEAMNAME_LASERTECH);
+                }
+            }else if(!gamepad1.dpad_right){
+                DpadRightPressed = false;
             }
 
-            if(gamepad1.left_bumper&&!leftBumperPressed){
+            if(gamepad1.dpad_left&&!DpadLeftPressed){
                 if(teamSelection!=0) {
                     teamSelection--;
                 }else{
                     teamSelection = teamSelectionMax;
-                    delay0RingsRed = 0;
-                    delay1RingsRed = 0;
-                    delay4RingsRed = 0;
-                    delay0RingsBlue = 0;
-                    delay1RingsBlue = 0;
-                    delay4RingsBlue = 0;
-
                 }
-                leftBumperPressed = true;
-            }else if(!gamepad1.left_bumper){
-                leftBumperPressed = false;
+                DpadLeftPressed = true;
+                if(teamSelection == 0) {
+                    changeTeam(TEAMNAME_MANUAL);
+                }else if(teamSelection == 1){
+                    changeTeam(TEAMNAME_KRAKEN);
+                }else if(teamSelection == 2){
+                    changeTeam(TEAMNAME_LASERTECH);
+                }
+            }else if(!gamepad1.dpad_left) {
+                DpadLeftPressed = false;
             }
 
-            if(teamSelection == 1){
-                //Kraken settings
-                delay0RingsRed = 6;
-                delay1RingsRed = 5;
-                delay4RingsRed = 5;
-                delay0RingsBlue = 6;
-                delay1RingsBlue = 3;
-                delay4RingsBlue = 2;
-            }else if(teamSelection == 2){
-                //LaserTech settings
-                delay0RingsRed = 3;
-                delay1RingsRed = 0;
-                delay4RingsRed = 0;
-                delay0RingsBlue = 3;
-                delay1RingsBlue = 0;
-                delay4RingsBlue = 0;
-            }
-            telemetry.addData("Team Selection",teamSelection);
-
-            if (gamepad1.a) {
-                position = 1;
-            }
-            if (gamepad1.b) {
-                position = 2;
-            }
-            if (gamepad1.x) {
-                position = 3;
-            }
-            if (gamepad1.y) {
-                position = 4;
-            }
             String[] positions = new String[4];
             positions[0] = "Outer Blue";
             positions[1] = "Inner Blue";
             positions[2] = "Inner Red";
             positions[3] = "Outer Red";
-            telemetry.addData("Starting Position", positions[position-1]);
-
-            if(teamSelection==0) {
 
                 if(gamepad1.left_stick_y > 0.5&&!leftStickMoved){
-                    if(selectedDelay!=5) {
-                        selectedDelay++;
+                    if(selectedItem !=7) {
+                        selectedItem++;
                     }else{
-                        selectedDelay = 0;
+                        selectedItem = 0;
                     }
                     leftStickMoved = true;
                 }else if(Math.abs(gamepad1.left_stick_y)<0.5){
@@ -174,10 +145,10 @@ public class Autonomous extends LinearOpMode {
                 }
 
                 if(gamepad1.left_stick_y < -0.5&&!leftStickMoved){
-                    if(selectedDelay!=0) {
-                        selectedDelay--;
+                    if(selectedItem !=0) {
+                        selectedItem--;
                     }else{
-                        selectedDelay = 5;
+                        selectedItem = 7;
                     }
                     leftStickMoved = true;
                 }else if(Math.abs(gamepad1.left_stick_y)<0.5){
@@ -185,72 +156,107 @@ public class Autonomous extends LinearOpMode {
                 }
 
                 if (gamepad1.left_trigger > 0.3 && !triggerPressed) {
-                    delay0RingsRed -= selectedDelay==0?1:0;
-                    delay1RingsRed -= selectedDelay==1?1:0;
-                    delay4RingsRed -= selectedDelay==2?1:0;
-                    delay0RingsBlue -= selectedDelay==3?1:0;
-                    delay1RingsBlue -= selectedDelay==4?1:0;
-                    delay4RingsBlue -= selectedDelay==5?1:0;
+                    delay0RingsRed -= selectedItem ==1&&delay0RingsRed>0?1:0;
+                    delay1RingsRed -= selectedItem ==2&&delay1RingsRed>0?1:0;
+                    delay4RingsRed -= selectedItem ==3&&delay4RingsRed>0?1:0;
+                    delay0RingsBlue -= selectedItem ==4&&delay0RingsBlue>0?1:0;
+                    delay1RingsBlue -= selectedItem ==5&&delay1RingsBlue>0?1:0;
+                    delay4RingsBlue -= selectedItem ==6&&delay4RingsBlue>0?1:0;
+
+                    if(selectedItem == 0){
+                        if(position!=1){
+                            position--;
+                        }else{
+                            position = 4;
+                        }
+                    }
+
+                    if(selectedItem == 7){
+                        if(targetShootingSpot!=0){
+                            targetShootingSpot--;
+                        }else{
+                            targetShootingSpot = 2;
+                        }
+                    }
+
                     triggerPressed = true;
                 }
                 if (gamepad1.right_trigger > 0.3 && !triggerPressed) {
-                    delay0RingsRed += selectedDelay==0?1:0;
-                    delay1RingsRed += selectedDelay==1?1:0;
-                    delay4RingsRed += selectedDelay==2?1:0;
-                    delay0RingsBlue += selectedDelay==3?1:0;
-                    delay1RingsBlue += selectedDelay==4?1:0;
-                    delay4RingsBlue += selectedDelay==5?1:0;
+                    delay0RingsRed += selectedItem ==1?1:0;
+                    delay1RingsRed += selectedItem ==2?1:0;
+                    delay4RingsRed += selectedItem ==3?1:0;
+                    delay0RingsBlue += selectedItem ==4?1:0;
+                    delay1RingsBlue += selectedItem ==5?1:0;
+                    delay4RingsBlue += selectedItem ==6?1:0;
+
+                    if(selectedItem == 0){
+                        if(position!=4){
+                            position++;
+                        }else{
+                            position = 1;
+                        }
+                    }
+
+                    if(selectedItem == 7){
+                        if(targetShootingSpot!=2){
+                            targetShootingSpot++;
+                        }else{
+                            targetShootingSpot = 0;
+                        }
+                    }
+
                     triggerPressed = true;
                 }
-            }
                 if (gamepad1.left_trigger <= 0.3 && gamepad1.right_trigger <= 0.3) {
                     triggerPressed = false;
                 }
-                if(selectedDelay == 0) {
-                    telemetry.addData("<0 Red Delay>", Integer.toString(delay0RingsRed).concat("s"));
-                }else{
-                    telemetry.addData("0 Red Delay", Integer.toString(delay0RingsRed).concat("s"));
-                }
-                if(selectedDelay == 1) {
-                   telemetry.addData("<1 Red Delay>", Integer.toString(delay1RingsRed).concat("s"));
-                }else{
-                    telemetry.addData("1 Red Delay", Integer.toString(delay1RingsRed).concat("s"));
-                }
-                if(selectedDelay == 2) {
-                    telemetry.addData("<4 Red Delay>", Integer.toString(delay4RingsRed).concat("s"));
-                }else{
-                    telemetry.addData("4 Red Delay", Integer.toString(delay4RingsRed).concat("s"));
-                }
-                if(selectedDelay == 3) {
-                    telemetry.addData("<0 Blue Delay>", Integer.toString(delay0RingsBlue).concat("s"));
-                }else{
-                telemetry.addData("0 Blue Delay", Integer.toString(delay0RingsBlue).concat("s"));
-                }
-                if(selectedDelay == 4) {
-                    telemetry.addData("<1 Blue Delay>", Integer.toString(delay1RingsBlue).concat("s"));
-                }else{
-                    telemetry.addData("1 Blue Delay", Integer.toString(delay1RingsBlue).concat("s"));
-                }
-                if(selectedDelay == 5) {
-                    telemetry.addData("<4 Blue Delay>", Integer.toString(delay4RingsBlue).concat("s"));
-                }else{
-                    telemetry.addData("4 Blue Delay", Integer.toString(delay4RingsBlue).concat("s"));
-                }
-            if (gamepad1.dpad_left) {
-                targetShootingSpot = 2;
-            }
-            if (gamepad1.dpad_up || gamepad1.dpad_down) {
-                targetShootingSpot = 0;
-            }
-            if (gamepad1.dpad_right) {
-                targetShootingSpot = 1;
-            }
             String[] shootingPositions = new String[3];
             shootingPositions[0] = "Center";
             shootingPositions[1] = "Right";
             shootingPositions[2] = "Left";
-            telemetry.addData("Target Shooting Spot",shootingPositions[targetShootingSpot]);
             telemetry.update();
+            telemetry.addData("Team Selection",teamNames.get(teamSelection));
+
+                if(selectedItem == 0) {
+                    telemetry.addData("<Starting Position>", positions[position-1]);
+                }else{
+                    telemetry.addData("Starting Position", positions[position-1]);
+                }
+                if(selectedItem == 1) {
+                    telemetry.addData("<0 Red Delay>", Integer.toString(delay0RingsRed).concat("s"));
+                }else{
+                    telemetry.addData("0 Red Delay", Integer.toString(delay0RingsRed).concat("s"));
+                }
+                if(selectedItem == 2) {
+                   telemetry.addData("<1 Red Delay>", Integer.toString(delay1RingsRed).concat("s"));
+                }else{
+                    telemetry.addData("1 Red Delay", Integer.toString(delay1RingsRed).concat("s"));
+                }
+                if(selectedItem == 3) {
+                    telemetry.addData("<4 Red Delay>", Integer.toString(delay4RingsRed).concat("s"));
+                }else{
+                    telemetry.addData("4 Red Delay", Integer.toString(delay4RingsRed).concat("s"));
+                }
+                if(selectedItem == 4) {
+                    telemetry.addData("<0 Blue Delay>", Integer.toString(delay0RingsBlue).concat("s"));
+                }else{
+                telemetry.addData("0 Blue Delay", Integer.toString(delay0RingsBlue).concat("s"));
+                }
+                if(selectedItem == 5) {
+                    telemetry.addData("<1 Blue Delay>", Integer.toString(delay1RingsBlue).concat("s"));
+                }else{
+                    telemetry.addData("1 Blue Delay", Integer.toString(delay1RingsBlue).concat("s"));
+                }
+                if(selectedItem == 6) {
+                    telemetry.addData("<4 Blue Delay>", Integer.toString(delay4RingsBlue).concat("s"));
+                }else{
+                    telemetry.addData("4 Blue Delay", Integer.toString(delay4RingsBlue).concat("s"));
+                }
+                if(selectedItem == 7) {
+                    telemetry.addData("<Target Shooting Spot>",shootingPositions[targetShootingSpot]);
+                }else{
+                    telemetry.addData("Target Shooting Spot",shootingPositions[targetShootingSpot]);
+                }
         }
         telemetry.addData("Settings","Submitted");
         telemetry.update();
@@ -365,5 +371,34 @@ public class Autonomous extends LinearOpMode {
         Conveyor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         //Conveyor.setTargetPosition(0);
         //Conveyor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+
+    public void changeTeam(String teamName){
+        switch(teamName){
+            case TEAMNAME_MANUAL:
+                delay0RingsRed = 0;
+                delay1RingsRed = 0;
+                delay4RingsRed = 0;
+                delay0RingsBlue = 0;
+                delay1RingsBlue = 0;
+                delay4RingsBlue = 0;
+                break;
+            case TEAMNAME_KRAKEN:
+                delay0RingsRed = 6;
+                delay1RingsRed = 5;
+                delay4RingsRed = 5;
+                delay0RingsBlue = 6;
+                delay1RingsBlue = 3;
+                delay4RingsBlue = 2;
+                break;
+            case TEAMNAME_LASERTECH:
+                delay0RingsRed = 3;
+                delay1RingsRed = 0;
+                delay4RingsRed = 0;
+                delay0RingsBlue = 3;
+                delay1RingsBlue = 0;
+                delay4RingsBlue = 0;
+                break;
+        }
     }
 }
