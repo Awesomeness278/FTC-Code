@@ -18,9 +18,9 @@ public class ShootingDrivetrain2 extends LinearOpMode {
     DcMotor right_front, right_back, left_front, left_back, conveyor, arm, intake;
     DcMotorEx shooter;
     Servo grip, blocker, straightener, parker;
-    PIDFCoefficients coefficients = new PIDFCoefficients(0,0,0,0);
     //Hardware Map Names for drive motors and odometry wheels.
     String rfName = "Right Front Motor", rbName = "Right Back Motor", lfName = "Left Front Motor", lbName = "Left Back Motor", shootName = "Shooter";
+    PIDFCoefficients coefficients = new PIDFCoefficients(0,0,0,0);
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -28,7 +28,6 @@ public class ShootingDrivetrain2 extends LinearOpMode {
         initDriveHardwareMap(rfName, rbName, lfName, lbName, shootName);
         arm.setTargetPosition(0);
         arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
         telemetry.addData("Status", "Init Complete");
         telemetry.update();
 
@@ -69,9 +68,9 @@ public class ShootingDrivetrain2 extends LinearOpMode {
         waitForStart();
         while (opModeIsActive()) {
             shooter.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, coefficients);
-         /*  if(gripPos.length<3){
+            /*if(gripPos.length<3){
                gripPos.push(grip.getPosition());
-           }*/
+            }*/
 
             //Movement
             double leftFront = 0;
@@ -160,6 +159,22 @@ public class ShootingDrivetrain2 extends LinearOpMode {
                 }catch(NoSuchFieldException | IllegalAccessException ignored){}
             }else if(gamepad2.left_stick_y<0.5){
                 leftThumbstickUp = true;
+            }
+            if(gamepad2.left_stick_x<-0.5&&leftThumbstsickLeft){
+                selectedCoefficient--;
+                if(selectedCoefficient<0){
+                    selectedCoefficient+=coefficientNames.length;
+                }
+                leftThumbstsickLeft = false;
+            }else if(gamepad2.left_stick_x>-0.5){
+                leftThumbstsickLeft = true;
+            }
+            if(gamepad2.left_stick_x>0.5&&leftThumbstickRight){
+                selectedCoefficient++;
+                selectedCoefficient = selectedCoefficient%coefficientNames.length;
+                leftThumbstickRight = false;
+            }else if(gamepad2.left_stick_x<0.5){
+                leftThumbstickRight = true;
             }
             if (gamepad2.right_bumper) {
                 if (!rightBumperPressed) {
@@ -316,5 +331,6 @@ public class ShootingDrivetrain2 extends LinearOpMode {
 
         telemetry.addData("Status", "Hardware Map Init Complete");
         telemetry.update();
+        coefficients = new PIDFCoefficients(shooter.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER));
     }
 }
