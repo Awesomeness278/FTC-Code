@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -134,6 +135,7 @@ public class ShootingDrivetrain extends LinearOpMode {
             telemetry.addData("Flywheel Power: ", veloc);
             telemetry.addData("Arm Position", arm.getCurrentPosition());
             telemetry.addData("Parker Position", parker.getController().getServoPosition(2));
+            telemetry.addData("Straightener Position", straightener.getController().getServoPosition(straightener.getPortNumber()));
             telemetry.update();
             if (gamepad2.right_bumper) {
                 if (!rightBumperPressed) {
@@ -232,7 +234,7 @@ public class ShootingDrivetrain extends LinearOpMode {
                gripPos = []
            }*/
             if(Math.abs(gamepad2.right_stick_y)>0.1){
-                straightener.setPosition((gamepad2.right_stick_y+1)/2);
+                straightener.setPosition((gamepad2.right_stick_y*0.2+1)/2);
             }else{
                 straightener.setPosition(0.5);
             }
