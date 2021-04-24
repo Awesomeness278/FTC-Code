@@ -39,7 +39,7 @@ public class ShootingDrivetrain extends LinearOpMode {
         double parkerPos = 0;
         double parkerUpPos = 0.95;
         double parkerDownPos = 0.3;
-        double veloc = -360;
+        double veloc = -300;
 
 
         boolean blockerDown = false;
@@ -117,7 +117,7 @@ public class ShootingDrivetrain extends LinearOpMode {
             //Flywheel
             if (gamepad2.dpad_up) {
                 if (!dPadUpPressed) {
-                    veloc += 5;
+                    veloc -= 5;
                 }
                 dPadUpPressed = true;
             } else {
@@ -126,7 +126,7 @@ public class ShootingDrivetrain extends LinearOpMode {
 
             if (gamepad2.dpad_down) {
                 if (!dPadDownPressed) {
-                    veloc -= 5;
+                    veloc += 5;
                 }
                 dPadDownPressed = true;
             } else {
