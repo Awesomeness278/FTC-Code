@@ -58,7 +58,7 @@ public class AutonomousData {
                 shootingXPosition3 = 0;
                 shootingRotation = 0;
                 shootingRotation2 = 0;
-                shootingRotation3 = 9;
+                shootingRotation3 = 7;
                 lineYPosition0 = 50;
                 lineYPosition1 = 72;
                 lineYPosition4 = 72;

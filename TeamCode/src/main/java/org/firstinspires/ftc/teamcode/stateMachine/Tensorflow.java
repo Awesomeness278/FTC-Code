@@ -21,21 +21,21 @@ public class Tensorflow extends StateManager {
 
         if(opMode.recognition == null){
             if(opMode.position == 1||opMode.position == 2) {
-                delay = opMode.delay0RingsRed;
-            }else{
                 delay = opMode.delay0RingsBlue;
+            }else{
+                delay = opMode.delay0RingsRed;
             }
         }else if(opMode.recognition.getLabel().equals("Single")){
             if(opMode.position == 1||opMode.position == 2) {
-                delay = opMode.delay1RingsRed;
-            }else{
                 delay = opMode.delay1RingsBlue;
+            }else{
+                delay = opMode.delay1RingsRed;
             }
         }else if(opMode.recognition.getLabel().equals("Quad")){
             if(opMode.position == 1||opMode.position == 2) {
-                delay = opMode.delay4RingsRed;
-            }else{
                 delay = opMode.delay4RingsBlue;
+            }else{
+                delay = opMode.delay4RingsRed;
             }
         }
 
