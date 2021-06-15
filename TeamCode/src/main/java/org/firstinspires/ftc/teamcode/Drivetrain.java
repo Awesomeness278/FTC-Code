@@ -12,7 +12,7 @@ public class Drivetrain {
         this.bl = hardwareMap.get(DcMotor.class,blName);
         this.br = hardwareMap.get(DcMotor.class,brName);
     }
-    public void Drive(double p1,double p2,double p3,double p4){
+    public void SetPower(double p1,double p2,double p3,double p4){
         this.fl.setPower(p1);
         this.fr.setPower(p2);
         this.bl.setPower(p3);
@@ -35,5 +35,27 @@ public class Drivetrain {
         this.fr.setZeroPowerBehavior(behavior);
         this.bl.setZeroPowerBehavior(behavior);
         this.br.setZeroPowerBehavior(behavior);
+    }
+    public void MecannumDrive(float x, float y, float moveSpeed, float steerSpeed, float speed){
+        double leftFront = (-y + x)*moveSpeed - x*-steerSpeed;
+        double leftBack = (-y - x)*moveSpeed - x*-steerSpeed;
+        double rightFront = (-y - x)*moveSpeed + x*-steerSpeed;
+        double rightBack = (-y + x)*moveSpeed + x*-steerSpeed;
+        double scalar = Math.max(Math.max(Math.abs(leftFront), Math.abs(leftBack)), Math.max(Math.abs(rightFront), Math.abs(rightBack)));
+        if (scalar < 1) scalar = 1;
+        this.fl.setPower(leftFront / scalar * speed);
+        this.bl.setPower(leftBack / scalar * speed);
+        this.fr.setPower(rightFront / scalar * speed);
+        this.br.setPower(rightBack / scalar * speed);
+    }
+    public void Drive(float forwardSpeed, float turnSpeed, float moveSpeed){
+        float leftPower = forwardSpeed+turnSpeed;
+        float rightPower = forwardSpeed-turnSpeed;
+        leftPower *= moveSpeed;
+        rightPower *= moveSpeed;
+        this.fl.setPower(leftPower);
+        this.fr.setPower(rightPower);
+        this.bl.setPower(leftPower);
+        this.br.setPower(rightPower);
     }
 }
